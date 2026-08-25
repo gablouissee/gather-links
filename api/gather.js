@@ -31,7 +31,9 @@ export default async function handler(req, res) {
 
   const enabled = {
     apple: true,
-    youtube: !!process.env.YOUTUBE_API_KEY,
+    // The public channel feed needs no key, so YouTube is on whenever the
+    // channel is known; a key only extends reach to the back catalogue.
+    youtube: !!(SHOW.youtube || process.env.YOUTUBE_API_KEY),
     spotify: !!(process.env.SPOTIFY_CLIENT_ID && process.env.SPOTIFY_CLIENT_SECRET),
   };
   const scoped = { apple: !!SHOW.apple, youtube: !!SHOW.youtube, spotify: !!SHOW.spotify };
@@ -127,13 +129,48 @@ async function gatherApple(term, q, book) {
   return { url: hit.trackViewUrl || hit.collectionViewUrl, title: hit.trackName || hit.collectionName || "" };
 }
 
-// --- YouTube (Data API v3 — free key) ---
+// --- YouTube ---
+// Two routes. The channel's public Atom feed needs no API key and covers the
+// most recent 15 uploads, which is where a premiere always is. The Data API is
+// used only when a key is configured, since it can reach the whole back
+// catalogue. Feed first: it is free, keyless, and enough for the common case.
 async function gatherYouTube(q, book, show) {
-  const key = process.env.YOUTUBE_API_KEY;
-  const channel = SHOW.youtube; // scope to the show's channel
+  const channel = SHOW.youtube;
+  if (channel) {
+    const viaFeed = await safe(() => gatherYouTubeFeed(channel, q, book));
+    if (viaFeed) return viaFeed;
+  }
+  if (!process.env.YOUTUBE_API_KEY) return null;
+  return gatherYouTubeApi(q, book, show, channel);
+}
+
+// Public channel feed — no key, no quota. Latest 15 uploads only.
+async function gatherYouTubeFeed(channel, q, book) {
+  const r = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(channel)}`);
+  if (!r.ok) return null;
+  const xml = await r.text();
+  const entries = [];
+  for (const block of xml.split("<entry>").slice(1)) {
+    const id = /<yt:videoId>([^<]+)<\/yt:videoId>/.exec(block);
+    const title = /<title>([\s\S]*?)<\/title>/.exec(block);
+    if (id && title) entries.push({ id: id[1], title: unescapeXml(title[1]) });
+  }
+  const hit = bestMatch(q, book, entries, (e) => e.title);
+  if (!hit) return null;
+  return { url: `https://www.youtube.com/watch?v=${hit.id}`, title: hit.title, via: "feed" };
+}
+
+function unescapeXml(s) {
+  return s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"')
+          .replace(/&#39;|&apos;/g, "'").replace(/&amp;/g, "&").trim();
+}
+
+// Data API — reaches older episodes the feed has dropped. Needs a free key.
+async function gatherYouTubeApi(q, book, show, channel) {
   const who = [q, book].filter(Boolean).join(" ");
   const params = new URLSearchParams({
-    part: "snippet", type: "video", maxResults: "5", key,
+    part: "snippet", type: "video", maxResults: "5",
+    key: process.env.YOUTUBE_API_KEY,
     q: channel ? who : (show ? `${show} ${who}` : who),
   });
   if (channel) params.set("channelId", channel);
@@ -144,6 +181,7 @@ async function gatherYouTube(q, book, show) {
   return {
     url: `https://www.youtube.com/watch?v=${item.id.videoId}`,
     title: (item.snippet && item.snippet.title) || "",
+    via: "api",
   };
 }
 

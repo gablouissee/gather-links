@@ -23,7 +23,7 @@ https://…
 | Platform | Auto-gathered? | How |
 |---|---|---|
 | Apple Podcast | ✅ | iTunes Search API — free, no key |
-| YouTube | ✅ | YouTube Data API v3 — free key |
+| YouTube | ✅ | public channel feed — **no key**; a free API key only adds older episodes |
 | Spotify | ✅ | Spotify Web API — free client credentials |
 | Amazon Podcast | ✎ paste | no public search API |
 | Facebook | ✎ paste | Graph API has no open search |

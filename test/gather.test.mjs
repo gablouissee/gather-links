@@ -113,12 +113,12 @@ test("stopwords alone cannot carry a match", async () => {
   assert.ok(body.results.apple.url.endsWith("/show"), "should not match an episode on stopwords");
 });
 
-test("platforms without credentials are reported as disabled, not failed", async () => {
+test("Spotify without credentials is reported as disabled, not failed", async () => {
   const { body } = await run({ q: "Melanie Whyte" });
-  assert.equal(body.enabled.youtube, false);
-  assert.equal(body.enabled.spotify, false);
-  assert.equal(body.results.youtube, null);
+  assert.equal(body.enabled.spotify, false, "Spotify genuinely needs a key");
   assert.equal(body.results.spotify, null);
+  // YouTube stays enabled without a key: the public channel feed covers it.
+  assert.equal(body.enabled.youtube, true);
 });
 
 test("YouTube search is restricted to the show's channel", async () => {
@@ -137,4 +137,55 @@ test("a platform outage degrades to null instead of failing the request", async 
   const { status, body } = await run({ q: "Melanie Whyte" });
   assert.equal(status, 200, "the endpoint should still answer");
   assert.equal(body.results.apple, null);
+});
+
+// --- YouTube via the public channel feed (no API key) ---
+
+const FEED_XML = `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom">
+ <title>Global Book Network</title>
+ <entry>
+  <yt:videoId>aaa111</yt:videoId>
+  <title>Global Book Network - Patricia Punch Barrett, author of Ventaloha</title>
+ </entry>
+ <entry>
+  <yt:videoId>bbb222</yt:videoId>
+  <title>Global Book Network - Melanie Whyte, Author of Birth, Death &amp; Rebirth</title>
+ </entry>
+</feed>`;
+
+function stubFeedFetch() {
+  globalThis.fetch = async (url) => {
+    const u = String(url);
+    if (u.includes("/feeds/videos.xml")) return { ok: true, text: async () => FEED_XML };
+    if (u.includes("itunes")) return ok({ results: [] });
+    return ok({});
+  };
+}
+
+test("YouTube resolves from the public feed with no API key", async () => {
+  stubFeedFetch();
+  delete process.env.YOUTUBE_API_KEY;
+  const { body } = await run({ q: "Patricia Punch Barrett", book: "Ventaloha" });
+  assert.equal(body.enabled.youtube, true, "YouTube should be enabled without a key");
+  assert.equal(body.results.youtube.url, "https://www.youtube.com/watch?v=aaa111");
+  assert.equal(body.results.youtube.via, "feed");
+});
+
+test("feed matching still respects the book title", async () => {
+  stubFeedFetch();
+  const { body } = await run({ q: "", book: "Birth, Death & Rebirth" });
+  assert.equal(body.results.youtube.url, "https://www.youtube.com/watch?v=bbb222");
+});
+
+test("feed XML entities are decoded in titles", async () => {
+  stubFeedFetch();
+  const { body } = await run({ book: "Birth, Death & Rebirth" });
+  assert.match(body.results.youtube.title, /Birth, Death & Rebirth/);
+});
+
+test("an unrelated name does not match a feed video", async () => {
+  stubFeedFetch();
+  const { body } = await run({ q: "Someone Not On The Show" });
+  assert.equal(body.results.youtube, null);
 });
