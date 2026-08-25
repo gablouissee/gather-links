@@ -189,3 +189,106 @@ test("an unrelated name does not match a feed video", async () => {
   const { body } = await run({ q: "Someone Not On The Show" });
   assert.equal(body.results.youtube, null);
 });
+
+// --- Links read out of the episode's YouTube description ---
+// This mirrors the real GBN description: every platform listed under the video.
+
+const DESC = `Global Book Network - Patricia Punch Barrett, author of Ventaloha
+
+Watch and listen everywhere:
+
+Facebook:
+https://www.facebook.com/share/v/16abcXYZ/
+
+Spotify:
+https://open.spotify.com/show/0jsYkdCqjGzmxK8JkceRa3
+
+Apple Podcast:
+https://podcasts.apple.com/us/podcast/ventaloha/id1789422185?i=1000700123456
+
+Amazon Podcast:
+https://music.amazon.com/podcasts/92023114-c003-403f-9a81-781c6c0a6f44/global-book-network
+
+Global Book Network:
+https://www.globalbooknetwork.tv/episodes/ventaloha
+
+Watch it on Roku!
+Home-> Streaming Channels-> Search Channels-> Type in "GLOBAL BOOK NETWORK"
+https://channelstore.roku.com/en-gb/details/7d47d3e405cf/global-book-network
+
+Watch it on Fire TV!
+https://www.amazon.com/gp/product/B0DWXZKYTC.
+
+Subscribe: https://www.youtube.com/@GlobalBookNetwork`;
+
+function stubDescFetch() {
+  const xml = `<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns:media="http://search.yahoo.com/mrss/">
+<entry><yt:videoId>vid789</yt:videoId>
+<title>Global Book Network - Patricia Punch Barrett, author of Ventaloha</title>
+<media:group><media:description>${DESC.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</media:description></media:group>
+</entry></feed>`;
+  globalThis.fetch = async (url) => {
+    const u = String(url);
+    if (u.includes("/feeds/videos.xml")) return { ok: true, text: async () => xml };
+    if (u.includes("itunes")) return ok({ results: [] });
+    return ok({});
+  };
+}
+
+test("every platform link is read from the video description", async () => {
+  stubDescFetch();
+  const { body } = await run({ q: "Patricia Punch Barrett", book: "Ventaloha" });
+  const r = body.results;
+  assert.equal(r.youtube.url, "https://www.youtube.com/watch?v=vid789");
+  assert.match(r.facebook.url, /facebook\.com\/share\/v\/16abcXYZ/);
+  assert.match(r.spotify.url, /open\.spotify\.com\/show\//);
+  assert.match(r.apple.url, /podcasts\.apple\.com/);
+  assert.match(r.amazon.url, /music\.amazon\.com\/podcasts\//);
+  assert.match(r.gbn.url, /globalbooknetwork\.tv\/episodes\/ventaloha/);
+});
+
+test("Roku and Fire TV are told apart, not confused with Amazon Podcast", async () => {
+  stubDescFetch();
+  const { body } = await run({ q: "Patricia Punch Barrett" });
+  assert.match(body.results.roku.url, /channelstore\.roku\.com/);
+  assert.match(body.results.firetv.url, /amazon\.com\/gp\/product\/B0DWXZKYTC$/,
+    "Fire TV must be the appstore link with its trailing full stop stripped");
+  assert.match(body.results.amazon.url, /music\.amazon\.com/,
+    "Amazon Podcast must stay the music.amazon link");
+});
+
+test("all eight platforms resolve from one search", async () => {
+  stubDescFetch();
+  const { body } = await run({ q: "Patricia Punch Barrett", book: "Ventaloha" });
+  const keys = ["youtube","facebook","spotify","apple","amazon","gbn","roku","firetv"];
+  const filled = keys.filter((k) => body.results[k] && body.results[k].url);
+  assert.equal(filled.length, 8, "expected all 8, got: " + filled.join(", "));
+});
+
+test("a dedicated connector's result wins over the description", async () => {
+  stubDescFetch();
+  const prev = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    if (String(url).includes("itunes")) {
+      return ok({ results: [{ wrapperType: "podcastEpisode", trackName: "Ventaloha", trackViewUrl: "https://podcasts.apple.com/VERIFIED" }] });
+    }
+    return prev(url);
+  };
+  const { body } = await run({ book: "Ventaloha" });
+  assert.equal(body.results.apple.url, "https://podcasts.apple.com/VERIFIED");
+});
+
+test("no description yields no invented links", async () => {
+  globalThis.fetch = async (url) => {
+    const u = String(url);
+    if (u.includes("/feeds/videos.xml")) {
+      return { ok: true, text: async () => `<feed xmlns:yt="x"><entry><yt:videoId>v1</yt:videoId><title>Global Book Network - Patricia Punch Barrett</title></entry></feed>` };
+    }
+    if (u.includes("itunes")) return ok({ results: [] });
+    return ok({});
+  };
+  const { body } = await run({ q: "Patricia Punch Barrett" });
+  assert.ok(body.results.youtube.url);
+  assert.ok(!body.results.facebook);
+  assert.ok(!body.results.roku);
+});

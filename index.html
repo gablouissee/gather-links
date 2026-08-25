@@ -224,7 +224,7 @@
       </button>
     </div>
     <h1>Gather every platform link into one post</h1>
-    <p>Search an author to auto-gather their Apple Podcast and YouTube links from within your show, paste the platforms that have no public search, and the formatted announcement builds itself — ready to copy into a post.</p>
+    <p>Search an author and it pulls every platform link straight from the episode's own YouTube description, then builds the formatted announcement — ready to copy into a post.</p>
   </header>
 
   <div class="grid">
@@ -244,7 +244,7 @@
           </div>
           <input type="text" id="g_book" placeholder="Book title (optional, improves accuracy)" autocomplete="off" style="margin-bottom:9px">
           <input type="text" id="g_show" placeholder="Narrow to a different show (optional) — leave blank for Global Book Network" autocomplete="off">
-          <p class="gather-status" id="gStatus">Searches within Global Book Network and fills Apple &amp; YouTube — no setup needed. Adding the book title helps when an author has been on more than once. The rest have no free search API — paste those below.</p>
+          <p class="gather-status" id="gStatus">Finds the episode on your channel and reads every platform link out of its description — usually filling all eight at once. Adding the book title helps when an author has been on more than once.</p>
         </div>
 
         <hr class="sep">
@@ -411,7 +411,10 @@
     var show=$("g_show").value.trim();
     var btn=$("gatherBtn"); btn.disabled=true; setStatus("Searching Apple, YouTube & Spotify…", "load");
     // Use the searched guest as the announcement name if it's still untouched.
-    if(!state.name.trim()){ state.name=q||book; $("f_name").value=state.name; }
+    // A successful gather starts a new episode, so the announcement name
+    // follows what was searched rather than keeping the previous author.
+    var who=q||book;
+    if(who){ state.name=who; $("f_name").value=who; }
     try{
       var url=API_BASE+"/api/gather?q="+encodeURIComponent(q)
         +(book?"&book="+encodeURIComponent(book):"")
@@ -419,19 +422,17 @@
       var r=await fetch(url, {headers:{"Accept":"application/json"}});
       if(!r.ok) throw new Error("HTTP "+r.status);
       var d=await r.json();
-      var found=[], missing=[], nokey=[];
-      ["apple","youtube","spotify"].forEach(function(k){
-        var res=d.results&&d.results[k];
-        if(res&&res.url){ setLink(k,res.url); found.push(byKey[k].name); }
-        else if(d.enabled&&d.enabled[k]===false){ nokey.push(byKey[k].name); }
-        else{ missing.push(byKey[k].name); }
+      var found=[], missing=[];
+      PLATFORMS.forEach(function(p){
+        var res=d.results&&d.results[p.key];
+        if(res&&res.url){ setLink(p.key,res.url); found.push(p.name); }
+        else{ missing.push(p.name); }
       });
       render();
       var msg=[];
-      if(found.length) msg.push("Found: "+found.join(", "));
-      if(missing.length) msg.push("no match: "+missing.join(", "));
-      if(nokey.length) msg.push("no API key: "+nokey.join(", "));
-      setStatus(found.length ? msg.join(" · ") : "Nothing found — try a different search, or paste links manually.", found.length?"ok":"warn");
+      if(found.length) msg.push("Found "+found.length+" of "+PLATFORMS.length+": "+found.join(", "));
+      if(missing.length) msg.push("paste these: "+missing.join(", "));
+      setStatus(found.length ? msg.join(" · ") : "Nothing found — check the spelling, or paste the links manually below.", found.length?"ok":"warn");
     }catch(e){
       setStatus("Couldn't reach the gather backend. Deploy it (see README) — meanwhile paste links manually below.", "err");
     }finally{ btn.disabled=false; }

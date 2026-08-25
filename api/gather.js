@@ -7,8 +7,9 @@
 // matches episodes of that podcast/channel. Override any of them with the
 // YOUTUBE_CHANNEL_ID / APPLE_PODCAST_ID / SPOTIFY_SHOW_ID env vars.
 //
-// Facebook, Amazon, Roku, Fire TV and Global Book Network have no free search
-// API and are never gathered here — they stay manual in the UI.
+// Most platforms here have no free search API. They do not need one: each
+// episode's YouTube description lists every link, so one feed fetch resolves
+// the whole set. See linksFromDescription below.
 
 // Global Book Network's public show IDs, used when no env var overrides them.
 // These are public identifiers, not secrets. Set the matching env var to point
@@ -48,12 +49,22 @@ export default async function handler(req, res) {
     enabled.spotify ? safe(() => gatherSpotify(term, q, book)) : Promise.resolve(null),
   ]);
 
+  // Links the episode's own YouTube description points at. A dedicated
+  // connector wins when it found something; otherwise these fill the gap —
+  // which is how Facebook, Amazon, Roku and Fire TV get resolved at all.
+  const described = linksFromDescription(youtube && youtube.description);
+  const results = { apple, youtube, spotify };
+  for (const key of Object.keys(described)) {
+    if (!results[key]) results[key] = { url: described[key], via: "description" };
+  }
+  if (results.youtube) delete results.youtube.description; // keep the payload small
+
   res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate");
   return res.status(200).json({
     query: { q, book, show },
     enabled,
     scoped,
-    results: { apple, youtube, spotify },
+    results,
   });
 }
 
@@ -99,6 +110,33 @@ function bestMatch(q, book, items, getText) {
     if ((g != null && g >= 0.5) || (b != null && b >= 0.6)) return best;
   }
   return null;
+}
+
+// --- Links listed in the video description ---
+// Every episode's YouTube description already lists where else it is posted, so
+// one feed fetch yields the whole set — no per-platform search, no keys. Domain
+// order matters: music.amazon is the podcast, amazon.com/dp is the Fire TV app.
+const LINK_RULES = [
+  { key: "facebook", re: /^https?:\/\/([\w-]+\.)?facebook\.com\// },
+  { key: "spotify",  re: /^https?:\/\/open\.spotify\.com\// },
+  { key: "apple",    re: /^https?:\/\/podcasts\.apple\.com\// },
+  { key: "amazon",   re: /^https?:\/\/music\.amazon\./ },
+  { key: "gbn",      re: /^https?:\/\/(www\.)?globalbooknetwork\./ },
+  { key: "roku",     re: /^https?:\/\/([\w-]+\.)?roku\.com\// },
+  { key: "firetv",   re: /^https?:\/\/(www\.)?amazon\.[a-z.]+\/(gp\/product|dp)\// },
+];
+
+function linksFromDescription(text) {
+  const found = {};
+  if (!text) return found;
+  const urls = text.match(/https?:\/\/[^\s<>"'\)\]]+/g) || [];
+  for (let url of urls) {
+    url = url.replace(/[.,;:!]+$/, ""); // strip trailing sentence punctuation
+    for (const rule of LINK_RULES) {
+      if (!found[rule.key] && rule.re.test(url)) { found[rule.key] = url; break; }
+    }
+  }
+  return found;
 }
 
 // --- Apple Podcasts (iTunes — free, no key) ---
@@ -153,11 +191,23 @@ async function gatherYouTubeFeed(channel, q, book) {
   for (const block of xml.split("<entry>").slice(1)) {
     const id = /<yt:videoId>([^<]+)<\/yt:videoId>/.exec(block);
     const title = /<title>([\s\S]*?)<\/title>/.exec(block);
-    if (id && title) entries.push({ id: id[1], title: unescapeXml(title[1]) });
+    const desc = /<media:description[^>]*>([\s\S]*?)<\/media:description>/.exec(block);
+    if (id && title) {
+      entries.push({
+        id: id[1],
+        title: unescapeXml(title[1]),
+        description: desc ? unescapeXml(desc[1]) : "",
+      });
+    }
   }
   const hit = bestMatch(q, book, entries, (e) => e.title);
   if (!hit) return null;
-  return { url: `https://www.youtube.com/watch?v=${hit.id}`, title: hit.title, via: "feed" };
+  return {
+    url: `https://www.youtube.com/watch?v=${hit.id}`,
+    title: hit.title,
+    description: hit.description,
+    via: "feed",
+  };
 }
 
 function unescapeXml(s) {

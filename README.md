@@ -1,9 +1,9 @@
 # Gather Links — Premiere Link Generator
 
 A **free** tool that gathers a premiere's platform links and turns them into a
-ready-to-post announcement. Search a guest or episode and it **auto-fills Apple
-Podcasts and YouTube from the web** with no keys or setup; you paste the platforms
-that have no free search API; the formatted block builds itself to copy into a post.
+ready-to-post announcement. Search an author and it **fills all eight platforms
+at once** — no API keys, no setup — then builds the formatted block to copy
+into a post.
 
 ```
 Esther L. Sanni
@@ -18,27 +18,29 @@ https://…
 …
 ```
 
-## What can and can't be auto-gathered
+## How it gathers everything
 
-| Platform | Auto-gathered? | How |
-|---|---|---|
-| Apple Podcast | ✅ | iTunes Search API — free, no key |
-| YouTube | ✅ | public channel feed — **no key**; a free API key only adds older episodes |
-| Spotify | ✎ paste | Web API now requires a paid **Spotify Premium** account |
-| Amazon Podcast | ✎ paste | no public search API |
-| Facebook | ✎ paste | no public post search; Graph needs a Page token that expires |
-| Global Book Network | ✎ paste | your own site |
-| Roku | ✎ paste | no public search API |
-| Fire TV | ✎ paste | no public search API |
+Each episode's YouTube description already lists where else that episode is
+posted. So instead of searching eight platforms separately — most of which have
+no free search API — the tool finds the episode on the channel's **public Atom
+feed** (no key, no quota) and reads the links straight out of its description.
 
-Every paste field carries an **open ↗** shortcut to the exact page its link comes
-from — the GBN Facebook page, Spotify and Amazon shows, the Roku channel, the
-Fire TV app listing, and globalbooknetwork.tv. CI enforces that none is missing.
+One request, no credentials, all eight platforms:
 
-The "paste" platforms have **no free search API from anyone**. For those the tool
-keeps a clean manual field, remembers your last entry, and shows an **open ↗**
-shortcut beside the field that opens the right page in a new tab — so grabbing
-the link is two clicks (on Facebook: the post's timestamp, or ⋯ → Copy link).
+| Source | Gives |
+|---|---|
+| YouTube channel feed | the video, plus every link in its description |
+| iTunes lookup (free, no key) | a verified Apple episode link, preferred when found |
+
+Links are matched to platforms by domain, which is what tells the two Amazon
+links apart: `music.amazon.com` is the podcast, `amazon.com/dp` is the Fire TV
+app. Anything the description omits stays an editable field with an **open ↗**
+shortcut to the page its link comes from.
+
+**Limits worth knowing.** The feed carries the latest 15 uploads — always enough
+for a premiere, but older episodes may not resolve; adding a free
+`YOUTUBE_API_KEY` extends reach to the back catalogue. And the links are only as
+good as the description: if one is missing there, paste it.
 
 ## How it's built
 
