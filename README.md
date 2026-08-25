@@ -75,6 +75,35 @@ The matcher scores each episode on the **author name** and the **book title**
 together, weighting the title slightly higher since titles are more distinctive.
 That is what separates two visits by the same author for different books.
 
+## Automatic deploys (GitHub Actions)
+
+Two workflows live in `.github/workflows`:
+
+- **CI** (`ci.yml`) — runs the test suite and the `index.html` structure check on
+  every push and pull request. Needs no secrets, so it works the moment you push.
+- **Deploy** (`deploy.yml`) — tests, deploys to Vercel, then calls the live
+  `/api/gather` endpoint to confirm the deployment actually answers. If the
+  Vercel secrets are not set it skips with a note instead of failing the build.
+
+To turn on deploys, add three repository secrets under
+**Settings → Secrets and variables → Actions**:
+
+| Secret | Where to get it |
+|---|---|
+| `VERCEL_TOKEN` | [vercel.com/account/tokens](https://vercel.com/account/tokens) |
+| `VERCEL_ORG_ID` | run `npx vercel link`, then read `.vercel/project.json` |
+| `VERCEL_PROJECT_ID` | same file |
+
+Your API keys stay in Vercel's own environment variables — the workflow never
+needs them.
+
+## Running the tests locally
+
+```sh
+npm test               # endpoint behaviour, no network required
+node scripts/check-html.mjs
+```
+
 ## Getting the free keys
 
 - **YouTube** — [Google Cloud Console](https://console.cloud.google.com): new

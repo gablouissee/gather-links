@@ -1,0 +1,91 @@
+name: Deploy
+
+# Deploys to Vercel on every push to the default branch, once the three repo
+# secrets below are set (Settings → Secrets and variables → Actions):
+#
+#   VERCEL_TOKEN       vercel.com/account/tokens
+#   VERCEL_ORG_ID      from .vercel/project.json after `vercel link`
+#   VERCEL_PROJECT_ID  from the same file
+#
+# Until they exist the job is skipped with a note, so the repo is never red
+# just because deployment has not been configured yet.
+on:
+  push:
+    branches:
+      - main
+      - claude/multi-platform-link-generator-2kzvb5
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to Vercel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check that deployment is configured
+        id: config
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "### Deployment not configured yet"
+              echo ""
+              echo "Add these repository secrets to enable automatic deploys:"
+              echo ""
+              echo '- `VERCEL_TOKEN` — https://vercel.com/account/tokens'
+              echo '- `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` — run `npx vercel link`, then read `.vercel/project.json`'
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run tests before deploying
+        if: steps.config.outputs.ready == 'true'
+        run: npm test
+
+      - name: Deploy
+        if: steps.config.outputs.ready == 'true'
+        id: vercel
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          set -euo pipefail
+          npx --yes vercel@latest pull --yes --environment=production --token="${{ secrets.VERCEL_TOKEN }}"
+          npx --yes vercel@latest build --prod --token="${{ secrets.VERCEL_TOKEN }}"
+          url=$(npx --yes vercel@latest deploy --prebuilt --prod --token="${{ secrets.VERCEL_TOKEN }}")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Verify the gather endpoint answers
+        if: steps.config.outputs.ready == 'true'
+        run: |
+          set -euo pipefail
+          url="${{ steps.vercel.outputs.url }}"
+          # Apple needs no API key, so a healthy deploy always returns a result here.
+          code=$(curl -s -o /tmp/gather.json -w "%{http_code}" --max-time 30 \
+            "$url/api/gather?q=Melanie%20Whyte")
+          echo "HTTP $code"
+          cat /tmp/gather.json
+          test "$code" = "200"
+          {
+            echo "### Deployed"
+            echo ""
+            echo "$url"
+            echo ""
+            echo '```json'
+            cat /tmp/gather.json
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
