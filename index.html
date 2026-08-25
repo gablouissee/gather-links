@@ -159,11 +159,12 @@
         <div class="gather">
           <div class="glabel"><span class="bolt">⚡</span> Auto-gather from the web</div>
           <div class="gather-row">
-            <input type="text" id="g_q" placeholder="Guest or episode — e.g. Esther L. Sanni" autocomplete="off">
+            <input type="text" id="g_q" placeholder="Author / guest — e.g. Esther L. Sanni" autocomplete="off">
             <button class="btn primary" id="gatherBtn" type="button">Gather</button>
           </div>
+          <input type="text" id="g_book" placeholder="Book title (optional, improves accuracy)" autocomplete="off" style="margin-bottom:9px">
           <input type="text" id="g_show" placeholder="Narrow to a different show (optional) — leave blank for Global Book Network" autocomplete="off">
-          <p class="gather-status" id="gStatus">Searches within Global Book Network and fills Apple, YouTube &amp; Spotify. Facebook, Amazon, Roku &amp; Fire TV have no search API — paste those below.</p>
+          <p class="gather-status" id="gStatus">Searches within Global Book Network and fills Apple, YouTube &amp; Spotify. Adding the book title helps when an author has been on more than once. Facebook, Amazon, Roku &amp; Fire TV have no search API — paste those below.</p>
         </div>
 
         <hr class="sep">
@@ -319,14 +320,16 @@
     var tag=linkTags[key]; if(tag){ tag.className="tag found"; tag.textContent="✓ found"; } }
 
   async function gather(){
-    var q=$("g_q").value.trim();
-    if(!q){ setStatus("Type a guest or episode name to search.", "warn"); return; }
+    var q=$("g_q").value.trim(), book=$("g_book").value.trim();
+    if(!q && !book){ setStatus("Type an author name or a book title to search.", "warn"); return; }
     var show=$("g_show").value.trim();
     var btn=$("gatherBtn"); btn.disabled=true; setStatus("Searching Apple, YouTube & Spotify…", "load");
     // Use the searched guest as the announcement name if it's still untouched.
-    if(!state.name.trim()){ state.name=q; $("f_name").value=q; }
+    if(!state.name.trim()){ state.name=q||book; $("f_name").value=state.name; }
     try{
-      var url=API_BASE+"/api/gather?q="+encodeURIComponent(q)+(show?"&show="+encodeURIComponent(show):"");
+      var url=API_BASE+"/api/gather?q="+encodeURIComponent(q)
+        +(book?"&book="+encodeURIComponent(book):"")
+        +(show?"&show="+encodeURIComponent(show):"");
       var r=await fetch(url, {headers:{"Accept":"application/json"}});
       if(!r.ok) throw new Error("HTTP "+r.status);
       var d=await r.json();

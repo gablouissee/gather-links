@@ -19,8 +19,9 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(204).end();
 
   const q = (req.query.q || "").toString().trim();
+  const book = (req.query.book || "").toString().trim();
   const show = (req.query.show || "").toString().trim();
-  if (!q) return res.status(400).json({ error: "Missing ?q= search term" });
+  if (!q && !book) return res.status(400).json({ error: "Missing ?q= (guest) or ?book= (title)" });
 
   const enabled = {
     apple: true,
@@ -33,17 +34,19 @@ export default async function handler(req, res) {
     spotify: !!process.env.SPOTIFY_SHOW_ID,
   };
 
-  const term = show ? `${show} ${q}` : q;
+  // Guest + book together are the search text; either alone also works.
+  const who = [q, book].filter(Boolean).join(" ");
+  const term = show ? `${show} ${who}` : who;
 
   const [apple, youtube, spotify] = await Promise.all([
-    safe(() => gatherApple(term, q)),
-    enabled.youtube ? safe(() => gatherYouTube(q, show)) : Promise.resolve(null),
-    enabled.spotify ? safe(() => gatherSpotify(term, q)) : Promise.resolve(null),
+    safe(() => gatherApple(term, q, book)),
+    enabled.youtube ? safe(() => gatherYouTube(q, book, show)) : Promise.resolve(null),
+    enabled.spotify ? safe(() => gatherSpotify(term, q, book)) : Promise.resolve(null),
   ]);
 
   res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate");
   return res.status(200).json({
-    query: { q, show },
+    query: { q, book, show },
     enabled,
     scoped,
     results: { apple, youtube, spotify },
@@ -58,22 +61,44 @@ async function safe(fn) {
 function norm(s) {
   return (s || "").toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
 }
-function bestMatch(q, items, getText, minRatio) {
-  const qt = norm(q).split(" ").filter(Boolean);
-  if (!qt.length) return null;
+// Words too common in episode titles to prove a match on their own.
+const STOP = new Set(["the","a","an","of","and","or","in","on","for","to","with","my","your","how","what","is","it"]);
+function tokens(s) {
+  return norm(s).split(" ").filter((w) => w && w.length > 1 && !STOP.has(w));
+}
+function ratio(toks, text) {
+  if (!toks.length) return null; // no signal given
+  let hits = 0;
+  for (const tok of toks) if (text.indexOf(tok) >= 0) hits++;
+  return hits / toks.length;
+}
+// Match on guest name and/or book title. Either alone can carry a match; both
+// matching ranks highest, which is what disambiguates same-guest repeat visits.
+function bestMatch(q, book, items, getText) {
+  const gt = tokens(q), bt = tokens(book);
+  if (!gt.length && !bt.length) return null;
   let best = null, bestScore = -1;
   for (const it of items) {
     const t = norm(getText(it));
-    let hits = 0;
-    for (const tok of qt) if (t.indexOf(tok) >= 0) hits++;
-    const score = hits / qt.length;
+    const g = ratio(gt, t), b = ratio(bt, t);
+    // Weight whichever signals were supplied; book slightly favoured when both
+    // are present, since titles are more distinctive than names.
+    let score;
+    if (g != null && b != null) score = g * 0.45 + b * 0.55;
+    else score = (g != null ? g : b);
     if (score > bestScore) { bestScore = score; best = it; }
   }
-  return bestScore >= (minRatio == null ? 0.5 : minRatio) ? best : null;
+  // Accept if either supplied signal is convincing on its own.
+  if (best) {
+    const t = norm(getText(best));
+    const g = ratio(gt, t), b = ratio(bt, t);
+    if ((g != null && g >= 0.5) || (b != null && b >= 0.6)) return best;
+  }
+  return null;
 }
 
 // --- Apple Podcasts (iTunes — free, no key) ---
-async function gatherApple(term, q) {
+async function gatherApple(term, q, book) {
   const id = process.env.APPLE_PODCAST_ID;
   if (id) {
     const r = await fetch(`https://itunes.apple.com/lookup?id=${encodeURIComponent(id)}&media=podcast&entity=podcastEpisode&limit=200`);
@@ -81,7 +106,7 @@ async function gatherApple(term, q) {
     const all = d.results || [];
     const episodes = all.filter((x) => x.trackViewUrl && (x.wrapperType === "podcastEpisode" || x.kind === "podcast-episode"));
     const showRow = all.find((x) => x.collectionViewUrl && (x.wrapperType === "track" || x.kind === "podcast"));
-    const hit = bestMatch(q, episodes, (e) => e.trackName);
+    const hit = bestMatch(q, book, episodes, (e) => e.trackName);
     if (hit) return { url: hit.trackViewUrl, title: hit.trackName || "" };
     if (showRow) return { url: showRow.collectionViewUrl, title: showRow.collectionName || "", note: "show page (no episode match)" };
     return null;
@@ -101,12 +126,13 @@ async function gatherApple(term, q) {
 }
 
 // --- YouTube (Data API v3 — free key) ---
-async function gatherYouTube(q, show) {
+async function gatherYouTube(q, book, show) {
   const key = process.env.YOUTUBE_API_KEY;
   const channel = process.env.YOUTUBE_CHANNEL_ID; // optional scope
+  const who = [q, book].filter(Boolean).join(" ");
   const params = new URLSearchParams({
     part: "snippet", type: "video", maxResults: "5", key,
-    q: channel ? q : (show ? `${show} ${q}` : q),
+    q: channel ? who : (show ? `${show} ${who}` : who),
   });
   if (channel) params.set("channelId", channel);
   const r = await fetch(`https://www.googleapis.com/youtube/v3/search?${params}`);
@@ -136,7 +162,7 @@ async function spotifyToken() {
   _spToken = { value: d.access_token, exp: Date.now() + (d.expires_in - 60) * 1000 };
   return _spToken.value;
 }
-async function gatherSpotify(term, q) {
+async function gatherSpotify(term, q, book) {
   const token = await spotifyToken();
   const showId = process.env.SPOTIFY_SHOW_ID;
   if (showId) {
@@ -150,7 +176,7 @@ async function gatherSpotify(term, q) {
       items = items.concat(d.items);
       if (d.items.length < 50) break;
     }
-    const hit = bestMatch(q, items.filter(Boolean), (e) => e.name);
+    const hit = bestMatch(q, book, items.filter(Boolean), (e) => e.name);
     if (hit && hit.external_urls) return { url: hit.external_urls.spotify, title: hit.name || "" };
     return null;
   }
