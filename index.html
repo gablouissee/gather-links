@@ -9,37 +9,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
   :root{
-    --ground:#ECEEF1;
-    --surface:#FFFFFF;
-    --surface-2:#F5F6F8;
-    --ink:#1A1D24;
-    --muted:#5C6472;
-    --faint:#8A929F;
-    --line:#DEE1E7;
-    --line-strong:#C7CCD5;
-    --accent:#B8862B;
-    --accent-ink:#8A6316;
-    --accent-bg:#F6EDD8;
-    --good:#1E9E6A;
-    --good-bg:#E4F3EC;
+    --ground:#ECEEF1;--surface:#FFFFFF;--surface-2:#F5F6F8;--ink:#1A1D24;--muted:#5C6472;
+    --faint:#8A929F;--line:#DEE1E7;--line-strong:#C7CCD5;--accent:#B8862B;--accent-ink:#8A6316;
+    --accent-bg:#F6EDD8;--good:#1E9E6A;--good-bg:#E4F3EC;--warn:#B9772A;--warn-bg:#F6ECDD;
+    --err:#C4443B;--err-bg:#F7E4E2;
     --shadow:0 1px 2px rgba(20,24,32,.05),0 10px 30px -16px rgba(20,24,32,.14);
     --field-focus:0 0 0 3px rgba(184,134,43,.22);
   }
   :root:not([data-theme="light"]){
     @media (prefers-color-scheme:dark){
-      --ground:#0C0E12;
-      --surface:#14171D;
-      --surface-2:#1A1E25;
-      --ink:#E8EAEF;
-      --muted:#9BA3B1;
-      --faint:#6B7482;
-      --line:#262B33;
-      --line-strong:#353C46;
-      --accent:#E0AC4E;
-      --accent-ink:#F0CB86;
-      --accent-bg:#2A2110;
-      --good:#42CB8C;
-      --good-bg:#122720;
+      --ground:#0C0E12;--surface:#14171D;--surface-2:#1A1E25;--ink:#E8EAEF;--muted:#9BA3B1;
+      --faint:#6B7482;--line:#262B33;--line-strong:#353C46;--accent:#E0AC4E;--accent-ink:#F0CB86;
+      --accent-bg:#2A2110;--good:#42CB8C;--good-bg:#122720;--warn:#DBA25A;--warn-bg:#2A2013;
+      --err:#E8756B;--err-bg:#2C1512;
       --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -18px rgba(0,0,0,.6);
       --field-focus:0 0 0 3px rgba(224,172,78,.25);
     }
@@ -47,101 +29,94 @@
   :root[data-theme="dark"]{
     --ground:#0C0E12;--surface:#14171D;--surface-2:#1A1E25;--ink:#E8EAEF;--muted:#9BA3B1;
     --faint:#6B7482;--line:#262B33;--line-strong:#353C46;--accent:#E0AC4E;--accent-ink:#F0CB86;
-    --accent-bg:#2A2110;--good:#42CB8C;--good-bg:#122720;
+    --accent-bg:#2A2110;--good:#42CB8C;--good-bg:#122720;--warn:#DBA25A;--warn-bg:#2A2013;
+    --err:#E8756B;--err-bg:#2C1512;
     --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -18px rgba(0,0,0,.6);
     --field-focus:0 0 0 3px rgba(224,172,78,.25);
   }
 
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
-  body{
-    margin:0;background:var(--ground);color:var(--ink);
-    font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
-    font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
-  }
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
   .page{max-width:1180px;margin:0 auto;padding:clamp(20px,4vw,40px)}
 
   header.top{margin-bottom:26px}
-  .eyebrow{
-    font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.2em;
-    text-transform:uppercase;color:var(--accent-ink);display:flex;align-items:center;gap:.6em;
-  }
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--accent-ink);display:flex;align-items:center;gap:.6em}
   .eyebrow::before{content:"";width:22px;height:2px;background:var(--accent);border-radius:2px}
-  header.top h1{
-    font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(1.7rem,4vw,2.4rem);
-    letter-spacing:-.01em;margin:.35rem 0 .2rem;text-wrap:balance;
-  }
-  header.top p{color:var(--muted);margin:0;max-width:60ch}
+  header.top h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(1.7rem,4vw,2.4rem);
+    letter-spacing:-.01em;margin:.35rem 0 .2rem;text-wrap:balance}
+  header.top p{color:var(--muted);margin:0;max-width:64ch}
 
   .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:start}
   @media(max-width:860px){.grid{grid-template-columns:1fr}}
 
   .panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
-  .panel-head{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
-    padding:16px 20px;border-bottom:1px solid var(--line);
-  }
-  .panel-head h2{
-    font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.05rem;margin:0;letter-spacing:-.01em;
-  }
+  .panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:16px 20px;border-bottom:1px solid var(--line)}
+  .panel-head h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:1.05rem;margin:0;letter-spacing:-.01em}
   .panel-body{padding:20px}
 
-  /* form */
+  /* gather box */
+  .gather{background:var(--accent-bg);border:1px solid var(--line-strong);border-radius:12px;padding:15px 16px}
+  .gather .glabel{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--accent-ink);margin-bottom:9px}
+  .gather .glabel .bolt{font-size:14px}
+  .gather-row{display:grid;grid-template-columns:1fr auto;gap:9px;margin-bottom:9px}
+  .gather input{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--surface);
+    border:1px solid var(--line-strong);border-radius:9px;padding:9px 11px;transition:border-color .12s,box-shadow .12s}
+  .gather input:focus{outline:none;border-color:var(--accent);box-shadow:var(--field-focus)}
+  .gather-status{margin:9px 0 0;font-size:12px;color:var(--muted);line-height:1.5}
+  .gather-status.load{color:var(--accent-ink)}
+  .gather-status.ok{color:var(--good)}
+  .gather-status.warn{color:var(--warn)}
+  .gather-status.err{color:var(--err)}
+
   .fld{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
   .fld:last-child{margin-bottom:0}
   label{font-size:12.5px;font-weight:600;color:var(--muted);letter-spacing:.01em}
   .row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
   @media(max-width:520px){.row{grid-template-columns:1fr}}
-  input[type=text],input[type=url],input[type=date],input[type=time]{
-    width:100%;font:inherit;font-size:14px;color:var(--ink);
-    background:var(--surface-2);border:1px solid var(--line-strong);border-radius:9px;
-    padding:9px 11px;transition:border-color .12s,box-shadow .12s;
-  }
+  input[type=text],input[type=url],input[type=date],input[type=time]{width:100%;font:inherit;font-size:14px;
+    color:var(--ink);background:var(--surface-2);border:1px solid var(--line-strong);border-radius:9px;
+    padding:9px 11px;transition:border-color .12s,box-shadow .12s}
   input::placeholder{color:var(--faint)}
   input:focus{outline:none;border-color:var(--accent);box-shadow:var(--field-focus);background:var(--surface)}
+  input.autofilled{border-color:var(--good);background:var(--good-bg)}
   .sep{height:1px;background:var(--line);margin:20px -20px;border:0}
-  .grouplabel{
-    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--faint);margin:0 0 12px;
-  }
+  .grouplabel{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--faint);margin:0 0 12px;display:flex;align-items:center;gap:8px}
+  .grouplabel .hint{text-transform:none;letter-spacing:0;font-family:"IBM Plex Sans",sans-serif;font-size:11.5px}
   .link-fld{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:center;margin-bottom:11px}
   .brand{width:11px;height:11px;border-radius:50%;flex:none;box-shadow:0 0 0 3px var(--surface),0 0 0 4px var(--line)}
   .link-fld .ltext{display:flex;flex-direction:column;gap:5px;min-width:0}
-  .link-fld .lname{font-size:12px;font-weight:600;color:var(--muted)}
+  .link-fld .lname{font-size:12px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:7px}
+  .tag{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
+    padding:1px 6px;border-radius:5px;font-weight:500}
+  .tag.auto{color:var(--good);background:var(--good-bg)}
+  .tag.manual{color:var(--faint);background:var(--surface-2);border:1px solid var(--line)}
+  .tag.found{color:var(--good);background:var(--good-bg)}
 
-  /* preview */
   .preview-wrap{position:sticky;top:20px}
   .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .toggle{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);cursor:pointer;user-select:none}
   .toggle input{accent-color:var(--accent);width:15px;height:15px}
-  button.btn{
-    font:inherit;font-size:13px;font-weight:600;cursor:pointer;
-    border-radius:9px;padding:8px 14px;border:1px solid var(--line-strong);
-    background:var(--surface-2);color:var(--ink);transition:background .12s,border-color .12s,transform .05s;
-  }
+  button.btn{font:inherit;font-size:13px;font-weight:600;cursor:pointer;border-radius:9px;padding:8px 14px;
+    border:1px solid var(--line-strong);background:var(--surface-2);color:var(--ink);
+    transition:background .12s,border-color .12s,transform .05s}
   button.btn:hover{border-color:var(--accent)}
   button.btn:active{transform:translateY(1px)}
+  button.btn:disabled{opacity:.55;cursor:default}
   button.btn.primary{background:var(--accent);border-color:var(--accent);color:#1a1206}
-  :root[data-theme="dark"] button.btn.primary,
-  :root:not([data-theme="light"]) button.btn.primary{color:#1a1206}
   button.btn.primary:hover{filter:brightness(1.04)}
   button.btn.ok{background:var(--good-bg);border-color:var(--good);color:var(--good)}
 
-  /* premiere card */
-  .card{
-    background:var(--surface-2);border:1px solid var(--line);border-radius:12px;
-    padding:22px 22px 20px;margin-bottom:18px;
-  }
-  .card .name{
-    font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:clamp(1.5rem,3.4vw,2rem);
-    letter-spacing:-.015em;line-height:1.05;margin:0 0 8px;text-wrap:balance;
-  }
-  .card .premiere{
-    display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;
-    color:var(--accent-ink);background:var(--accent-bg);border-radius:999px;padding:5px 13px;margin-bottom:18px;
-  }
-  .card .premiere .live{width:7px;height:7px;border-radius:50%;background:var(--accent);
-    box-shadow:0 0 0 0 var(--accent);animation:pulse 2.4s infinite}
+  .card{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:22px 22px 20px;margin-bottom:18px}
+  .card .name{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:clamp(1.5rem,3.4vw,2rem);
+    letter-spacing:-.015em;line-height:1.05;margin:0 0 8px;text-wrap:balance}
+  .card .premiere{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;
+    color:var(--accent-ink);background:var(--accent-bg);border-radius:999px;padding:5px 13px;margin-bottom:18px}
+  .card .premiere .live{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 2.4s infinite}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(184,134,43,.5)}70%{box-shadow:0 0 0 7px rgba(184,134,43,0)}100%{box-shadow:0 0 0 0 rgba(184,134,43,0)}}
   @media (prefers-reduced-motion:reduce){.card .premiere .live{animation:none}}
   .plist{display:flex;flex-direction:column;gap:2px}
@@ -154,17 +129,13 @@
   .prow a:hover{text-decoration:underline}
   .prow .empty{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--faint)}
 
-  /* raw text */
   .rawhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px}
   .rawhead .t{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
-  pre.raw{
-    margin:0;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;
-    padding:16px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:1.7;
-    color:var(--ink);white-space:pre-wrap;word-break:break-word;max-height:340px;overflow:auto;
-  }
+  pre.raw{margin:0;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:16px;
+    font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:1.7;color:var(--ink);
+    white-space:pre-wrap;word-break:break-word;max-height:340px;overflow:auto}
 
   footer{margin-top:34px;text-align:center;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--faint)}
-  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 </head>
 <body>
@@ -173,7 +144,7 @@
   <header class="top">
     <div class="eyebrow">Premiere Link Generator</div>
     <h1>Gather every platform link into one post</h1>
-    <p>Fill in the premiere details and paste each platform's link. The formatted announcement builds itself on the right — copy it straight into a post, or share the live page.</p>
+    <p>Search a guest or episode to auto-gather Apple, YouTube and Spotify from the web, paste the platforms that have no public search, and the formatted announcement builds itself — ready to copy into a post.</p>
   </header>
 
   <div class="grid">
@@ -184,31 +155,34 @@
         <button class="btn" id="clearBtn" type="button">Reset</button>
       </div>
       <div class="panel-body">
+
+        <div class="gather">
+          <div class="glabel"><span class="bolt">⚡</span> Auto-gather from the web</div>
+          <div class="gather-row">
+            <input type="text" id="g_q" placeholder="Guest or episode — e.g. Esther L. Sanni" autocomplete="off">
+            <button class="btn primary" id="gatherBtn" type="button">Gather</button>
+          </div>
+          <input type="text" id="g_show" placeholder="Show or channel to narrow (optional) — e.g. Global Book Network" autocomplete="off">
+          <p class="gather-status" id="gStatus">Fills Apple, YouTube &amp; Spotify automatically. Facebook, Amazon, Roku &amp; Fire TV have no search API — paste those below.</p>
+        </div>
+
+        <hr class="sep">
+
         <div class="fld">
           <label for="f_name">Guest / episode name</label>
           <input type="text" id="f_name" placeholder="Esther L. Sanni" autocomplete="off">
         </div>
         <div class="row">
-          <div class="fld">
-            <label for="f_intro">Intro phrase</label>
-            <input type="text" id="f_intro" placeholder="Premiere this" autocomplete="off">
-          </div>
-          <div class="fld">
-            <label for="f_date">Date</label>
-            <input type="date" id="f_date">
-          </div>
-          <div class="fld">
-            <label for="f_time">Time</label>
-            <input type="time" id="f_time">
-          </div>
+          <div class="fld"><label for="f_intro">Intro phrase</label>
+            <input type="text" id="f_intro" placeholder="Premiere this" autocomplete="off"></div>
+          <div class="fld"><label for="f_date">Date</label><input type="date" id="f_date"></div>
+          <div class="fld"><label for="f_time">Time</label><input type="time" id="f_time"></div>
         </div>
-        <div class="fld">
-          <label for="f_tz">Time zone label</label>
-          <input type="text" id="f_tz" placeholder="New York Time" autocomplete="off">
-        </div>
+        <div class="fld"><label for="f_tz">Time zone label</label>
+          <input type="text" id="f_tz" placeholder="New York Time" autocomplete="off"></div>
 
         <hr class="sep">
-        <p class="grouplabel">Platform links</p>
+        <p class="grouplabel">Platform links <span class="hint">— ⚡ auto · ✎ paste</span></p>
         <div id="linkFields"></div>
       </div>
     </div>
@@ -216,15 +190,11 @@
     <!-- PREVIEW -->
     <div class="preview-wrap">
       <div class="panel">
-        <div class="panel-head">
-          <h2>Preview</h2>
-          <div class="toolbar">
-            <label class="toggle"><input type="checkbox" id="hideEmpty"> Hide empty</label>
-          </div>
+        <div class="panel-head"><h2>Preview</h2>
+          <div class="toolbar"><label class="toggle"><input type="checkbox" id="hideEmpty"> Hide empty</label></div>
         </div>
         <div class="panel-body">
           <div class="card" id="card"></div>
-
           <div class="rawhead">
             <span class="t">Copyable text</span>
             <div class="toolbar">
@@ -239,194 +209,164 @@
 
   </div>
 
-  <footer>Free · runs entirely in your browser · no account, no server</footer>
+  <footer>Free · your inputs stay in your browser · gathering runs through your own deployed backend</footer>
 </div>
 
 <script>
 (function(){
   "use strict";
-  var PLATFORMS = [
-    {key:"youtube",  name:"YouTube",         label:"YouTube:",              brand:"#FF0033", ph:"https://youtube.com/watch?v=..."},
-    {key:"facebook", name:"Facebook",        label:"Facebook:",             brand:"#1877F2", ph:"https://facebook.com/..."},
-    {key:"spotify",  name:"Spotify",         label:"Spotify:",              brand:"#1DB954", ph:"https://open.spotify.com/..."},
-    {key:"apple",    name:"Apple Podcast",   label:"Apple Podcast:",        brand:"#A033C9", ph:"https://podcasts.apple.com/..."},
-    {key:"amazon",   name:"Amazon Podcast",  label:"Amazon Podcast:",       brand:"#00A8E1", ph:"https://music.amazon.com/..."},
-    {key:"gbn",      name:"Global Book Network", label:"Global Book Network:", brand:"#B8862B", ph:"https://globalbooknetwork.com/..."},
-    {key:"roku",     name:"Roku",            label:"Watch it on Roku!",     brand:"#662D91", ph:"https://therokuchannel.roku.com/..."},
-    {key:"firetv",   name:"Fire TV",         label:"Watch it on Fire TV!",  brand:"#FF9900", ph:"https://www.amazon.com/..."}
-  ];
+  // If you host the frontend and backend separately, set this to the backend origin.
+  var API_BASE = (window.GATHER_API_BASE || "");
 
-  var DEFAULTS = {
-    name:"Esther L. Sanni", intro:"Premiere this",
-    date:"2026-08-24", time:"19:00", tz:"New York Time",
-    hideEmpty:false, links:{}
-  };
+  var PLATFORMS = [
+    {key:"youtube",  name:"YouTube",             label:"YouTube:",             brand:"#FF0033", auto:true,  ph:"https://youtube.com/watch?v=..."},
+    {key:"facebook", name:"Facebook",            label:"Facebook:",            brand:"#1877F2", auto:false, ph:"https://facebook.com/..."},
+    {key:"spotify",  name:"Spotify",             label:"Spotify:",             brand:"#1DB954", auto:true,  ph:"https://open.spotify.com/..."},
+    {key:"apple",    name:"Apple Podcast",       label:"Apple Podcast:",       brand:"#A033C9", auto:true,  ph:"https://podcasts.apple.com/..."},
+    {key:"amazon",   name:"Amazon Podcast",      label:"Amazon Podcast:",      brand:"#00A8E1", auto:false, ph:"https://music.amazon.com/..."},
+    {key:"gbn",      name:"Global Book Network", label:"Global Book Network:", brand:"#B8862B", auto:false, ph:"https://globalbooknetwork.com/..."},
+    {key:"roku",     name:"Roku",                label:"Watch it on Roku!",    brand:"#662D91", auto:false, ph:"https://therokuchannel.roku.com/..."},
+    {key:"firetv",   name:"Fire TV",             label:"Watch it on Fire TV!", brand:"#FF9900", auto:false, ph:"https://www.amazon.com/..."}
+  ];
+  var byKey = {}; PLATFORMS.forEach(function(p){byKey[p.key]=p;});
+
+  var DEFAULTS = {name:"Esther L. Sanni", intro:"Premiere this", date:"2026-08-24", time:"19:00",
+    tz:"New York Time", hideEmpty:false, links:{}};
   PLATFORMS.forEach(function(p){DEFAULTS.links[p.key]="";});
 
-  var STORE = "gatherlinks.v1";
-  var $ = function(id){return document.getElementById(id);};
+  var STORE="gatherlinks.v1", $=function(id){return document.getElementById(id);};
 
-  function loadState(){
-    // URL hash wins (shared editor link), then localStorage, then defaults
-    try{
-      if(location.hash.length>1){
-        var fromHash = JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(1)))));
-        if(fromHash && fromHash.links) return merge(fromHash);
-      }
-    }catch(e){}
-    try{
-      var raw = localStorage.getItem(STORE);
-      if(raw) return merge(JSON.parse(raw));
-    }catch(e){}
-    return merge({});
-  }
   function merge(s){
-    var out = {name:s.name!=null?s.name:DEFAULTS.name,
-               intro:s.intro!=null?s.intro:DEFAULTS.intro,
-               date:s.date!=null?s.date:DEFAULTS.date,
-               time:s.time!=null?s.time:DEFAULTS.time,
-               tz:s.tz!=null?s.tz:DEFAULTS.tz,
-               hideEmpty:!!s.hideEmpty, links:{}};
+    var out={name:s.name!=null?s.name:DEFAULTS.name, intro:s.intro!=null?s.intro:DEFAULTS.intro,
+      date:s.date!=null?s.date:DEFAULTS.date, time:s.time!=null?s.time:DEFAULTS.time,
+      tz:s.tz!=null?s.tz:DEFAULTS.tz, hideEmpty:!!s.hideEmpty, links:{}};
     PLATFORMS.forEach(function(p){out.links[p.key]=(s.links&&s.links[p.key])||"";});
     return out;
   }
+  function loadState(){
+    try{ if(location.hash.length>1){ var h=JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(1))))); if(h&&h.links) return merge(h);} }catch(e){}
+    try{ var raw=localStorage.getItem(STORE); if(raw) return merge(JSON.parse(raw)); }catch(e){}
+    return merge({});
+  }
   function save(st){ try{ localStorage.setItem(STORE, JSON.stringify(st)); }catch(e){} }
+  var state=loadState();
 
-  var state = loadState();
-
-  // Build link input fields
-  var linkFields = $("linkFields");
+  // Link fields
+  var linkInputs={}, linkTags={};
+  var linkFields=$("linkFields");
   PLATFORMS.forEach(function(p){
-    var wrap = document.createElement("div"); wrap.className="link-fld";
-    var dot = document.createElement("span"); dot.className="brand"; dot.style.background=p.brand;
-    var col = document.createElement("div"); col.className="ltext";
-    var nm = document.createElement("span"); nm.className="lname"; nm.textContent=p.name;
-    var inp = document.createElement("input"); inp.type="url"; inp.placeholder=p.ph;
-    inp.value = state.links[p.key]; inp.setAttribute("aria-label", p.name+" link");
-    inp.addEventListener("input", function(){ state.links[p.key]=inp.value.trim(); render(); });
+    var wrap=document.createElement("div"); wrap.className="link-fld";
+    var dot=document.createElement("span"); dot.className="brand"; dot.style.background=p.brand;
+    var col=document.createElement("div"); col.className="ltext";
+    var nm=document.createElement("span"); nm.className="lname";
+    nm.appendChild(document.createTextNode(p.name+" "));
+    var tag=document.createElement("span"); tag.className="tag "+(p.auto?"auto":"manual");
+    tag.textContent=p.auto?"⚡ auto":"✎ paste"; nm.appendChild(tag); linkTags[p.key]=tag;
+    var inp=document.createElement("input"); inp.type="url"; inp.placeholder=p.ph;
+    inp.value=state.links[p.key]; inp.setAttribute("aria-label", p.name+" link");
+    inp.addEventListener("input", function(){ state.links[p.key]=inp.value.trim(); inp.classList.remove("autofilled"); render(); });
+    linkInputs[p.key]=inp;
     col.appendChild(nm); col.appendChild(inp);
-    wrap.appendChild(dot); wrap.appendChild(col);
-    linkFields.appendChild(wrap);
+    wrap.appendChild(dot); wrap.appendChild(col); linkFields.appendChild(wrap);
   });
 
-  // Wire meta fields
-  function bind(id, key){
-    var el = $(id); el.value = state[key];
-    el.addEventListener("input", function(){ state[key]=el.value; render(); });
-  }
-  bind("f_name","name"); bind("f_intro","intro"); bind("f_date","date");
-  bind("f_time","time"); bind("f_tz","tz");
-  $("hideEmpty").checked = state.hideEmpty;
+  function bind(id,key){ var el=$(id); el.value=state[key];
+    el.addEventListener("input", function(){ state[key]=el.value; render(); }); }
+  bind("f_name","name"); bind("f_intro","intro"); bind("f_date","date"); bind("f_time","time"); bind("f_tz","tz");
+  $("hideEmpty").checked=state.hideEmpty;
   $("hideEmpty").addEventListener("change", function(){ state.hideEmpty=this.checked; render(); });
 
   var DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
   var MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
-
   function fmtWhen(){
     var parts=[];
-    if(state.date){
-      var d=state.date.split("-"); var y=+d[0], m=+d[1], day=+d[2];
-      var dt=new Date(y, m-1, day);
-      if(!isNaN(dt)) parts.push(DAYS[dt.getDay()]+", "+MONTHS[m-1]+" "+day+", "+y);
-    }
-    if(state.time){
-      var t=state.time.split(":"); var hh=+t[0], mm=+t[1];
-      var ap = hh>=12 ? "pm":"am"; var h12=hh%12; if(h12===0) h12=12;
-      parts.push(h12 + (mm ? ":"+String(mm).padStart(2,"0") : "") + ap);
-    }
+    if(state.date){ var d=state.date.split("-"); var y=+d[0],m=+d[1],day=+d[2]; var dt=new Date(y,m-1,day);
+      if(!isNaN(dt)) parts.push(DAYS[dt.getDay()]+", "+MONTHS[m-1]+" "+day+", "+y); }
+    if(state.time){ var t=state.time.split(":"); var hh=+t[0],mm=+t[1]; var ap=hh>=12?"pm":"am"; var h12=hh%12; if(h12===0)h12=12;
+      parts.push(h12+(mm?":"+String(mm).padStart(2,"0"):"")+ap); }
     if(state.tz.trim()) parts.push(state.tz.trim());
     return parts.join(" ");
   }
-
   function buildText(){
-    var lines=[];
-    lines.push(state.name.trim() || "");
-    lines.push("");
-    var when = fmtWhen();
-    lines.push((state.intro.trim() + (when?" "+when:"")).trim());
-    PLATFORMS.forEach(function(p){
-      var url = state.links[p.key].trim();
-      if(!url && state.hideEmpty) return;
-      lines.push("");
-      lines.push(p.label);
-      lines.push(url || "link here");
-    });
+    var lines=[]; lines.push(state.name.trim()||""); lines.push("");
+    var when=fmtWhen(); lines.push((state.intro.trim()+(when?" "+when:"")).trim());
+    PLATFORMS.forEach(function(p){ var url=state.links[p.key].trim();
+      if(!url&&state.hideEmpty) return; lines.push(""); lines.push(p.label); lines.push(url||"link here"); });
     return lines.join("\n");
   }
-
   function render(){
-    // Card
-    var card = $("card");
-    card.innerHTML="";
-    var nm=document.createElement("div"); nm.className="name";
-    nm.textContent = state.name.trim() || "Guest name";
-    card.appendChild(nm);
-    var when=fmtWhen();
-    var pr=document.createElement("div"); pr.className="premiere";
+    var card=$("card"); card.innerHTML="";
+    var nm=document.createElement("div"); nm.className="name"; nm.textContent=state.name.trim()||"Guest name"; card.appendChild(nm);
+    var when=fmtWhen(); var pr=document.createElement("div"); pr.className="premiere";
     var live=document.createElement("span"); live.className="live"; pr.appendChild(live);
-    var prt=document.createElement("span");
-    prt.textContent=(state.intro.trim()+(when?" "+when:"")).trim() || "Premiere details";
-    pr.appendChild(prt); card.appendChild(pr);
-
+    var prt=document.createElement("span"); prt.textContent=(state.intro.trim()+(when?" "+when:"")).trim()||"Premiere details"; pr.appendChild(prt); card.appendChild(pr);
     var list=document.createElement("div"); list.className="plist";
-    PLATFORMS.forEach(function(p){
-      var url=state.links[p.key].trim();
-      if(!url && state.hideEmpty) return;
+    PLATFORMS.forEach(function(p){ var url=state.links[p.key].trim(); if(!url&&state.hideEmpty) return;
       var row=document.createElement("div"); row.className="prow";
       var dot=document.createElement("span"); dot.className="pdot"; dot.style.background=p.brand;
       var meta=document.createElement("div"); meta.className="pmeta";
-      var lab=document.createElement("div"); lab.className="plabel"; lab.textContent=p.label;
-      meta.appendChild(lab);
-      if(url){
-        var a=document.createElement("a"); a.href=url; a.textContent=url;
-        a.target="_blank"; a.rel="noopener noreferrer"; meta.appendChild(a);
-      }else{
-        var e=document.createElement("span"); e.className="empty"; e.textContent="link here"; meta.appendChild(e);
-      }
-      row.appendChild(dot); row.appendChild(meta); list.appendChild(row);
-    });
+      var lab=document.createElement("div"); lab.className="plabel"; lab.textContent=p.label; meta.appendChild(lab);
+      if(url){ var a=document.createElement("a"); a.href=url; a.textContent=url; a.target="_blank"; a.rel="noopener noreferrer"; meta.appendChild(a); }
+      else{ var e=document.createElement("span"); e.className="empty"; e.textContent="link here"; meta.appendChild(e); }
+      row.appendChild(dot); row.appendChild(meta); list.appendChild(row); });
     card.appendChild(list);
-
-    // Raw
-    $("raw").textContent = buildText();
-    save(state);
+    $("raw").textContent=buildText(); save(state);
   }
 
-  // Copy text
+  // ---- Auto-gather ----
+  function setStatus(msg, cls){ var el=$("gStatus"); el.textContent=msg; el.className="gather-status"+(cls?" "+cls:""); }
+  function setLink(key,url){ state.links[key]=url; var inp=linkInputs[key]; if(inp){ inp.value=url; inp.classList.add("autofilled"); }
+    var tag=linkTags[key]; if(tag){ tag.className="tag found"; tag.textContent="✓ found"; } }
+
+  async function gather(){
+    var q=$("g_q").value.trim();
+    if(!q){ setStatus("Type a guest or episode name to search.", "warn"); return; }
+    var show=$("g_show").value.trim();
+    var btn=$("gatherBtn"); btn.disabled=true; setStatus("Searching Apple, YouTube & Spotify…", "load");
+    try{
+      var url=API_BASE+"/api/gather?q="+encodeURIComponent(q)+(show?"&show="+encodeURIComponent(show):"");
+      var r=await fetch(url, {headers:{"Accept":"application/json"}});
+      if(!r.ok) throw new Error("HTTP "+r.status);
+      var d=await r.json();
+      var found=[], missing=[], nokey=[];
+      ["apple","youtube","spotify"].forEach(function(k){
+        var res=d.results&&d.results[k];
+        if(res&&res.url){ setLink(k,res.url); found.push(byKey[k].name); }
+        else if(d.enabled&&d.enabled[k]===false){ nokey.push(byKey[k].name); }
+        else{ missing.push(byKey[k].name); }
+      });
+      render();
+      var msg=[];
+      if(found.length) msg.push("Found: "+found.join(", "));
+      if(missing.length) msg.push("no match: "+missing.join(", "));
+      if(nokey.length) msg.push("no API key: "+nokey.join(", "));
+      setStatus(found.length ? msg.join(" · ") : "Nothing found — try a different search, or paste links manually.", found.length?"ok":"warn");
+    }catch(e){
+      setStatus("Couldn't reach the gather backend. Deploy it (see README) — meanwhile paste links manually below.", "err");
+    }finally{ btn.disabled=false; }
+  }
+  $("gatherBtn").addEventListener("click", gather);
+  $("g_q").addEventListener("keydown", function(e){ if(e.key==="Enter") gather(); });
+
+  // ---- Copy / share / reset ----
   function copyToClipboard(text, btn, okLabel){
-    var done=function(){
-      var old=btn.textContent; btn.textContent=okLabel; btn.classList.add("ok");
-      setTimeout(function(){ btn.textContent=old; btn.classList.remove("ok"); },1400);
-    };
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(done, fallback);
-    } else { fallback(); }
-    function fallback(){
-      try{
-        var ta=document.createElement("textarea"); ta.value=text;
-        ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta);
-        ta.select(); document.execCommand("copy"); document.body.removeChild(ta); done();
-      }catch(e){ btn.textContent="Press Ctrl+C"; }
-    }
+    var done=function(){ var old=btn.textContent; btn.textContent=okLabel; btn.classList.add("ok");
+      setTimeout(function(){ btn.textContent=old; btn.classList.remove("ok"); },1400); };
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done,fallback); } else { fallback(); }
+    function fallback(){ try{ var ta=document.createElement("textarea"); ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); done(); }catch(e){ btn.textContent="Press Ctrl+C"; } }
   }
   $("copyBtn").addEventListener("click", function(){ copyToClipboard(buildText(), this, "Copied!"); });
-
-  $("shareBtn").addEventListener("click", function(){
-    var hash="";
-    try{ hash=btoa(unescape(encodeURIComponent(JSON.stringify(state)))); }catch(e){}
-    var url=location.origin+location.pathname+"#"+hash;
-    copyToClipboard(url, this, "Link copied!");
-  });
-
+  $("shareBtn").addEventListener("click", function(){ var hash=""; try{ hash=btoa(unescape(encodeURIComponent(JSON.stringify(state)))); }catch(e){}
+    copyToClipboard(location.origin+location.pathname+"#"+hash, this, "Link copied!"); });
   $("clearBtn").addEventListener("click", function(){
     if(!confirm("Clear all fields and start fresh?")) return;
     try{ localStorage.removeItem(STORE); }catch(e){}
-    state = merge({name:"", intro:"Premiere this", date:"", time:"", tz:"New York Time"});
-    // reflect in inputs
-    $("f_name").value=""; $("f_intro").value="Premiere this"; $("f_date").value="";
-    $("f_time").value=""; $("f_tz").value="New York Time"; $("hideEmpty").checked=false;
-    var inputs=linkFields.querySelectorAll("input");
-    inputs.forEach(function(i){ i.value=""; });
+    state=merge({name:"", intro:"Premiere this", date:"", time:"", tz:"New York Time"});
+    $("f_name").value=""; $("f_intro").value="Premiere this"; $("f_date").value=""; $("f_time").value="";
+    $("f_tz").value="New York Time"; $("hideEmpty").checked=false;
+    PLATFORMS.forEach(function(p){ var i=linkInputs[p.key]; if(i){ i.value=""; i.classList.remove("autofilled"); }
+      var t=linkTags[p.key]; if(t){ t.className="tag "+(p.auto?"auto":"manual"); t.textContent=p.auto?"⚡ auto":"✎ paste"; } });
     if(location.hash) history.replaceState(null,"",location.pathname);
     render();
   });
