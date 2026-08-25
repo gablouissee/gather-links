@@ -144,7 +144,7 @@
   <header class="top">
     <div class="eyebrow">Premiere Link Generator</div>
     <h1>Gather every platform link into one post</h1>
-    <p>Search a guest or episode to auto-gather Apple, YouTube and Spotify from the web, paste the platforms that have no public search, and the formatted announcement builds itself — ready to copy into a post.</p>
+    <p>Search a guest to auto-gather their Apple, YouTube and Spotify links from within your show, paste the platforms that have no public search, and the formatted announcement builds itself — ready to copy into a post.</p>
   </header>
 
   <div class="grid">
@@ -162,8 +162,8 @@
             <input type="text" id="g_q" placeholder="Guest or episode — e.g. Esther L. Sanni" autocomplete="off">
             <button class="btn primary" id="gatherBtn" type="button">Gather</button>
           </div>
-          <input type="text" id="g_show" placeholder="Show or channel to narrow (optional) — e.g. Global Book Network" autocomplete="off">
-          <p class="gather-status" id="gStatus">Fills Apple, YouTube &amp; Spotify automatically. Facebook, Amazon, Roku &amp; Fire TV have no search API — paste those below.</p>
+          <input type="text" id="g_show" placeholder="Narrow to a different show (optional) — leave blank for Global Book Network" autocomplete="off">
+          <p class="gather-status" id="gStatus">Searches within Global Book Network and fills Apple, YouTube &amp; Spotify. Facebook, Amazon, Roku &amp; Fire TV have no search API — paste those below.</p>
         </div>
 
         <hr class="sep">
@@ -323,6 +323,8 @@
     if(!q){ setStatus("Type a guest or episode name to search.", "warn"); return; }
     var show=$("g_show").value.trim();
     var btn=$("gatherBtn"); btn.disabled=true; setStatus("Searching Apple, YouTube & Spotify…", "load");
+    // Use the searched guest as the announcement name if it's still untouched.
+    if(!state.name.trim()){ state.name=q; $("f_name").value=q; }
     try{
       var url=API_BASE+"/api/gather?q="+encodeURIComponent(q)+(show?"&show="+encodeURIComponent(show):"");
       var r=await fetch(url, {headers:{"Accept":"application/json"}});

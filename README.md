@@ -56,6 +56,22 @@ Missing a key just disables that one platform's auto-fill — everything else
 still works. Netlify Functions work the same way (rename `api/` per Netlify's
 convention or add a `netlify.toml` redirect).
 
+## Scoping to your show (recommended)
+
+Set these three env vars and a guest-name search will only match episodes of
+**your** show, instead of searching all of Apple/Spotify/YouTube. This is what
+prevents another podcast's episode from being pulled in by mistake:
+
+| Variable | Where to find it |
+|---|---|
+| `YOUTUBE_CHANNEL_ID` | YouTube Studio → Settings → Channel → Advanced settings (`UC…`) |
+| `APPLE_PODCAST_ID` | the number after `/id` in your Apple Podcasts show URL |
+| `SPOTIFY_SHOW_ID` | the code in `open.spotify.com/show/<id>` |
+
+With them set, the backend pulls your show's episode list and fuzzy-matches the
+guest name against episode titles. Leave any of them blank and that platform
+falls back to an open search.
+
 ## Getting the free keys
 
 - **YouTube** — [Google Cloud Console](https://console.cloud.google.com): new
