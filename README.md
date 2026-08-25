@@ -31,6 +31,10 @@ https://…
 | Roku | ✎ paste | no public search API |
 | Fire TV | ✎ paste | no public search API |
 
+Every paste field carries an **open ↗** shortcut to the exact page its link comes
+from — the GBN Facebook page, Spotify and Amazon shows, the Roku channel, the
+Fire TV app listing, and globalbooknetwork.tv. CI enforces that none is missing.
+
 The "paste" platforms have **no free search API from anyone**. For those the tool
 keeps a clean manual field, remembers your last entry, and shows an **open ↗**
 shortcut beside the field that opens the right page in a new tab — so grabbing
