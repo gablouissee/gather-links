@@ -26,13 +26,15 @@ https://…
 | YouTube | ✅ | public channel feed — **no key**; a free API key only adds older episodes |
 | Spotify | ✎ paste | Web API now requires a paid **Spotify Premium** account |
 | Amazon Podcast | ✎ paste | no public search API |
-| Facebook | ✎ paste | Graph API has no open search |
+| Facebook | ✎ paste | no public post search; Graph needs a Page token that expires |
 | Global Book Network | ✎ paste | your own site |
 | Roku | ✎ paste | no public search API |
 | Fire TV | ✎ paste | no public search API |
 
-The four "paste" platforms have **no free search API from anyone** — the tool
-keeps a clean manual field (and remembers your last entry) for those.
+The "paste" platforms have **no free search API from anyone**. For those the tool
+keeps a clean manual field, remembers your last entry, and shows an **open ↗**
+shortcut beside the field that opens the right page in a new tab — so grabbing
+the link is two clicks (on Facebook: the post's timestamp, or ⋯ → Copy link).
 
 ## How it's built
 
