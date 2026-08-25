@@ -8,32 +8,85 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
+  /* Palette: #023078 navy · #3c8bcb mid · #719dd8 light · #262c3d slate · #fff · #000 */
   :root{
-    --ground:#ECEEF1;--surface:#FFFFFF;--surface-2:#F5F6F8;--ink:#1A1D24;--muted:#5C6472;
-    --faint:#8A929F;--line:#DEE1E7;--line-strong:#C7CCD5;--accent:#B8862B;--accent-ink:#8A6316;
-    --accent-bg:#F6EDD8;--good:#1E9E6A;--good-bg:#E4F3EC;--warn:#B9772A;--warn-bg:#F6ECDD;
-    --err:#C4443B;--err-bg:#F7E4E2;
-    --shadow:0 1px 2px rgba(20,24,32,.05),0 10px 30px -16px rgba(20,24,32,.14);
-    --field-focus:0 0 0 3px rgba(184,134,43,.22);
+    --ground:#EDF1F8;
+    --surface:#FFFFFF;
+    --surface-2:#F4F7FC;
+    --ink:#262C3D;
+    --muted:#55617C;
+    --faint:#8794AF;
+    --line:#DCE4F1;
+    --line-strong:#BFCDE4;
+    --accent:#023078;
+    --accent-2:#3C8BCB;
+    --accent-ink:#023078;
+    --accent-bg:#E4EDF9;
+    --accent-fg:#FFFFFF;
+    --good:#17795A;
+    --good-bg:#E1F2EA;
+    --warn:#8A5A12;
+    --warn-bg:#F7EEDC;
+    --err:#AE332B;
+    --err-bg:#F8E5E3;
+    --shadow:0 1px 2px rgba(38,44,61,.06),0 10px 30px -16px rgba(2,48,120,.20);
+    --field-focus:0 0 0 3px rgba(60,139,203,.28);
+    --pulse:rgba(2,48,120,.42);
+    --scheme:light;
   }
   :root:not([data-theme="light"]){
     @media (prefers-color-scheme:dark){
-      --ground:#0C0E12;--surface:#14171D;--surface-2:#1A1E25;--ink:#E8EAEF;--muted:#9BA3B1;
-      --faint:#6B7482;--line:#262B33;--line-strong:#353C46;--accent:#E0AC4E;--accent-ink:#F0CB86;
-      --accent-bg:#2A2110;--good:#42CB8C;--good-bg:#122720;--warn:#DBA25A;--warn-bg:#2A2013;
-      --err:#E8756B;--err-bg:#2C1512;
-      --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -18px rgba(0,0,0,.6);
-      --field-focus:0 0 0 3px rgba(224,172,78,.25);
+      --ground:#171B26;
+      --surface:#262C3D;
+      --surface-2:#2E3547;
+      --ink:#F2F5FA;
+      --muted:#A9B5CC;
+      --faint:#7C8AA6;
+      --line:#333B50;
+      --line-strong:#45506B;
+      --accent:#719DD8;
+      --accent-2:#3C8BCB;
+      --accent-ink:#9FC1E9;
+      --accent-bg:#1D2A42;
+      --accent-fg:#12161F;
+      --good:#4FC38E;
+      --good-bg:#122E24;
+      --warn:#E0A85C;
+      --warn-bg:#2E2413;
+      --err:#E8776D;
+      --err-bg:#331916;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -18px rgba(0,0,0,.7);
+      --field-focus:0 0 0 3px rgba(113,157,216,.30);
+      --pulse:rgba(113,157,216,.42);
+      --scheme:dark;
     }
   }
   :root[data-theme="dark"]{
-    --ground:#0C0E12;--surface:#14171D;--surface-2:#1A1E25;--ink:#E8EAEF;--muted:#9BA3B1;
-    --faint:#6B7482;--line:#262B33;--line-strong:#353C46;--accent:#E0AC4E;--accent-ink:#F0CB86;
-    --accent-bg:#2A2110;--good:#42CB8C;--good-bg:#122720;--warn:#DBA25A;--warn-bg:#2A2013;
-    --err:#E8756B;--err-bg:#2C1512;
-    --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -18px rgba(0,0,0,.6);
-    --field-focus:0 0 0 3px rgba(224,172,78,.25);
+    --ground:#171B26;
+    --surface:#262C3D;
+    --surface-2:#2E3547;
+    --ink:#F2F5FA;
+    --muted:#A9B5CC;
+    --faint:#7C8AA6;
+    --line:#333B50;
+    --line-strong:#45506B;
+    --accent:#719DD8;
+    --accent-2:#3C8BCB;
+    --accent-ink:#9FC1E9;
+    --accent-bg:#1D2A42;
+    --accent-fg:#12161F;
+    --good:#4FC38E;
+    --good-bg:#122E24;
+    --warn:#E0A85C;
+    --warn-bg:#2E2413;
+    --err:#E8776D;
+    --err-bg:#331916;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px -18px rgba(0,0,0,.7);
+    --field-focus:0 0 0 3px rgba(113,157,216,.30);
+    --pulse:rgba(113,157,216,.42);
+    --scheme:dark;
   }
+  :root{color-scheme:var(--scheme)}
 
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
@@ -42,6 +95,16 @@
   .page{max-width:1180px;margin:0 auto;padding:clamp(20px,4vw,40px)}
 
   header.top{margin-bottom:26px}
+  .toprow{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .themebtn{
+    display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:12.5px;font-weight:600;
+    color:var(--muted);background:var(--surface);border:1px solid var(--line-strong);
+    border-radius:999px;padding:6px 13px;cursor:pointer;
+    transition:border-color .12s,color .12s,background .12s;
+  }
+  .themebtn:hover{border-color:var(--accent);color:var(--accent-ink)}
+  .themebtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .themebtn .ticon{font-size:13px;line-height:1}
   .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.2em;
     text-transform:uppercase;color:var(--accent-ink);display:flex;align-items:center;gap:.6em}
   .eyebrow::before{content:"";width:22px;height:2px;background:var(--accent);border-radius:2px}
@@ -111,7 +174,7 @@
   button.btn:hover{border-color:var(--accent)}
   button.btn:active{transform:translateY(1px)}
   button.btn:disabled{opacity:.55;cursor:default}
-  button.btn.primary{background:var(--accent);border-color:var(--accent);color:#1a1206}
+  button.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
   button.btn.primary:hover{filter:brightness(1.04)}
   button.btn.ok{background:var(--good-bg);border-color:var(--good);color:var(--good)}
 
@@ -121,7 +184,7 @@
   .card .premiere{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;
     color:var(--accent-ink);background:var(--accent-bg);border-radius:999px;padding:5px 13px;margin-bottom:18px}
   .card .premiere .live{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 2.4s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(184,134,43,.5)}70%{box-shadow:0 0 0 7px rgba(184,134,43,0)}100%{box-shadow:0 0 0 0 rgba(184,134,43,0)}}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 var(--pulse)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
   @media (prefers-reduced-motion:reduce){.card .premiere .live{animation:none}}
   .plist{display:flex;flex-direction:column;gap:2px}
   .prow{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:baseline;padding:8px 0;border-top:1px solid var(--line)}
@@ -141,14 +204,27 @@
 
   footer{margin-top:34px;text-align:center;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--faint)}
 </style>
+<script>
+(function(){
+  try{
+    var t=localStorage.getItem("gatherlinks.theme");
+    if(t==="light"||t==="dark") document.documentElement.setAttribute("data-theme",t);
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
 <div class="page">
 
   <header class="top">
-    <div class="eyebrow">Premiere Link Generator</div>
+    <div class="toprow">
+      <div class="eyebrow">Premiere Link Generator</div>
+      <button class="themebtn" id="themeBtn" type="button" aria-live="polite">
+        <span class="ticon" id="themeIcon" aria-hidden="true">🖥️</span><span id="themeLabel">System</span>
+      </button>
+    </div>
     <h1>Gather every platform link into one post</h1>
-    <p>Search a guest to auto-gather their Apple, YouTube and Spotify links from within your show, paste the platforms that have no public search, and the formatted announcement builds itself — ready to copy into a post.</p>
+    <p>Search an author to auto-gather their Apple Podcast and YouTube links from within your show, paste the platforms that have no public search, and the formatted announcement builds itself — ready to copy into a post.</p>
   </header>
 
   <div class="grid">
@@ -384,6 +460,35 @@
       var t=linkTags[p.key]; if(t){ t.className="tag "+(p.auto?"auto":"manual"); t.textContent=p.auto?"⚡ auto":"✎ paste"; } });
     if(location.hash) history.replaceState(null,"",location.pathname);
     render();
+  });
+
+  // ---- Theme: System → Light → Dark ----
+  var THEME_KEY="gatherlinks.theme";
+  var MODES=[
+    {v:"system", icon:"🖥️", label:"System"},
+    {v:"light",  icon:"☀️", label:"Light"},
+    {v:"dark",   icon:"🌙", label:"Dark"}
+  ];
+  function readTheme(){
+    try{ var t=localStorage.getItem(THEME_KEY); if(t==="light"||t==="dark"||t==="system") return t; }catch(e){}
+    return "system";
+  }
+  function applyTheme(mode){
+    var root=document.documentElement;
+    if(mode==="system") root.removeAttribute("data-theme");
+    else root.setAttribute("data-theme", mode);
+    var m=MODES.filter(function(x){return x.v===mode;})[0]||MODES[0];
+    $("themeIcon").textContent=m.icon;
+    $("themeLabel").textContent=m.label;
+    $("themeBtn").setAttribute("aria-label","Theme: "+m.label+". Click to change.");
+    try{ localStorage.setItem(THEME_KEY, mode); }catch(e){}
+  }
+  var themeMode=readTheme();
+  applyTheme(themeMode);
+  $("themeBtn").addEventListener("click", function(){
+    var i=MODES.map(function(x){return x.v;}).indexOf(themeMode);
+    themeMode=MODES[(i+1)%MODES.length].v;
+    applyTheme(themeMode);
   });
 
   render();
