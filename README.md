@@ -56,21 +56,24 @@ Missing a key just disables that one platform's auto-fill — everything else
 still works. Netlify Functions work the same way (rename `api/` per Netlify's
 convention or add a `netlify.toml` redirect).
 
-## Scoping to your show (recommended)
+## Scoped to Global Book Network
 
-Set these three env vars and a guest-name search will only match episodes of
-**your** show, instead of searching all of Apple/Spotify/YouTube. This is what
-prevents another podcast's episode from being pulled in by mistake:
+Searches are already locked to GBN's own show on each platform, so an author
+name only matches GBN episodes — never another podcast's. These IDs are baked in
+as defaults (they are public, not secrets):
 
-| Variable | Where to find it |
-|---|---|
-| `YOUTUBE_CHANNEL_ID` | YouTube Studio → Settings → Channel → Advanced settings (`UC…`) |
-| `APPLE_PODCAST_ID` | the number after `/id` in your Apple Podcasts show URL |
-| `SPOTIFY_SHOW_ID` | the code in `open.spotify.com/show/<id>` |
+| Platform | ID | Source |
+|---|---|---|
+| YouTube | `UC1fzWsm6INY4aYEIYPGMIBw` | [youtube.com/@GlobalBookNetwork](https://www.youtube.com/@GlobalBookNetwork) |
+| Apple | `1789422185` | [podcasts.apple.com/…/id1789422185](https://podcasts.apple.com/us/podcast/global-book-network/id1789422185) |
+| Spotify | `0jsYkdCqjGzmxK8JkceRa3` | [open.spotify.com/show/…](https://open.spotify.com/show/0jsYkdCqjGzmxK8JkceRa3) |
 
-With them set, the backend pulls your show's episode list and fuzzy-matches the
-guest name against episode titles. Leave any of them blank and that platform
-falls back to an open search.
+Set `YOUTUBE_CHANNEL_ID`, `APPLE_PODCAST_ID`, or `SPOTIFY_SHOW_ID` to point the
+generator at a different show.
+
+The matcher scores each episode on the **author name** and the **book title**
+together, weighting the title slightly higher since titles are more distinctive.
+That is what separates two visits by the same author for different books.
 
 ## Getting the free keys
 

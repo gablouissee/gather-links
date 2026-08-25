@@ -3,15 +3,21 @@
 //
 //   GET /api/gather?q=<guest or episode>&show=<optional show/channel>
 //
-// Scoping (recommended): set these env vars to lock searches to ONE show, so a
-// guest name only matches episodes of your podcast/channel:
-//   YOUTUBE_CHANNEL_ID   — your channel (UC...)
-//   APPLE_PODCAST_ID     — the number after /id in your Apple Podcasts show URL
-//   SPOTIFY_SHOW_ID      — the id in open.spotify.com/show/<id>
-// Without them, each connector does an open search instead.
+// Searches are scoped to one show (see SHOW below) so an author name only
+// matches episodes of that podcast/channel. Override any of them with the
+// YOUTUBE_CHANNEL_ID / APPLE_PODCAST_ID / SPOTIFY_SHOW_ID env vars.
 //
 // Facebook, Amazon, Roku, Fire TV and Global Book Network have no free search
 // API and are never gathered here — they stay manual in the UI.
+
+// Global Book Network's public show IDs, used when no env var overrides them.
+// These are public identifiers, not secrets. Set the matching env var to point
+// the generator at a different show.
+const SHOW = {
+  apple: process.env.APPLE_PODCAST_ID || "1789422185",
+  spotify: process.env.SPOTIFY_SHOW_ID || "0jsYkdCqjGzmxK8JkceRa3",
+  youtube: process.env.YOUTUBE_CHANNEL_ID || "UC1fzWsm6INY4aYEIYPGMIBw",
+};
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -28,11 +34,7 @@ export default async function handler(req, res) {
     youtube: !!process.env.YOUTUBE_API_KEY,
     spotify: !!(process.env.SPOTIFY_CLIENT_ID && process.env.SPOTIFY_CLIENT_SECRET),
   };
-  const scoped = {
-    apple: !!process.env.APPLE_PODCAST_ID,
-    youtube: !!process.env.YOUTUBE_CHANNEL_ID,
-    spotify: !!process.env.SPOTIFY_SHOW_ID,
-  };
+  const scoped = { apple: !!SHOW.apple, youtube: !!SHOW.youtube, spotify: !!SHOW.spotify };
 
   // Guest + book together are the search text; either alone also works.
   const who = [q, book].filter(Boolean).join(" ");
@@ -99,7 +101,7 @@ function bestMatch(q, book, items, getText) {
 
 // --- Apple Podcasts (iTunes — free, no key) ---
 async function gatherApple(term, q, book) {
-  const id = process.env.APPLE_PODCAST_ID;
+  const id = SHOW.apple;
   if (id) {
     const r = await fetch(`https://itunes.apple.com/lookup?id=${encodeURIComponent(id)}&media=podcast&entity=podcastEpisode&limit=200`);
     const d = await r.json();
@@ -128,7 +130,7 @@ async function gatherApple(term, q, book) {
 // --- YouTube (Data API v3 — free key) ---
 async function gatherYouTube(q, book, show) {
   const key = process.env.YOUTUBE_API_KEY;
-  const channel = process.env.YOUTUBE_CHANNEL_ID; // optional scope
+  const channel = SHOW.youtube; // scope to the show's channel
   const who = [q, book].filter(Boolean).join(" ");
   const params = new URLSearchParams({
     part: "snippet", type: "video", maxResults: "5", key,
@@ -164,7 +166,7 @@ async function spotifyToken() {
 }
 async function gatherSpotify(term, q, book) {
   const token = await spotifyToken();
-  const showId = process.env.SPOTIFY_SHOW_ID;
+  const showId = SHOW.spotify;
   if (showId) {
     let items = [];
     for (let off = 0; off < 150; off += 50) {
