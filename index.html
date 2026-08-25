@@ -164,7 +164,7 @@
           </div>
           <input type="text" id="g_book" placeholder="Book title (optional, improves accuracy)" autocomplete="off" style="margin-bottom:9px">
           <input type="text" id="g_show" placeholder="Narrow to a different show (optional) — leave blank for Global Book Network" autocomplete="off">
-          <p class="gather-status" id="gStatus">Searches within Global Book Network and fills Apple &amp; YouTube — no setup needed. Adding the book title helps when an author has been on more than once. Facebook, Amazon, Roku &amp; Fire TV have no search API — paste those below.</p>
+          <p class="gather-status" id="gStatus">Searches within Global Book Network and fills Apple &amp; YouTube — no setup needed. Adding the book title helps when an author has been on more than once. The rest have no free search API — paste those below.</p>
         </div>
 
         <hr class="sep">
@@ -222,7 +222,7 @@
   var PLATFORMS = [
     {key:"youtube",  name:"YouTube",             label:"YouTube:",             brand:"#FF0033", auto:true,  ph:"https://youtube.com/watch?v=..."},
     {key:"facebook", name:"Facebook",            label:"Facebook:",            brand:"#1877F2", auto:false, ph:"https://facebook.com/..."},
-    {key:"spotify",  name:"Spotify",             label:"Spotify:",             brand:"#1DB954", auto:true,  ph:"https://open.spotify.com/..."},
+    {key:"spotify",  name:"Spotify",             label:"Spotify:",             brand:"#1DB954", auto:false, ph:"https://open.spotify.com/..."},
     {key:"apple",    name:"Apple Podcast",       label:"Apple Podcast:",       brand:"#A033C9", auto:true,  ph:"https://podcasts.apple.com/..."},
     {key:"amazon",   name:"Amazon Podcast",      label:"Amazon Podcast:",      brand:"#00A8E1", auto:false, ph:"https://music.amazon.com/podcasts/92023114-c003-403f-9a81-781c6c0a6f44/..."},
     {key:"gbn",      name:"Global Book Network", label:"Global Book Network:", brand:"#B8862B", auto:false, ph:"https://www.globalbooknetwork.tv/..."},

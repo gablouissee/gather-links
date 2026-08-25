@@ -2,8 +2,8 @@
 
 A **free** tool that gathers a premiere's platform links and turns them into a
 ready-to-post announcement. Search a guest or episode and it **auto-fills Apple
-Podcasts, YouTube, and Spotify from the web**; you paste the platforms that have
-no public search API; the formatted block builds itself for you to copy into a post.
+Podcasts and YouTube from the web** with no keys or setup; you paste the platforms
+that have no free search API; the formatted block builds itself to copy into a post.
 
 ```
 Esther L. Sanni
@@ -24,7 +24,7 @@ https://…
 |---|---|---|
 | Apple Podcast | ✅ | iTunes Search API — free, no key |
 | YouTube | ✅ | public channel feed — **no key**; a free API key only adds older episodes |
-| Spotify | ✅ | Spotify Web API — free client credentials |
+| Spotify | ✎ paste | Web API now requires a paid **Spotify Premium** account |
 | Amazon Podcast | ✎ paste | no public search API |
 | Facebook | ✎ paste | Graph API has no open search |
 | Global Book Network | ✎ paste | your own site |
@@ -108,8 +108,8 @@ node scripts/check-html.mjs
 
 - **YouTube** — [Google Cloud Console](https://console.cloud.google.com): new
   project → enable *YouTube Data API v3* → Credentials → API key.
-- **Spotify** — [Spotify Developer Dashboard](https://developer.spotify.com/dashboard):
-  Create app → copy Client ID and Client Secret.
+- **Spotify** — only possible with a paid **Spotify Premium** account; free
+  accounts are blocked from the Web API. Without it Spotify stays a paste field.
 
 ## Features
 
