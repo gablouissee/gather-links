@@ -228,6 +228,10 @@ body{font-family:var(--font-body);background:linear-gradient(160deg,#FFF4E7 0%,#
 pre.summary{margin:0;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;font-family:var(--font-mono);font-size:12.5px;line-height:1.7;color:var(--txt);white-space:pre-wrap;word-break:break-word;max-height:320px;overflow:auto;text-align:left}
 .copy-status{font-size:12px;color:var(--txt3);margin-top:8px;min-height:16px}
 .copy-status.ok{color:var(--green)}
+.save-status{display:none;font-size:13.5px;color:var(--txt3);margin:-16px 0 28px}
+.save-status.visible{display:block}
+.save-status.ok{color:var(--green)}
+.save-status.err{color:var(--red)}
 
 /* UTILITY */
 .color-green{color:var(--green)}
@@ -511,6 +515,7 @@ pre.summary{margin:0;background:var(--surface2);border:1px solid var(--border);b
   <div class="done-emoji">🏆</div>
   <h2 class="done-title">Test Submitted!</h2>
   <p class="done-sub">Thanks, <span id="done-name">—</span>. Your responses are recorded below — copy the summary and send it to your Lioncrest contact.</p>
+  <p class="save-status" id="save-status"></p>
   <div class="done-score color-gold" id="done-score-pct">0%</div>
   <div class="done-score-label">Part 1 Mastery</div>
   <div class="done-breakdown" id="done-breakdown"></div>
@@ -530,6 +535,13 @@ pre.summary{margin:0;background:var(--surface2);border:1px solid var(--border);b
 </div>
 
 <script>
+// ===================== CONFIG =====================
+// Paste your Google Apps Script Web App URL here (ends in /exec) to
+// auto-save each submission as a row in a Google Sheet. Leave blank to
+// skip auto-save — the Copy Summary button on the completion screen
+// still works either way.
+const GOOGLE_SCRIPT_URL = '';
+
 // ===================== DATA =====================
 
 const HOOKS = [
@@ -625,7 +637,8 @@ const state = {
   part2Notes: '',
   part3Q1: '',
   part3Q2: '',
-  part3Q3: ''
+  part3Q3: '',
+  submissionSaved: false
 };
 
 // ===================== ROUTING =====================
@@ -1090,6 +1103,51 @@ function renderDoneScreen() {
 
   const statusEl = document.getElementById('copy-status');
   if (statusEl) { statusEl.textContent = ''; statusEl.classList.remove('ok'); }
+
+  saveSubmission();
+}
+
+function saveSubmission() {
+  if (state.submissionSaved) return;
+  state.submissionSaved = true;
+  if (!GOOGLE_SCRIPT_URL) return;
+
+  const payload = {
+    candidateName: state.candidateName,
+    hooksScore: state.hooksScore,
+    masteryPct: getMasteryPct(),
+    part2Link1: state.part2Link1,
+    part2Link2: state.part2Link2,
+    part2Notes: state.part2Notes,
+    part3Q1: state.part3Q1,
+    part3Q2: state.part3Q2,
+    part3Q3: state.part3Q3,
+    submittedAt: new Date().toISOString()
+  };
+
+  const statusEl = document.getElementById('save-status');
+  if (statusEl) {
+    statusEl.textContent = 'Saving your submission…';
+    statusEl.classList.remove('ok', 'err');
+    statusEl.classList.add('visible');
+  }
+
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  }).then(() => {
+    if (statusEl) {
+      statusEl.textContent = 'Your submission has been sent to Lioncrest.';
+      statusEl.classList.add('ok');
+    }
+  }).catch(() => {
+    if (statusEl) {
+      statusEl.textContent = "Couldn't confirm your submission was saved automatically — please also copy the summary below and send it to your Lioncrest contact.";
+      statusEl.classList.add('err');
+    }
+  });
 }
 
 function copySummary() {
@@ -1121,6 +1179,7 @@ function restartTest() {
   state.part3Q1 = '';
   state.part3Q2 = '';
   state.part3Q3 = '';
+  state.submissionSaved = false;
 
   const nameInput = document.getElementById('candidate-name');
   if (nameInput) nameInput.value = '';
