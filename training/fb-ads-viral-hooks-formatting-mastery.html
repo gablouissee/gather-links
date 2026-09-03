@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facebook Ads 2026 — Mastery Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  /* Atticus Publishing palette — navy #023078 · mid #3C8BCB · light #719DD8 · slate #262C3D */
+  --bg:#171B26;--surface:#262C3D;--surface2:#2E3547;--border:#333B50;
+  --gold:#719DD8;--gold-dim:rgba(113,157,216,0.12);--gold-border:rgba(113,157,216,0.3);
+  --coral:#3C8BCB;--coral-dim:rgba(60,139,203,0.12);--coral-border:rgba(60,139,203,0.3);
+  --teal:#9FC1E9;--teal-dim:rgba(159,193,233,0.12);--teal-border:rgba(159,193,233,0.3);
+  --green:#4FC38E;--red:#E8776D;--accent-fg:#12161F;
+  --txt:#F2F5FA;--txt2:#A9B5CC;--txt3:#7C8AA6;
+  --radius:14px;--font-head:'Fraunces',Georgia,serif;--font-body:'IBM Plex Sans',sans-serif;--font-mono:'IBM Plex Mono',monospace;
+}
+body{font-family:var(--font-body);background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex}
+
+/* WELCOME */
+#s-welcome{flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;position:relative;overflow:hidden}
+#s-welcome::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(113,157,216,0.06) 0%,transparent 70%);top:-200px;left:-100px;pointer-events:none}
+#s-welcome::after{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(159,193,233,0.06) 0%,transparent 70%);bottom:-150px;right:-100px;pointer-events:none}
+.w-eyebrow{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--txt3);margin-bottom:16px}
+.w-title{font-family:var(--font-head);font-size:clamp(32px,5vw,64px);font-weight:800;line-height:1.1;margin-bottom:16px}
+.w-title span.g{color:var(--gold)}
+.w-title span.c{color:var(--coral)}
+.w-sub{font-size:16px;color:var(--txt2);max-width:520px;line-height:1.6;margin-bottom:40px}
+.w-stats{display:flex;gap:24px;margin-bottom:48px;flex-wrap:wrap;justify-content:center}
+.w-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 24px;text-align:center}
+.w-stat .num{font-family:var(--font-head);font-size:28px;font-weight:800}
+.w-stat .lbl{font-family:var(--font-mono);font-size:12px;color:var(--txt2);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+.w-stat.gold .num{color:var(--gold)}
+.w-stat.coral .num{color:var(--coral)}
+.w-stat.teal .num{color:var(--teal)}
+.w-actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.btn{padding:14px 28px;border-radius:10px;border:none;cursor:pointer;font-family:var(--font-body);font-size:15px;font-weight:600;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px}
+.btn-gold{background:var(--gold);color:var(--accent-fg)}
+.btn-gold:hover{background:#8FB3E3;transform:translateY(-2px)}
+.btn-coral{background:var(--coral);color:#fff}
+.btn-coral:hover{background:#56A3DE;transform:translateY(-2px)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--txt)}
+.btn-outline:hover{border-color:var(--txt2);transform:translateY(-2px)}
+.btn-teal{background:var(--teal);color:var(--accent-fg)}
+.btn-teal:hover{transform:translateY(-2px)}
+.btn-sm{padding:10px 18px;font-size:13px}
+.formula-bar{margin-top:40px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 24px;font-size:13px;color:var(--txt2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.formula-bar span.step{color:var(--txt);font-weight:600}
+.formula-bar .arrow{color:var(--txt3)}
+
+/* STUDY SCREEN */
+#s-study{flex-direction:column}
+.study-header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:100}
+.sh-logo{font-family:var(--font-head);font-size:14px;font-weight:800;color:var(--txt2);white-space:nowrap}
+.sh-progress-wrap{flex:1;display:flex;align-items:center;gap:12px}
+.sh-progress-bar{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.sh-progress-fill{height:100%;border-radius:3px;transition:width 0.5s ease;background:var(--gold)}
+.sh-counter{font-size:13px;color:var(--txt2);white-space:nowrap;min-width:80px;text-align:right}
+.sh-mastery{background:var(--surface2);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;white-space:nowrap}
+.sh-mastery .pct{color:var(--gold)}
+.sh-home{padding:6px 12px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--txt2);cursor:pointer;font-size:12px;font-family:var(--font-body)}
+.sh-home:hover{border-color:var(--txt2);color:var(--txt)}
+
+.study-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;min-height:0}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;max-width:760px;width:100%;padding:48px;position:relative;overflow:hidden;animation:fadeIn 0.3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.card::before{content:attr(data-num);position:absolute;right:-10px;top:-20px;font-family:var(--font-head);font-size:160px;font-weight:800;opacity:0.04;color:#fff;line-height:1;pointer-events:none;user-select:none}
+.card.hooks-card{border-color:var(--gold-border);background:linear-gradient(135deg,var(--surface) 0%,rgba(113,157,216,0.04) 100%)}
+.card.formats-card{border-color:var(--coral-border);background:linear-gradient(135deg,var(--surface) 0%,rgba(60,139,203,0.04) 100%)}
+.card-tag{display:inline-block;font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:20px}
+.card-tag.hooks{background:var(--gold-dim);color:var(--gold)}
+.card-tag.formats{background:var(--coral-dim);color:var(--coral)}
+.card-name{font-family:var(--font-head);font-size:clamp(22px,4vw,36px);font-weight:800;line-height:1.15;margin-bottom:24px;color:var(--txt)}
+.hooks-card .card-name{color:var(--gold)}
+.formats-card .card-name{color:var(--coral)}
+.card-structure{font-size:13px;color:var(--txt3);margin-bottom:16px;font-family:var(--font-mono);letter-spacing:0.5px}
+.card-structure span{color:var(--coral);font-weight:500}
+.card-example{background:var(--surface2);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:24px;font-size:15px;color:var(--txt);font-style:italic;line-height:1.6}
+.formats-card .card-example{border-left-color:var(--coral)}
+.card-example-label{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);margin-bottom:8px;font-style:normal}
+.card-rationale-label{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px}
+.card-rationale{font-size:15px;color:var(--txt2);line-height:1.75}
+
+/* CARD NAV */
+.card-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:28px;max-width:760px;width:100%}
+.nav-btn{padding:12px 28px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--txt);cursor:pointer;font-family:var(--font-body);font-size:14px;font-weight:600;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
+.nav-btn:hover:not(:disabled){border-color:var(--txt2);transform:translateY(-1px)}
+.nav-btn:disabled{opacity:0.3;cursor:not-allowed}
+.nav-btn.primary{background:var(--gold);border-color:var(--gold);color:var(--accent-fg)}
+.nav-btn.primary.formats{background:var(--coral);border-color:var(--coral);color:#fff}
+.nav-btn.primary:hover:not(:disabled){transform:translateY(-1px);opacity:0.9}
+.card-dots{display:flex;gap:6px;align-items:center}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--surface2);transition:all 0.2s;border:1px solid var(--border)}
+.dot.active{background:var(--gold);border-color:var(--gold);width:20px;border-radius:3px}
+.formats-mode .dot.active{background:var(--coral);border-color:var(--coral)}
+
+/* QUIZ OVERLAY */
+#s-quiz{position:fixed;inset:0;background:rgba(9,9,15,0.94);z-index:200;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 20px;overflow-y:auto;backdrop-filter:blur(4px)}
+.quiz-container{max-width:780px;width:100%;margin:0 auto}
+.quiz-header{text-align:center;margin-bottom:32px}
+.quiz-badge{display:inline-block;font-family:var(--font-mono);background:var(--teal-dim);border:1px solid var(--teal-border);color:var(--teal);font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:14px}
+.quiz-title{font-family:var(--font-head);font-size:clamp(20px,4vw,30px);font-weight:800;margin-bottom:8px}
+.quiz-sub{font-size:14px;color:var(--txt2)}
+.quiz-progress-dots{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.qpd{width:8px;height:8px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);transition:all 0.2s}
+.qpd.answered{background:var(--teal);border-color:var(--teal)}
+.qpd.correct{background:var(--green);border-color:var(--green)}
+.qpd.wrong{background:var(--red);border-color:var(--red)}
+.quiz-question-block{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:16px;transition:border-color 0.2s}
+.quiz-question-block.correct-block{border-color:rgba(79,195,142,0.4)}
+.quiz-question-block.wrong-block{border-color:rgba(232,119,109,0.4)}
+.q-num{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px}
+.q-text{font-size:15px;color:var(--txt);line-height:1.65;margin-bottom:18px;font-weight:500}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.q-opt{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:14px;color:var(--txt2);transition:all 0.18s;text-align:left;display:flex;align-items:flex-start;gap:10px;line-height:1.4}
+.q-opt:hover:not(.locked){background:var(--teal-dim);border-color:var(--teal-border);color:var(--txt)}
+.q-opt.selected{background:var(--teal-dim);border-color:var(--teal);color:var(--txt);font-weight:600}
+.q-opt.correct{background:rgba(79,195,142,0.12);border-color:var(--green);color:var(--txt)}
+.q-opt.wrong{background:rgba(232,119,109,0.12);border-color:var(--red);color:var(--txt2)}
+.q-opt.reveal-correct{background:rgba(79,195,142,0.12);border-color:var(--green);color:var(--txt)}
+.q-opt .opt-letter{min-width:22px;height:22px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:var(--font-head);transition:all 0.2s}
+.q-opt.selected .opt-letter{background:var(--teal);color:var(--accent-fg)}
+.q-opt.correct .opt-letter{background:var(--green);color:var(--accent-fg)}
+.q-opt.wrong .opt-letter{background:var(--red);color:var(--accent-fg)}
+.q-opt.reveal-correct .opt-letter{background:var(--green);color:var(--accent-fg)}
+.q-opt.locked{cursor:not-allowed}
+.q-exp{margin-top:14px;background:rgba(79,195,142,0.06);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;color:var(--txt2);line-height:1.6;display:none}
+.q-exp.visible{display:block}
+.q-exp-wrong{border-left-color:var(--red);background:rgba(232,119,109,0.06)}
+
+.quiz-footer{text-align:center;margin-top:24px;padding-bottom:40px}
+.quiz-score-display{font-family:var(--font-head);font-size:48px;font-weight:800;margin-bottom:8px;display:none}
+.quiz-score-display.visible{display:block}
+.quiz-score-label{font-size:15px;color:var(--txt2);margin-bottom:24px;display:none}
+.quiz-score-label.visible{display:block}
+.quiz-footer-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.quiz-msg{font-size:16px;margin-bottom:20px;font-weight:600;display:none}
+.quiz-msg.visible{display:block}
+
+/* COMPLETION */
+#s-done{flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;min-height:100vh}
+.done-emoji{font-size:60px;margin-bottom:20px}
+.done-title{font-family:var(--font-head);font-size:clamp(28px,5vw,52px);font-weight:800;margin-bottom:12px}
+.done-sub{font-size:16px;color:var(--txt2);max-width:480px;line-height:1.6;margin-bottom:32px}
+.done-score{font-family:var(--font-head);font-size:80px;font-weight:800;line-height:1;margin-bottom:8px}
+.done-score-label{font-family:var(--font-mono);font-size:14px;color:var(--txt2);letter-spacing:2px;text-transform:uppercase;margin-bottom:32px}
+.done-breakdown{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+.done-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 24px;min-width:140px}
+.done-stat .dsn{font-family:var(--font-head);font-size:28px;font-weight:800}
+.done-stat .dsl{font-family:var(--font-mono);font-size:12px;color:var(--txt2);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+
+/* SECTION TRANSITION */
+#s-section-done{flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
+.sd-icon{font-size:56px;margin-bottom:20px}
+.sd-title{font-family:var(--font-head);font-size:clamp(24px,4vw,44px);font-weight:800;margin-bottom:12px}
+.sd-sub{font-size:15px;color:var(--txt2);max-width:480px;line-height:1.6;margin-bottom:32px}
+.sd-stats{display:flex;gap:16px;justify-content:center;margin-bottom:32px;flex-wrap:wrap}
+.sd-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px;text-align:center}
+.sd-stat .n{font-family:var(--font-head);font-size:24px;font-weight:800}
+.sd-stat .l{font-family:var(--font-mono);font-size:11px;color:var(--txt2);margin-top:2px;letter-spacing:1px;text-transform:uppercase}
+
+/* UTILITY */
+.mt-auto{margin-top:auto}
+.color-green{color:var(--green)}
+.color-red{color:var(--red)}
+.color-gold{color:var(--gold)}
+.color-coral{color:var(--coral)}
+.color-teal{color:var(--teal)}
+.sparkle{animation:sparkle 0.5s ease}
+@keyframes sparkle{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+
+/* MINI QUIZ SKIP */
+.skip-link{font-size:12px;color:var(--txt3);cursor:pointer;text-decoration:underline;margin-top:16px;display:block}
+.skip-link:hover{color:var(--txt2)}
+</style>
+</head>
+<body>
+
+<!-- WELCOME SCREEN -->
+<div class="screen active" id="s-welcome">
+  <div class="w-eyebrow">Facebook Ads 2026 · Marketing Team</div>
+  <h1 class="w-title"><span class="g">Ad Hooks</span> &amp; <span class="c">Viral Formats</span><br>Mastery Training</h1>
+  <p class="w-sub">Master recognition of the top 30 ad hooks and 50 viral ad formats. Every 5 cards you'll face a quick knowledge check — worded to test real understanding, not memorization.</p>
+  <div class="w-stats">
+    <div class="w-stat gold"><div class="num">30</div><div class="lbl">Ad Hooks</div></div>
+    <div class="w-stat coral"><div class="num">50</div><div class="lbl">Viral Formats</div></div>
+    <div class="w-stat teal"><div class="num">16</div><div class="lbl">Knowledge Checks</div></div>
+    <div class="w-stat"><div class="num" style="color:var(--teal)">95%</div><div class="lbl">Target Mastery</div></div>
+  </div>
+  <div class="w-actions">
+    <button class="btn btn-gold" onclick="startSection('hooks')">&#9733; Study Hooks (1–30)</button>
+    <button class="btn btn-coral" onclick="startSection('formats')">&#9650; Study Formats (1–50)</button>
+  </div>
+  <div class="formula-bar">
+    <span style="font-family:var(--font-mono);color:var(--txt3);font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase">Master Formula</span>
+    &nbsp;
+    <span class="step">Hook</span><span class="arrow">→</span>
+    <span class="step">Problem</span><span class="arrow">→</span>
+    <span class="step">Offer</span><span class="arrow">→</span>
+    <span class="step">Benefit</span><span class="arrow">→</span>
+    <span class="step">Trust</span><span class="arrow">→</span>
+    <span class="step">CTA</span>
+  </div>
+</div>
+
+<!-- STUDY SCREEN -->
+<div class="screen" id="s-study" style="flex-direction:column">
+  <header class="study-header">
+    <div class="sh-logo">Ad Mastery</div>
+    <div class="sh-progress-wrap">
+      <div class="sh-progress-bar"><div class="sh-progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+    <div class="sh-counter" id="sh-counter">1 of 30</div>
+    <div class="sh-mastery">Mastery: <span class="pct" id="sh-mastery-pct">0%</span></div>
+    <button class="sh-home" onclick="goTo('welcome')">&#8592; Home</button>
+  </header>
+  <div class="study-body" id="study-body">
+    <div class="card" id="main-card" data-num="1">
+      <!-- rendered by JS -->
+    </div>
+    <div class="card-nav" id="card-nav">
+      <button class="nav-btn" id="btn-prev" onclick="prevCard()">&#8592; Previous</button>
+      <div class="card-dots" id="card-dots"></div>
+      <button class="nav-btn primary" id="btn-next" onclick="nextCard()">Next &#8594;</button>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION DONE SCREEN -->
+<div class="screen" id="s-section-done" style="flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;min-height:100vh">
+  <div class="sd-icon" id="sd-icon">🎯</div>
+  <h2 class="sd-title" id="sd-title">Section Complete!</h2>
+  <p class="sd-sub" id="sd-sub">You've finished studying all the Hooks. Ready to tackle Viral Ad Formats?</p>
+  <div class="sd-stats" id="sd-stats"></div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center" id="sd-actions"></div>
+</div>
+
+<!-- QUIZ OVERLAY -->
+<div class="screen" id="s-quiz" style="display:none;position:fixed;inset:0;background:rgba(9,9,15,0.94);z-index:200;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 20px;overflow-y:auto">
+  <div class="quiz-container">
+    <div class="quiz-header">
+      <div class="quiz-badge">⚡ Knowledge Check</div>
+      <h2 class="quiz-title" id="quiz-title">Quick Check — Hooks 1–5</h2>
+      <p class="quiz-sub" id="quiz-sub">Answer all 5 questions. These are worded differently to test real recognition — not memorization.</p>
+      <div class="quiz-progress-dots" id="quiz-dots"></div>
+    </div>
+    <div id="quiz-questions"></div>
+    <div class="quiz-footer">
+      <div class="quiz-score-display" id="quiz-score-display"></div>
+      <div class="quiz-score-label" id="quiz-score-label"></div>
+      <div class="quiz-msg" id="quiz-msg"></div>
+      <div class="quiz-footer-btns" id="quiz-footer-btns">
+        <button class="btn btn-teal" id="btn-submit" onclick="submitQuiz()" style="display:none">Submit Answers</button>
+      </div>
+      <span class="skip-link" onclick="skipQuiz()">Skip for now</span>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETION SCREEN -->
+<div class="screen" id="s-done" style="flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;min-height:100vh">
+  <div class="done-emoji">🏆</div>
+  <h2 class="done-title">Training Complete!</h2>
+  <p class="done-sub">You've completed both sections. Here's your final mastery score across all 16 knowledge checks.</p>
+  <div class="done-score color-gold" id="done-score-pct">0%</div>
+  <div class="done-score-label">Overall Mastery</div>
+  <div class="done-breakdown" id="done-breakdown"></div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+    <button class="btn btn-gold" onclick="startSection('hooks')">Review Hooks</button>
+    <button class="btn btn-coral" onclick="startSection('formats')">Review Formats</button>
+    <button class="btn btn-outline" onclick="goTo('welcome')">Back to Home</button>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+
+const HOOKS = [
+{id:1,name:"The Question Hook",example:'"Finished your manuscript but not sure what comes next?"',rationale:"Questions force the brain to answer involuntarily. When the question matches the reader's exact situation, they feel seen and understood — creating an emotional pause before a logical decision to keep reading."},
+{id:2,name:"The Double Question Hook",example:'"Tired of guessing? Tired of waiting?"',rationale:"Two short questions in a row create a rhythm and build momentum. Each question layers the pain deeper, making the reader feel increasingly understood. Works especially well in video as an opening voiceover."},
+{id:3,name:"The Identity Hook",example:'"For authors who are serious about publishing professionally."',rationale:"People buy into who they believe they are. When the hook names a specific identity — serious, ambitious, professional — the right audience self-selects in, and the wrong audience self-selects out. This is one of the most powerful qualifying tools in copywriting."},
+{id:4,name:"The Before Action Hook",example:'"Before you publish your book, get professional feedback first."',rationale:"This format positions the brand as a necessary step before a decision the reader is already about to make. It creates urgency without pressure, and feels like advice rather than a sales pitch."},
+{id:5,name:"The Pain Point Hook",example:'"Publishing alone is overwhelming — and most authors don\'t know where to start."',rationale:"Naming a pain point out loud creates instant connection. The reader feels understood rather than sold to. Effective pain hooks are specific, not generic — the more precise the pain, the stronger the connection."},
+{id:6,name:"The Curiosity Gap Hook",example:'"Here\'s what most authors don\'t realize until it\'s too late."',rationale:"The human brain cannot tolerate an open loop. When you tease information the reader doesn't have yet, they are compelled to keep reading just to close the gap. This is one of the highest-engagement hook formats available."},
+{id:7,name:"The Contrarian Hook",example:'"Stop trying to figure out publishing on your own."',rationale:"Leading with the opposite of conventional wisdom creates a pattern interrupt. It challenges what the reader currently believes and positions the brand as the smarter alternative. Works best when immediately followed by a compelling reason."},
+{id:8,name:"The Specificity Hook",example:'"In 27 days, this author went from unfinished manuscript to submitted and reviewed."',rationale:"Specificity signals truth. Vague claims like 'fast results' are ignored. Specific numbers and timelines feel real and earned. The brain processes specific figures as evidence, not just claims."},
+{id:9,name:"The Warning Hook",example:'"If you\'re about to publish without feedback, read this first."',rationale:"Warnings trigger a protective instinct. The reader pauses because they believe they might be about to make a mistake. This hook format implies the brand has important knowledge the reader doesn't — which earns attention before making any offer."},
+{id:10,name:"The Confession Hook",example:'"I\'ll be honest with you — most authors are skipping the most important step."',rationale:"Confessions feel human and disarming. When a brand admits something instead of boasting, the reader lowers their guard. This format builds trust fast and makes the rest of the message feel more credible."},
+{id:11,name:"The Reframe Hook",example:'"It\'s not your writing that\'s holding you back. It\'s not knowing the next step."',rationale:"Reframes shift blame away from the reader and redirect it toward an external, solvable problem. This makes the reader feel relieved instead of defensive — which opens them to the offer."},
+{id:12,name:"The Future Pacing Hook",example:'"Imagine opening your inbox to see your manuscript has been reviewed by a professional editorial team."',rationale:"Future pacing bypasses current skepticism by placing the reader mentally into the desired outcome. It activates emotion before logic — which is the right sequence for high-converting copy."},
+{id:13,name:"The Social Proof Hook",example:'"Over 4,000 authors have already submitted their manuscript for a free evaluation."',rationale:"Humans are wired to follow what others are already doing. When a large, credible number is placed at the very beginning of the ad, it signals safety and trust before the reader even processes the offer."},
+{id:14,name:"The Negative Qualification Hook",example:'"This is not for everyone. Only authors ready to take the next serious step."',rationale:"Exclusivity creates desire. When an ad says it is not for everyone, the reader immediately wants to qualify themselves as someone it IS for. This also filters for higher quality leads by repelling people looking for easy or free options."},
+{id:15,name:"The Relatability Hook",example:'"I know how it feels to finish writing something you\'re proud of — and then have no idea what to do next."',rationale:"Empathy before the offer is one of the most trust-building moves in advertising. It says: we understand your experience. Readers who feel understood are far more likely to take action than readers who feel sold to."},
+{id:16,name:"The Direct Address Hook",example:'"Attention: First-time authors with a completed manuscript."',rationale:"Calling out the exact person the ad is for creates an instant stop-scroll moment. The reader feels the ad was written personally for them. Simple, direct, and incredibly effective for targeted audiences."},
+{id:17,name:"The Story Opener Hook",example:'"It was 11pm and she had just typed the last sentence of her manuscript — and had no idea what came next."',rationale:"Stories activate a different part of the brain than direct claims. The reader enters a narrative instead of processing a sales pitch, which means resistance drops. A good story hook makes the reader feel like they are watching something, not being sold something."},
+{id:18,name:"The Comparison Hook",example:'"Most authors guess at publishing. The most successful ones get feedback first."',rationale:"Comparisons position the reader in one of two groups — the smart group or the average group. The reader naturally wants to align with the better outcome, which makes the offer feel like the obvious next step."},
+{id:19,name:"The Momentum Killer Hook",example:'"You\'re almost there. Here\'s what stops most authors at this exact stage."',rationale:"This hook meets the reader at the finish line — close to success — and warns them of the most common failure point. It speaks to proximity to success, which creates high emotional engagement."},
+{id:20,name:"The Outcome-First Hook",example:'"Here\'s what happens when a professional editorial team reviews your manuscript before you publish."',rationale:"Leading with the outcome reverses the traditional pitch structure. Instead of building toward what happens, you reveal the result first and let curiosity pull the reader backward into the explanation."},
+{id:21,name:"The Number Drop Hook",example:'"83% of first-time authors skip this step — and regret it later."',rationale:"Numbers in hooks signal research and authority. They also trigger comparison — the reader immediately wants to know if they are in that percentage or not. The combination of a statistic and a consequence is one of the highest-curiosity hook combinations."},
+{id:22,name:"The Time-Based Hook",example:'"Before the end of this month, your manuscript could already be reviewed."',rationale:"Time references create urgency without fake deadlines. They anchor the offer to a near-future outcome, making the action feel attainable and immediate rather than distant or abstract."},
+{id:23,name:"The Challenge Hook",example:'"Can you spot the one thing that separates a published author from an unpublished one?"',rationale:"Challenges activate the ego and trigger competitive instinct. The reader wants to answer correctly — and the only way to find out if they did is to keep reading. Gamification inside a hook is extremely effective for scroll-stopping."},
+{id:24,name:"The Disqualifier Hook",example:'"If you\'re still not sure you have a manuscript worth publishing, this probably isn\'t for you."',rationale:"Reverse psychology applied to advertising. Telling people they might not qualify makes the ones who do qualify lean in harder. It also filters out low-quality leads at the earliest possible moment in the funnel."},
+{id:25,name:"The Revelation Hook",example:'"What the publishing industry doesn\'t talk about — and why most authors get stuck."',rationale:"Any hook that implies hidden or suppressed information creates immediate curiosity. The reader feels they are about to get access to something they were previously blocked from. This format positions the brand as an insider."},
+{id:26,name:"The Bold Claim Hook",example:'"This one step could be the difference between your book sitting in a drawer and being on a shelf."',rationale:"A bold, high-stakes statement demands attention. It sets the emotional stakes high enough to make the reader pause and consider what they might be missing — without overpromising with unbelievable specifics."},
+{id:27,name:"The Empathy Stack Hook",example:'"You wrote the book. You edited it. You\'re proud of it. Now what?"',rationale:"Stacking validations before introducing the problem is disarming and powerful. The reader feels affirmed before they feel challenged, which makes them receptive to the offer rather than defensive about where they are."},
+{id:28,name:"The Pattern Interrupt Hook",example:'"Wait. Before you click away — does your manuscript actually have a next step?"',rationale:"Acknowledging that the reader might leave — and using that as the hook — breaks the expected advertising pattern. The reader's brain pauses to process the unexpected meta-awareness, creating a genuine moment of attention."},
+{id:29,name:"The Simple Promise Hook",example:'"One conversation. That\'s all it takes to know your next publishing step."',rationale:"Simplicity is underrated. When every other ad promises complex transformations, a short and believable promise cuts through. The simpler and more specific the promise, the more credible it feels in a noisy feed."},
+{id:30,name:"The Newsworthy Hook",example:'"Something just shifted in how serious authors are approaching publishing in 2026."',rationale:"News framing triggers the same neural response as a breaking headline. The reader feels like they are about to learn something timely and relevant — which makes the ad feel like information rather than advertising."}
+];
+
+const FORMATS = [
+{id:1,name:"The Question-Question Format",structure:"Question → Question → Answer → Offer",example:'"Not sure where to begin? Not sure who to trust? Here\'s the one step serious authors take first."',rationale:"Rhythm and repetition. Two questions build emotional momentum before the answer lands. The brain anticipates relief by the third line, making the offer feel satisfying and earned rather than pushed."},
+{id:2,name:"The 90-Day Results Format",structure:"Timeframe → Transformation → Proof → CTA",example:'"In 90 days, here\'s what changed for this author after getting professional feedback."',rationale:"Specific timeframes make transformation believable. 90 days is long enough to be credible and short enough to feel achievable. This format anchors the outcome to a real-world clock, making results feel earned."},
+{id:3,name:"The Before & After Format",structure:"Before State → Turning Point → After State → CTA",example:'"Before: Confused about publishing. After: Clear plan, manuscript reviewed, next steps mapped."',rationale:"The brain is wired for contrast. Before-and-after structures satisfy the narrative need for resolution. They show what life looks like on the other side, which is the most effective emotional motivator in advertising."},
+{id:4,name:"The Day-in-the-Life Format",structure:"Morning → Challenge → Discovery → Resolution",example:'"Monday morning. Manuscript done. Zero idea what to do. By Friday, she had a full editorial review."',rationale:"This format makes abstract outcomes feel lived-in and real. By grounding the story in a specific day and time, readers project themselves into the experience, creating empathy and identification."},
+{id:5,name:"The Myth vs. Truth Format",structure:"Common Belief → Truth Reveal → Offer as the Correct Path",example:'"Myth: You need a literary agent to publish professionally. Truth: There is a better first step."',rationale:"Challenging a widely held belief positions the brand as an educator and authority. It creates immediate engagement from anyone who held the myth — which is usually most of the audience."},
+{id:6,name:"The Here's What Happened Format",structure:"Casual Story Open → Problem → Discovery → CTA",example:'"Here\'s what happened when one author submitted her manuscript sample before trying to publish."',rationale:"Casual narration lowers defenses. The reader follows along like they are hearing a conversation, not watching an ad. The result is longer view time and higher engagement throughout the creative."},
+{id:7,name:"The Listicle Format",structure:"Numbered List of Problems or Benefits → CTA",example:'"5 things every author should do before publishing their first book."',rationale:"Lists promise organized, digestible information. The numbered format creates a completion instinct — readers want to get through all the items. Each item is a micro-hook that extends engagement."},
+{id:8,name:"The Confession Format",structure:"Honest Admission → Why It Matters → Offer as the Better Way",example:'"We\'ll be honest — most authors who come to us waited too long to ask for help."',rationale:"Confessions from a brand feel rare and trustworthy. Readers are used to brands overselling. When a brand admits something imperfect, it signals credibility and disarms resistance before the pitch lands."},
+{id:9,name:"The Warning Format",structure:"Alert → The Mistake → Consequence → Offer as the Solution",example:'"Warning: Publishing without professional feedback is one of the most costly mistakes first-time authors make."',rationale:"Protective instincts override sales resistance. A warning suggests the brand is on the reader's side. The reader stops to absorb information that feels like it is protecting them, not selling to them."},
+{id:10,name:"The Step-by-Step Tutorial Format",structure:"Promise a Process → Deliver 3–5 Actionable Steps → CTA",example:'"Here is the exact process serious authors follow before submitting their manuscript."',rationale:"Tutorial formats position the brand as an expert guide. Readers stay engaged because they expect to receive useful information. The CTA at the end feels like a natural next step rather than an intrusive pitch."},
+{id:11,name:"The POV Format",structure:"First-Person Perspective → Relatable Situation → CTA",example:'"POV: You just finished your manuscript and have no idea what to do next."',rationale:"POV formats place the viewer inside the experience. Popularized on short-form video, this format creates instant empathy and has extremely high scroll-stop rates because readers self-identify within the first second."},
+{id:12,name:"The Reply to Comment Format",structure:"Repost a Real or Simulated Question → Answer It as an Ad",example:'"Someone asked: \'Is it worth getting a manuscript evaluation?\' Here\'s the honest answer."',rationale:"This format mimics organic social interaction, which lowers the perception of it being an ad. It also works as a pre-handled FAQ structure that naturally neutralizes common objections before they arise."},
+{id:13,name:"The Testimonial Carousel Format",structure:"Multiple Customer Stories → Pattern of Results → CTA",example:"Three slides: Author 1 result → Author 2 result → Author 3 result → Submit your manuscript",rationale:"Social proof compounds when delivered in a sequence. Each story reinforces the last, creating a pattern the reader accepts as the norm rather than the exception — and consensus drives action."},
+{id:14,name:"The Green Screen Explainer Format",structure:"Presenter + Background Image → Walkthrough → CTA",example:"Someone standing in front of a manuscript page on screen, explaining what happens in an editorial review.",rationale:"The green screen format draws attention because the layered visual is unusual. It signals explanation and education — two things that justify longer watch times on video ads in a feed environment."},
+{id:15,name:"The Side-by-Side Comparison Format",structure:"Option A vs. Option B → Clear Winner → CTA",example:'"Publishing without guidance vs. publishing with a professional evaluation. Here\'s the difference."',rationale:"Comparisons simplify complex decisions. Readers prefer ads that help them decide rather than ads that just persuade them. Framing the brand as the obviously better option through evidence is highly converting."},
+{id:16,name:"The Behind the Scenes Format",structure:"Show the Process → Build Trust → Offer Access",example:'"Here\'s what actually happens when your manuscript goes through our editorial review."',rationale:"Transparency builds credibility. Showing the process behind the product removes ambiguity and replaces it with confidence. Readers who understand how something works are significantly more likely to trust and act on it."},
+{id:17,name:"The Unboxing-Reveal Format",structure:"Build Anticipation → Reveal → Reaction → CTA",example:'"She opened the email with her editorial feedback. Here\'s what it said — and her reaction."',rationale:"Reveal formats leverage suspense and anticipation. The emotional arc from expectation to reaction is deeply engaging and keeps viewers watching until the end, improving video completion rates dramatically."},
+{id:18,name:"The Expert Breakdown Format",structure:"Authority Figure → Explain a Problem → Present Solution → CTA",example:'"A publishing advisor explains the three things most authors miss before their first submission."',rationale:"Authority-led explanations are persuasive because they borrow credibility from expertise. When an expert explains a problem, the solution they recommend carries automatic weight and trust."},
+{id:19,name:"The 'I Tried X for 30 Days' Format",structure:"Challenge Accepted → Daily Journey → Final Result → CTA",example:'"I got professional feedback on my manuscript for 30 days and here\'s what changed."',rationale:"Challenge formats create a narrative thread that rewards viewers who watch to the end. They are extremely effective for building engagement because the viewer is emotionally invested in the outcome before the offer even appears."},
+{id:20,name:"The 'Nobody Talks About This' Format",structure:"Suppressed Information → Reveal → Offer as Access",example:'"Nobody in the publishing space talks about what happens between finishing a manuscript and getting it in front of readers."',rationale:"Anything framed as suppressed, overlooked, or hidden creates urgency and curiosity. The reader feels like they are being let in on something important that others are missing — elevating perceived value."},
+{id:21,name:"The Trending Audio + Text Format",structure:"Trending Audio → Text Overlay → CTA",example:"Trending audio playing in background, text: \"When you finally get professional feedback on your manuscript.\"",rationale:"Borrowing the emotional energy of trending audio is one of the most efficient ways to trigger feelings before your message lands. The audio does the emotional heavy lifting; the text delivers the offer."},
+{id:22,name:"The Storytime Format",structure:"Conversational Story → Conflict → Resolution → Offer",example:'"Let me tell you about an author who almost self-published without getting feedback. What happened next surprised everyone."',rationale:"Storytelling is the oldest persuasion mechanism. When the story is relatable, readers follow along without consciously processing that they are being sold something. The offer at the end lands with significantly less resistance."},
+{id:23,name:"The Hot Take Format",structure:"Controversial Opinion → Defence → Offer as Proof",example:'"Hot take: Most first-time authors are not ready to publish — but not for the reason they think."',rationale:"Controversy creates engagement. A bold opinion invites agreement or argument, and both responses generate attention and interaction. The follow-up explanation positions the brand as thoughtful and substantive."},
+{id:24,name:"The Checklist Format",structure:"List of Questions or Criteria → Reader Self-Evaluates → CTA",example:'"Before you publish your manuscript, can you check off all five of these?"',rationale:"Checklists gamify self-assessment. The reader measures themselves against each item, and if they cannot check something off, the gap becomes the reason to take action. This generates high-intent, self-qualified leads."},
+{id:25,name:"The 'What I Wish I Knew' Format",structure:"Hindsight Framing → Key Lessons → Offer as the Shortcut",example:'"What I wish I knew before submitting my manuscript without professional feedback."',rationale:"Hindsight framing implies lived experience and real knowledge. The reader absorbs the lessons as warnings they can still avoid — making the offer feel like a shortcut to a better outcome that the speaker took the hard way."},
+{id:26,name:"The Founder Story Format",structure:"Origin Story → Problem Discovered → Mission Created → CTA",example:'"We started this because we kept seeing talented authors publish before they were ready."',rationale:"Founder stories humanize a brand and create emotional investment. When a company's origin is tied to a real problem they witnessed, the audience connects the offer to a genuine mission rather than a profit motive."},
+{id:27,name:"The Product Demo Format",structure:"Show What Happens → Walk Through the Experience → Explain the Value → CTA",example:'"Here\'s what an actual manuscript evaluation looks like — start to finish."',rationale:"Demonstrations remove the unknown. When a reader can see exactly what they are getting, purchase resistance drops significantly. This format works best for services where the process is not widely understood."},
+{id:28,name:"The Customer Journey Format",structure:"Where They Started → What Changed → Where They Are Now → CTA",example:'"Six months ago, she had a finished manuscript and no plan. Here\'s where she is today."',rationale:"Journey narratives create aspiration and belief simultaneously. The reader can see themselves at the starting point and be pulled toward the outcome — functioning as long-form, compelling social proof."},
+{id:29,name:"The FAQ Format",structure:"Common Question → Direct Answer → CTA",example:'"Q: Is a manuscript evaluation really worth it before publishing? A: Here\'s what the data shows."',rationale:"FAQ formats meet the reader where their objections already are. By answering the most common concerns upfront, the brand removes hesitation before it has a chance to prevent action from happening."},
+{id:30,name:"The Agitate-Solution Format",structure:"Problem → Make the Problem Worse → Solution → CTA",example:'"You finished your manuscript. Now comes the part nobody warns you about — and most authors get it wrong."',rationale:"Agitating the problem deepens emotional investment before the solution arrives. The reader feels the pain more acutely, which makes the relief of the offer feel proportionally more valuable."},
+{id:31,name:"The Open Loop Format",structure:"Promise an Answer → Delay It → Deliver It → CTA",example:'"There is one thing that separates published authors from unpublished ones. I\'ll tell you what it is in a moment."',rationale:"Open loops exploit the brain's drive for completion. The reader cannot stop watching or reading because they are waiting for the promised information. Watch time and read-through rates spike dramatically with this format."},
+{id:32,name:"The 'This vs. That' Format",structure:"Two Options → Clear Contrast → Position Offer as the Right Choice",example:'"Self-publishing blind vs. submitting with a professional evaluation first. One costs more in the long run."',rationale:"Binary choice framing simplifies decision-making. When the reader sees two options with a clear winner, the preferred choice feels obvious — and the brand is positioned as the natural, logical path forward."},
+{id:33,name:"The Screenshot Proof Format",structure:"Show Real Results → Contextualize → Offer Access",example:"Screenshot of editorial feedback or author testimonial with context → 'This is what our evaluation looks like.'",rationale:"Screenshots signal authenticity in a way polished graphics cannot. Even staged-looking screenshots perform well because they feel closer to real evidence than designed assets — proximity to reality builds trust."},
+{id:34,name:"The Talking Head Format",structure:"Person on Camera → Direct Conversation → CTA",example:"Publishing advisor speaking directly to camera explaining what a manuscript evaluation includes.",rationale:"Eye contact and direct speech create parasocial connection. The viewer feels like they are being spoken to personally, not watching an advertisement. Talking head formats consistently score highest on trust metrics."},
+{id:35,name:"The Text-Only Scroll Format",structure:"Black Text on White/Minimal Background → Scrolling Key Points → CTA",example:"Plain text ad reading through the offer point by point with no video or image at all.",rationale:"Text-only formats stand out in a feed full of designed graphics and produced videos. Simplicity reads as confidence. The absence of production signals the message is the point, not the packaging."},
+{id:36,name:"The UGC Format",structure:"Real Customer → Real Experience → Real Recommendation → CTA",example:"An author recording herself talking about her experience submitting a manuscript for evaluation.",rationale:"User-generated content is the most trusted ad format in existence. When someone who is not paid by the brand recommends it, the credibility is exponentially higher than anything the brand could produce itself."},
+{id:37,name:"The Aspirational Lifestyle Format",structure:"Desired Outcome Shown → Emotional Appeal → Offer as the Path",example:"Author relaxing confidently with a published book → 'This is what it looks like when you start the right way.'",rationale:"Aspirational advertising sells the feeling of the result, not the steps to get there. When the emotional reward is vivid and clear, readers are pulled toward the offer rather than pushed by fear or urgency."},
+{id:38,name:"The Problem Stack Format",structure:"Layer Multiple Problems → Show They Share a Root Cause → Offer as the Single Fix",example:'"Unsure about editing. Unsure about formatting. Unsure about publishing. Here\'s what they all have in common."',rationale:"Stacking problems makes the reader feel their situation is more complicated than one solution — and then revealing that one solution resolves all of them creates enormous relief and perceived value."},
+{id:39,name:"The Rapid Fire Format",structure:"Quick Hits of Information → Short Sentences or Clips → CTA",example:'Fast-cut video: "Hook. Problem. Offer. Feedback. Next step. Submit today." — all under 10 seconds.',rationale:"Fast pacing signals energy and confidence. Rapid fire formats work well for audiences with shorter attention spans and are especially effective in Reels and Stories where the first second determines view-through."},
+{id:40,name:"The 'Here's Why' Format",structure:"Statement → Explanation → Offer as the Logical Conclusion",example:'"Here\'s why most authors don\'t publish on time — and what to do about it."',rationale:"Explanation formats feel educational rather than commercial. The reader follows along because they expect to learn something, which keeps them engaged long enough to encounter the offer naturally."},
+{id:41,name:"The Countdown-Urgency Format",structure:"Limited Availability → Stakes → CTA Before Time Runs Out",example:'"We can only accept 20 manuscript evaluations this month. Here\'s how to request yours."',rationale:"Scarcity and urgency are among the most tested persuasion principles in advertising. When capacity is genuinely limited, this format creates legitimate urgency that drives faster decisions from serious prospects."},
+{id:42,name:"The Authority Quote Format",structure:"Quote from an Expert → Context → Offer Tied to the Insight",example:'"\'The most common mistake first-time authors make is publishing without professional input.\' — Publishing advisor."',rationale:"Third-party credibility bypasses skepticism. When a respected authority validates the core message, the brand inherits that authority. The quote creates the belief; the offer provides the action."},
+{id:43,name:"The Results Timeline Format",structure:"Day 1 → Day 7 → Day 30 → Day 90 → CTA",example:'"Day 1: Submitted manuscript sample. Day 3: Received editorial feedback. Day 30: Publishing plan confirmed."',rationale:"Timelines make intangible services tangible. When the reader can see what happens and when it happens, the uncertainty that prevents action is replaced by a clear and manageable sequence of events."},
+{id:44,name:"The 'I Was Wrong About' Format",structure:"Former Belief → What Changed It → New Understanding → Offer",example:'"I was wrong about how publishing works — and it cost me a year of wasted effort."',rationale:"Admitting a past mistake is one of the most disarming things a brand or person can say. It signals honesty, generates empathy, and makes the new belief — and the offer tied to it — far more persuasive."},
+{id:45,name:"The Pattern Interrupt Format",structure:"Unexpected Element → Pause the Viewer → Deliver the Message",example:"Starting a video mid-sentence or with an unusual visual before pivoting directly to the hook.",rationale:"The brain is constantly filtering for what is familiar. Anything that breaks the expected pattern forces a moment of genuine attention — and that moment is the window where the hook can land most effectively."},
+{id:46,name:"The Endorsement Chain Format",structure:"Multiple Mini-Endorsements in Sequence → CTA",example:"Three authors in quick succession each saying one line about what getting feedback did for their manuscript.",rationale:"A single testimonial can be dismissed. A chain of testimonials creates a pattern the reader interprets as consensus. Consensus is one of the strongest forces in consumer behavior — it signals safety."},
+{id:47,name:"The Word-for-Word Script Format",structure:"Give the Reader an Exact Script → Position the Offer as What Provides That Script",example:'"Here\'s exactly what to say to a publisher when they ask about your manuscript."',rationale:"Providing ready-made language makes the offer feel immediately actionable. The reader does not have to think about how to use the service — they can already picture themselves using it."},
+{id:48,name:"The Emotional Arc Format",structure:"Negative Emotion → Journey → Positive Emotion → CTA",example:"Author shown frustrated → receiving feedback → smiling at manuscript → 'Start your evaluation today.'",rationale:"Emotional storytelling in ads works because decisions are made emotionally and justified rationally. By walking the viewer through the full arc from problem to resolution, the CTA arrives at the peak of positive emotion."},
+{id:49,name:"The 'Real Reason' Format",structure:"Surface Problem → Dig Deeper → Real Root Cause → Offer as the Fix",example:'"You don\'t have a publishing problem. You have a feedback problem. Here\'s the difference."',rationale:"Reframing the problem at a deeper level positions the brand as more insightful than the competition. It makes the reader feel like the brand truly understands them — which is the foundation of trust and conversion."},
+{id:50,name:"The Direct Response Letter Format",structure:"Long-form Conversational Copy → Builds a Case → Multiple CTAs Woven Throughout",example:"A 400-word Facebook post written as a letter to authors building a detailed argument for why professional feedback matters.",rationale:"Long-form direct response copy attracts the highest-intent readers. Anyone who reads through a 400-word post has demonstrated enough interest to be worth pursuing — pre-qualifying themselves through sustained attention."}
+];
+
+const QUIZZES = [
+{id:0,section:'hooks',afterIndex:4,label:'Hooks 1–5',questions:[
+{q:"An ad opens with: 'Struggling to take the leap into publishing?' The reader's brain automatically tries to answer. What hook type uses this involuntary response as its core mechanism?",opts:["Identity Hook","Question Hook","Pain Point Hook","Before Action Hook"],correct:1,exp:"The Question Hook works because the human brain cannot ignore an open question — it triggers an involuntary attempt to answer, creating engagement before the reader consciously decides to continue."},
+{q:"'Tired of guessing? Tired of waiting?' — Two questions hit in rapid succession before the payoff arrives. What hook type uses this rhythm-building strategy?",opts:["Double Question Hook","Curiosity Gap Hook","Warning Hook","Pain Point Hook"],correct:0,exp:"The Double Question Hook layers two short questions to build emotional momentum. Each question compounds the reader's sense of being understood, making the answer feel like a relief."},
+{q:"A copywriter writes: 'Built for authors who refuse to guess their way through publishing.' The ad attracts only one type of person before they even read the offer. What is this hook called?",opts:["Before Action Hook","Reframe Hook","Identity Hook","Direct Address Hook"],correct:2,exp:"The Identity Hook works because people buy into who they believe they are. By naming a specific identity — serious, ambitious — the right people self-select in while wrong-fit leads self-select out."},
+{q:"'Before you hit send to any publisher — do this one thing first.' This hook inserts itself into a decision the reader has already made. What type is it?",opts:["Warning Hook","Before Action Hook","Revelation Hook","Momentum Killer Hook"],correct:1,exp:"The Before Action Hook positions the brand as a necessary step before an action the reader is already planning to take — it feels like advice rather than a sales pitch."},
+{q:"'Most authors finish their manuscript and freeze — because nobody told them what to do next.' This works because it names a frustration with precision. What hook is this?",opts:["Pain Point Hook","Confession Hook","Contrarian Hook","Story Opener Hook"],correct:0,exp:"The Pain Point Hook creates instant connection by naming a specific frustration out loud. The more precise the pain, the stronger the reader feels understood — and the more likely they are to keep reading."}
+]},
+{id:1,section:'hooks',afterIndex:9,label:'Hooks 6–10',questions:[
+{q:"'What most publishing guides leave out — and why it matters more than anything.' The reader keeps scrolling because their brain can't handle an unresolved gap. Name this hook.",opts:["Revelation Hook","Contrarian Hook","Curiosity Gap Hook","Open Loop Hook"],correct:2,exp:"The Curiosity Gap Hook exploits the brain's need to close information loops. By teasing knowledge the reader doesn't yet have, you compel them to keep reading just to find the resolution."},
+{q:"'Stop treating your manuscript like a guessing game.' This hook works by going against what most authors currently do or believe. What is it called?",opts:["Bold Claim Hook","Contrarian Hook","Hot Take Hook","Reframe Hook"],correct:1,exp:"The Contrarian Hook leads with the opposite of conventional wisdom — creating a pattern interrupt that positions the brand as the smarter, more informed alternative."},
+{q:"'In 23 days, this first-time author went from confused to fully evaluated.' The precise number makes the result feel real and earned. What hook type is this?",opts:["Time-Based Hook","Number Drop Hook","Specificity Hook","Social Proof Hook"],correct:2,exp:"The Specificity Hook uses precise details to signal truth. Vague claims like 'fast results' are ignored; specific numbers and timelines feel like evidence the brain can believe."},
+{q:"'If you're about to publish without getting your manuscript reviewed — stop and read this.' The reader pauses because they might be making a costly mistake. What hook is this?",opts:["Before Action Hook","Warning Hook","Urgency Hook","Momentum Killer Hook"],correct:1,exp:"The Warning Hook triggers a protective instinct — the reader believes they might be about to make a mistake. This positions the brand as knowledgeable and on the reader's side rather than selling to them."},
+{q:"'Here's something we don't say enough — most authors come to us too late.' A brand admitting an imperfect truth builds trust faster than boasting. What hook is this?",opts:["Empathy Stack Hook","Founder Story Hook","Confession Hook","Relatability Hook"],correct:2,exp:"The Confession Hook works because it's disarming. When a brand admits something instead of boasting, the reader lowers their defenses — making the rest of the message and offer feel more credible."}
+]},
+{id:2,section:'hooks',afterIndex:14,label:'Hooks 11–15',questions:[
+{q:"'It's not your writing that's holding you back. It's not knowing what comes after the manuscript.' This hook removes blame and points to a solvable external problem. What type is it?",opts:["Contrarian Hook","Reframe Hook","Pain Point Hook","Revelation Hook"],correct:1,exp:"The Reframe Hook shifts blame away from the reader and redirects it toward a solvable external problem. This makes the reader feel relieved rather than defensive — opening them to the offer."},
+{q:"'Picture this: You open your inbox and find detailed professional notes on your manuscript — and a clear path forward.' This hook places the reader in the future outcome first. What is it?",opts:["Story Opener Hook","Aspirational Hook","Future Pacing Hook","Outcome-First Hook"],correct:2,exp:"Future Pacing bypasses current skepticism by placing the reader mentally in the desired outcome. It activates emotion before logic — the right sequence for building conversion momentum."},
+{q:"'More than 5,000 authors have already taken this first step before publishing.' Placed at the start of the ad, this creates safety and trust immediately. What hook is this?",opts:["Authority Quote Hook","Social Proof Hook","Bold Claim Hook","Endorsement Hook"],correct:1,exp:"The Social Proof Hook leverages herd behavior — humans follow what others are already doing. A large, credible number at the start of an ad signals safety before the reader even processes the offer."},
+{q:"'This isn't for everyone. If you want free publishing or a guaranteed deal, this isn't it.' Creating desire by excluding people is the strategy. What is this hook called?",opts:["Disqualifier Hook","Negative Qualification Hook","Direct Address Hook","Identity Hook"],correct:1,exp:"The Negative Qualification Hook uses exclusivity to create desire. When an ad says it's not for everyone, the people it IS for lean in harder — and wrong-fit leads filter themselves out early."},
+{q:"'I know what it feels like to finish something you're proud of — and have no idea what comes next.' Empathy placed before the offer is the core strategy. What hook is this?",opts:["Confession Hook","Story Opener Hook","Founder Story Hook","Relatability Hook"],correct:3,exp:"The Relatability Hook leads with empathy — 'I understand your experience.' Readers who feel understood are far more likely to take action than readers who feel sold to or lectured."}
+]},
+{id:3,section:'hooks',afterIndex:19,label:'Hooks 16–20',questions:[
+{q:"'First-time authors with a completed manuscript — this is for you.' The reader feels personally called out before reading another word. What is this hook?",opts:["Identity Hook","Direct Address Hook","Negative Qualification Hook","Challenge Hook"],correct:1,exp:"The Direct Address Hook creates an instant stop-scroll moment by calling out the exact person the ad is for. The reader feels the ad was written specifically for them — which dramatically increases engagement."},
+{q:"'It was 9pm when she typed the final word of her manuscript — and felt completely lost about what came next.' The story draws the reader in before any pitch is made. What hook is this?",opts:["Relatability Hook","Founder Story Hook","Story Opener Hook","Day-in-the-Life Hook"],correct:2,exp:"The Story Opener Hook activates a different part of the brain than direct claims. The reader enters a narrative instead of processing a pitch — so resistance drops, and engagement rises."},
+{q:"'Authors who guess their way through publishing vs. authors who start with feedback. The difference shows up in the results.' This hook puts the reader in one of two groups. What is it?",opts:["This vs. That Format","Comparison Hook","Myth vs. Truth Hook","Side-by-Side Hook"],correct:1,exp:"The Comparison Hook uses two groups to position the reader — and they naturally want to be in the better group. This makes the offer feel like the obvious path to the smarter outcome."},
+{q:"'You're closer than you think — but this is where most authors stall.' The hook meets the reader right at the finish line. What type is this?",opts:["Warning Hook","Time-Based Hook","Momentum Killer Hook","Agitate-Solution Hook"],correct:2,exp:"The Momentum Killer Hook speaks to proximity to success — the reader is almost there, but this is where most fail. Emotional investment is high because the outcome feels within reach."},
+{q:"'Here's what changes when a professional editorial team reviews your manuscript before you try to publish.' The result is revealed first; explanation follows. What hook leads with the outcome?",opts:["Future Pacing Hook","Outcome-First Hook","Bold Claim Hook","Before Action Hook"],correct:1,exp:"The Outcome-First Hook reverses the traditional pitch structure — leading with the result and letting curiosity pull the reader backward into the explanation. It starts at the finish line."}
+]},
+{id:4,section:'hooks',afterIndex:24,label:'Hooks 21–25',questions:[
+{q:"'76% of first-time authors skip this one step before publishing — and most regret it.' A number plus a consequence equals high curiosity. What hook type is this?",opts:["Social Proof Hook","Specificity Hook","Number Drop Hook","Bold Claim Hook"],correct:2,exp:"The Number Drop Hook uses a specific statistic plus a consequence to trigger curiosity. The reader immediately wonders if they're in that percentage — and the only way to find out is to keep reading."},
+{q:"'Before the end of this week, your manuscript could already have expert eyes on it.' The hook anchors the result to something near and achievable. What hook type is this?",opts:["Urgency Hook","Time-Based Hook","Countdown Hook","Results Timeline Hook"],correct:1,exp:"The Time-Based Hook creates urgency without fake deadlines by anchoring the offer to a specific near-future window. It makes the action feel attainable right now, not at some distant future point."},
+{q:"'Can you name the single thing that separates authors who publish confidently from those who stall?' The reader's competitive instinct kicks in. What hook is this?",opts:["Hot Take Hook","Open Loop Hook","Challenge Hook","Curiosity Gap Hook"],correct:2,exp:"The Challenge Hook activates ego and competitive instinct. The reader wants to answer correctly — and the only way to verify their answer is to keep reading. It's gamification embedded into the opening line."},
+{q:"'If you're looking for free publishing or a guaranteed book deal, this isn't for you.' The hook filters the audience before the offer even arrives. What is this hook?",opts:["Negative Qualification Hook","Disqualifier Hook","Identity Hook","Warning Hook"],correct:1,exp:"The Disqualifier Hook uses reverse psychology — telling people they might not qualify makes the right people lean in harder. It filters out low-quality leads at the earliest possible moment."},
+{q:"'What the publishing industry doesn't advertise — and why most authors get stuck at the same stage.' Hidden knowledge creates a feeling of insider access. What hook is this?",opts:["Curiosity Gap Hook","Contrarian Hook","Confession Hook","Revelation Hook"],correct:3,exp:"The Revelation Hook implies suppressed or overlooked information — positioning the brand as an insider with access to knowledge others don't have. This drives curiosity and perceived exclusivity."}
+]},
+{id:5,section:'hooks',afterIndex:29,label:'Hooks 26–30',questions:[
+{q:"'This one decision could be the difference between your book finding readers — or collecting dust.' High-stakes framing demands attention. What hook type is this?",opts:["Warning Hook","Bold Claim Hook","Future Pacing Hook","Momentum Killer Hook"],correct:1,exp:"The Bold Claim Hook sets the emotional stakes high enough to make the reader pause and consider what they might be missing. It doesn't overpromise with specifics but delivers maximum impact."},
+{q:"'You planned it. You wrote it. You edited it. Now you're stuck.' Validating the reader's effort before naming the problem is the core strategy. What hook is this?",opts:["Relatability Hook","Reframe Hook","Empathy Stack Hook","Before Action Hook"],correct:2,exp:"The Empathy Stack Hook stacks affirmations before introducing the problem. The reader feels validated before they feel challenged — which makes them receptive rather than defensive when the offer arrives."},
+{q:"'Wait — before you scroll past this, does your manuscript actually have a next step mapped out?' The ad acknowledges the reader might leave and uses it as the hook. What type is this?",opts:["Contrarian Hook","Hot Take Hook","Curiosity Gap Hook","Pattern Interrupt Hook"],correct:3,exp:"The Pattern Interrupt Hook breaks the expected advertising pattern by acknowledging the reader's behavior (scrolling away). This unexpected meta-awareness forces a genuine pause in attention."},
+{q:"'One evaluation call. That's it. That's all it takes to know your next publishing step.' Simplicity cuts through complexity. What hook is this?",opts:["Before Action Hook","Direct Address Hook","Simple Promise Hook","Time-Based Hook"],correct:2,exp:"The Simple Promise Hook stands out precisely because most ads over-promise. A short, believable, specific promise cuts through noise in a feed full of complex claims — and credibility increases with simplicity."},
+{q:"'Something just changed about how serious authors approach publishing in 2026 — and it's worth knowing.' The ad feels like a news alert, not an advertisement. What hook is this?",opts:["Revelation Hook","Contrarian Hook","Newsworthy Hook","Curiosity Gap Hook"],correct:2,exp:"The Newsworthy Hook triggers the same neural response as a breaking headline. The reader feels they're about to learn something timely and important — which makes the ad feel like information, not advertising."}
+]},
+{id:6,section:'formats',afterIndex:4,label:'Formats 1–5',questions:[
+{q:"An ad opens: 'Not sure where to begin? Not sure who to trust? Here's the one step serious authors take first.' Two questions build rhythm before the payoff. What format is this?",opts:["Double Question Hook","Question-Question Format","FAQ Format","Open Loop Format"],correct:1,exp:"The Question-Question Format uses two questions in sequence to build rhythm and emotional momentum before the answer lands — making the offer feel like a satisfying payoff rather than an interruption."},
+{q:"'In 90 days, here's what changed after one author started with professional feedback.' A specific timeframe makes the transformation feel achievable and real. What format is this?",opts:["Results Timeline Format","90-Day Results Format","Customer Journey Format","I Tried X Format"],correct:1,exp:"The 90-Day Results Format anchors transformation to a specific, believable timeframe. 90 days is long enough to feel credible and short enough to feel achievable — making the outcome feel real, not aspirational."},
+{q:"'Before: Confused, unsure, stalled. After: Manuscript reviewed, direction clear, publishing plan in motion.' What ad format is entirely built on contrast between two states?",opts:["Emotional Arc Format","Side-by-Side Format","Before & After Format","Agitate-Solution Format"],correct:2,exp:"The Before & After Format satisfies the brain's narrative need for resolution by showing two contrasting states. The contrast between before and after is the emotional engine that drives action."},
+{q:"An ad follows one author's Monday-to-Friday experience — from finishing her manuscript to receiving her evaluation results by Friday. What format grounds the story in a specific time window?",opts:["Customer Journey Format","Day-in-the-Life Format","Storytime Format","Results Timeline Format"],correct:1,exp:"The Day-in-the-Life Format makes abstract outcomes feel lived-in and specific. By anchoring the story in a real timeline (Monday to Friday), readers project themselves into the experience more easily."},
+{q:"'Myth: You need a literary agent before anything else happens. Truth: There's a smarter first step.' This format disrupts a widely held belief. What is it called?",opts:["Contrarian Format","Hot Take Format","Myth vs. Truth Format","Reframe Format"],correct:2,exp:"The Myth vs. Truth Format positions the brand as an educator by challenging common misconceptions. It creates engagement from anyone who held the myth — which is usually most of the target audience."}
+]},
+{id:7,section:'formats',afterIndex:9,label:'Formats 6–10',questions:[
+{q:"'Here's what happened when one author submitted her first three chapters before trying to publish independently.' This casual narrative opener reduces ad resistance. What format is this?",opts:["Storytime Format","Here's What Happened Format","UGC Format","Customer Journey Format"],correct:1,exp:"The Here's What Happened Format uses casual narration to make the reader feel like they're overhearing a conversation rather than watching an ad. This lowers resistance and extends engagement significantly."},
+{q:"An ad promises '5 things every serious author does before publishing' and delivers each as a numbered point. The reader's completion instinct keeps them engaged. What format is this?",opts:["Checklist Format","Step-by-Step Tutorial","Listicle Format","FAQ Format"],correct:2,exp:"The Listicle Format triggers a completion instinct — readers want to see all the items. Each numbered point is also a micro-hook that extends attention, making it one of the most reliable engagement formats."},
+{q:"A brand says: 'We'll be honest — most authors who come to us have already waited too long.' Admitting an imperfect truth builds credibility fast. What format is this?",opts:["Behind the Scenes Format","Founder Story Format","Here's What Happened Format","Confession Format"],correct:3,exp:"The Confession Format works because brands almost never admit imperfections. When one does, the reader's guard drops. Perceived honesty is one of the most powerful trust-builders in all of advertising."},
+{q:"'Warning: Submitting your manuscript to publishers without a professional review first is one of the costliest mistakes in self-publishing.' This activates protective instincts. What format is it?",opts:["Agitate-Solution Format","Warning Format","Bold Claim Format","Open Loop Format"],correct:1,exp:"The Warning Format positions the brand as being on the reader's side — protecting them from a mistake. This lowers sales resistance and increases credibility before any offer is made."},
+{q:"'Here is the exact process serious authors follow — Step 1, Step 2, Step 3 — before they publish.' The brand is positioned as the expert guide. What format is this?",opts:["Behind the Scenes Format","Checklist Format","Step-by-Step Tutorial Format","Listicle Format"],correct:2,exp:"The Step-by-Step Tutorial Format works because readers expect to receive useful information. They stay engaged because each step delivers value — and the CTA at the end feels like a natural next step rather than a pitch."}
+]},
+{id:8,section:'formats',afterIndex:14,label:'Formats 11–15',questions:[
+{q:"A short video opens with text: 'POV: You just sent your final chapter and have zero idea what to do next.' This format places the viewer inside the experience. What is it?",opts:["Day-in-the-Life Format","UGC Format","POV Format","Storytime Format"],correct:2,exp:"The POV Format creates instant empathy by placing the viewer inside the scenario. It has extremely high scroll-stop rates because readers self-identify within the first second — before they realize it's an ad."},
+{q:"An ad shows a screenshot of a reader's comment: 'Is manuscript feedback really worth it before publishing?' and the ad answers it directly. What format mimics organic social interaction?",opts:["FAQ Format","Reply to Comment Format","Screenshot Proof Format","Hot Take Format"],correct:1,exp:"The Reply to Comment Format reduces the perception of the content being an ad by mimicking organic social interaction. It also pre-handles the audience's most common objections in a natural, conversational format."},
+{q:"A Facebook ad cycles through three author stories in quick succession — each sharing a single-sentence result. The pattern creates a sense of consensus. What format is this?",opts:["UGC Format","Endorsement Chain Format","Testimonial Carousel Format","Customer Journey Format"],correct:2,exp:"The Testimonial Carousel Format compounds social proof — each story reinforces the previous one, creating a pattern the reader accepts as the norm rather than the exception. Consensus drives action."},
+{q:"A video shows a person standing in front of a manuscript page on screen, walking through what editorial feedback looks like in real time. What format uses layered visuals behind a presenter?",opts:["Product Demo Format","Talking Head Format","Green Screen Explainer Format","Behind the Scenes Format"],correct:2,exp:"The Green Screen Explainer Format is effective because the unusual layered visual draws attention, while the educational walkthrough justifies the viewer staying longer — a powerful combination in a competitive feed."},
+{q:"An ad shows two columns — 'Publishing without guidance' vs. 'Publishing after a professional evaluation' — with differences listed clearly. What format is built on direct contrast?",opts:["Before & After Format","Side-by-Side Comparison Format","Myth vs. Truth Format","This vs. That Format"],correct:1,exp:"The Side-by-Side Comparison Format simplifies decision-making by presenting two options and making the winner obvious through direct evidence. Readers prefer ads that help them decide over ads that just persuade."}
+]},
+{id:9,section:'formats',afterIndex:19,label:'Formats 16–20',questions:[
+{q:"An ad shows the actual internal process of what happens to a manuscript after it's submitted for evaluation. Transparency replaces ambiguity. What format is this?",opts:["Product Demo Format","Behind the Scenes Format","Green Screen Explainer Format","Step-by-Step Tutorial Format"],correct:1,exp:"The Behind the Scenes Format builds credibility through transparency. Showing the process removes the unknown — and when readers understand how something works, trust and conversion both increase significantly."},
+{q:"'She opened the email containing her editorial feedback — here's her reaction.' Suspense, revelation, and emotion are the three core mechanics. What format is this?",opts:["Customer Journey Format","Storytime Format","Emotional Arc Format","Unboxing-Reveal Format"],correct:3,exp:"The Unboxing-Reveal Format leverages anticipation and emotional reaction to keep viewers watching. The suspense created before the reveal is one of the strongest video engagement mechanics available."},
+{q:"'A senior publishing advisor explains the three things most authors overlook before submitting their manuscript.' Authority-led content borrows credibility. What format is this?",opts:["Talking Head Format","Expert Breakdown Format","Founder Story Format","Behind the Scenes Format"],correct:1,exp:"The Expert Breakdown Format borrows credibility from the authority figure delivering the content. When an expert explains a problem, the solution they recommend carries automatic weight and social proof."},
+{q:"An ad follows one person who committed to getting professional publishing feedback every week for 30 days, sharing what changed. The viewer is invested in the outcome before the offer appears. What format?",opts:["Customer Journey Format","Day-in-the-Life Format","I Tried X for 30 Days Format","Results Timeline Format"],correct:2,exp:"The 'I Tried X for 30 Days' Format creates a narrative thread that rewards viewers who watch to the end. Because the viewer invests emotionally in the journey, the offer lands with far less resistance."},
+{q:"'Nobody in the publishing world talks about what really happens between finishing a manuscript and getting it in front of readers.' Hidden information framing creates exclusivity. What format is this?",opts:["Revelation Hook Format","Curiosity Gap Format","Nobody Talks About This Format","Contrarian Format"],correct:2,exp:"The 'Nobody Talks About This' Format positions the brand as having insider knowledge others suppress or overlook. Exclusivity and hidden-knowledge framing are among the highest-curiosity triggers in advertising."}
+]},
+{id:10,section:'formats',afterIndex:24,label:'Formats 21–25',questions:[
+{q:"An ad uses a popular, emotionally charged audio track while text reads: 'When you finally get clarity on your publishing next steps.' The audio creates emotion; the text delivers the message. What format?",opts:["UGC Format","Pattern Interrupt Format","Trending Audio + Text Format","POV Format"],correct:2,exp:"The Trending Audio + Text Format borrows emotional energy from audio that already carries associations and feelings — letting the sound do the emotional heavy lifting while the text delivers the offer efficiently."},
+{q:"'Let me tell you about the author who almost published her manuscript without any feedback — and what stopped her at the last minute.' A narrative structure where the pitch hides inside the story. What format?",opts:["Customer Journey Format","Here's What Happened Format","Storytime Format","Confession Format"],correct:2,exp:"The Storytime Format is one of the oldest persuasion mechanisms. When the story is relatable, readers follow along without consciously processing that they're being sold something — reducing resistance significantly."},
+{q:"'Hot take: The reason most first-time authors stall has nothing to do with their writing ability.' A bold, potentially polarizing opinion invites reaction and engagement. What format is this?",opts:["Contrarian Format","Hot Take Format","Myth vs. Truth Format","Bold Claim Format"],correct:1,exp:"The Hot Take Format generates engagement by presenting a bold opinion that invites both agreement and debate. Either response drives attention and interaction — and the follow-up positions the brand as thoughtful."},
+{q:"An ad asks: 'Before you publish — can you check off these five things?' The reader self-evaluates and the gap they discover becomes the reason to act. What format is this?",opts:["Listicle Format","Step-by-Step Tutorial Format","FAQ Format","Checklist Format"],correct:3,exp:"The Checklist Format is powerful because the reader identifies their own gap through self-assessment. They create their own motivation to act — making the CTA feel like a conclusion they reached themselves."},
+{q:"'What I wish I'd known before spending six months trying to figure out publishing alone.' Hindsight framing implies lived experience. What format is this?",opts:["Confession Format","What I Wish I Knew Format","Founder Story Format","Storytime Format"],correct:1,exp:"The 'What I Wish I Knew' Format uses hindsight to imply real experience and hard-won knowledge. The reader absorbs the lessons as warnings they can still avoid — making the offer feel like a valuable shortcut."}
+]},
+{id:11,section:'formats',afterIndex:29,label:'Formats 26–30',questions:[
+{q:"'We built this because we kept seeing talented authors publish before their manuscript was truly ready.' An origin tied to a real problem. What format is this?",opts:["Behind the Scenes Format","Expert Breakdown Format","Founder Story Format","Confession Format"],correct:2,exp:"The Founder Story Format humanizes the brand by connecting its origin to a genuine problem observed in the world. This makes the offer feel mission-driven rather than profit-driven — a powerful trust signal."},
+{q:"An ad walks through what a manuscript evaluation looks like from submission to feedback delivery — showing the full service experience step by step. What format removes the unknown?",opts:["Step-by-Step Tutorial Format","Behind the Scenes Format","Green Screen Explainer Format","Product Demo Format"],correct:3,exp:"The Product Demo Format is most effective for services where the process is unclear. Showing the full experience reduces uncertainty — and when people know exactly what they're getting, hesitation drops dramatically."},
+{q:"An ad tells the story of an author from her first uncertain day after finishing her manuscript to where she is six months later, fully published with a plan. What format is this?",opts:["Day-in-the-Life Format","I Tried X for 30 Days Format","Customer Journey Format","Emotional Arc Format"],correct:2,exp:"The Customer Journey Format creates aspiration and belief simultaneously. The reader sees themselves at the starting point and is emotionally pulled toward the outcome — making it one of the most compelling long-form formats."},
+{q:"An ad poses the most common reader question — 'Is a manuscript evaluation really worth the time?' — and answers it directly and honestly. This meets objections where they already exist. What is it?",opts:["Reply to Comment Format","Checklist Format","FAQ Format","Expert Breakdown Format"],correct:2,exp:"The FAQ Format is effective because it meets the reader where their objections already live. By answering concerns upfront, the brand removes hesitation before it can prevent action from being taken."},
+{q:"'You finished your manuscript. Now comes the part nobody tells you about — and it's where most authors make their biggest mistake.' The problem is introduced then made worse before the solution arrives. What format?",opts:["Warning Format","Problem Stack Format","Open Loop Format","Agitate-Solution Format"],correct:3,exp:"The Agitate-Solution Format deepens emotional investment by making the problem feel more acute before offering relief. The greater the pain felt, the more valuable the solution feels when it finally arrives."}
+]},
+{id:12,section:'formats',afterIndex:34,label:'Formats 31–35',questions:[
+{q:"'There is one thing that changes everything about how an author approaches publishing. I'll get to it in just a moment.' The viewer cannot stop watching because their brain needs resolution. What format?",opts:["Curiosity Gap Format","Open Loop Format","Cliffhanger Format","Revelation Format"],correct:1,exp:"The Open Loop Format exploits the brain's powerful drive for completion. By promising an answer and delaying it, you create a compulsive need to keep watching or reading that overrides the normal impulse to scroll away."},
+{q:"'Self-publishing blind vs. starting with a professional evaluation. One of these costs you more in the long run.' A binary choice is presented with a clear winner implied. What format is this?",opts:["Side-by-Side Format","Myth vs. Truth Format","Before & After Format","This vs. That Format"],correct:3,exp:"The 'This vs. That' Format simplifies the decision landscape to two clear options. When the winner is obvious through framing and evidence, the brand's position becomes the logical, inevitable choice."},
+{q:"An ad shows an actual screenshot of an author's editorial feedback notes with brief context. Authenticity signals credibility in a way polished graphics cannot. What format is this?",opts:["UGC Format","Testimonial Carousel Format","Screenshot Proof Format","Product Demo Format"],correct:2,exp:"The Screenshot Proof Format provides evidence that feels closer to reality than designed assets. Even staged screenshots perform well because they carry the visual language of authenticity — proximity to real builds trust."},
+{q:"A publishing advisor looks directly into the camera and speaks conversationally about what most authors get wrong before they publish. Eye contact creates personal connection. What format is this?",opts:["Expert Breakdown Format","Green Screen Explainer Format","Talking Head Format","UGC Format"],correct:2,exp:"The Talking Head Format creates parasocial connection through eye contact and direct speech. The viewer feels like they are being spoken to personally — not watching an ad — which dramatically increases trust and engagement."},
+{q:"An ad with no images, no graphics — just clean text scrolling through the key points of the offer. Simplicity reads as confidence. What format uses this approach?",opts:["Direct Response Letter Format","Pattern Interrupt Format","Text-Only Scroll Format","Rapid Fire Format"],correct:2,exp:"The Text-Only Scroll Format stands out because it's unexpected in an image-heavy feed. The absence of production value signals that the message itself is the point — and confidence in the message alone builds credibility."}
+]},
+{id:13,section:'formats',afterIndex:39,label:'Formats 36–40',questions:[
+{q:"An author records herself on her phone talking unprompted about what changed after she got a professional evaluation. No script, no production. This is the most trusted ad type. What format is it?",opts:["Testimonial Carousel Format","Talking Head Format","UGC Format","Reply to Comment Format"],correct:2,exp:"UGC (User-Generated Content) is the most trusted ad format because it comes from someone not being paid by the brand. The authenticity is inherent — and authenticity is the highest credibility signal available."},
+{q:"An ad shows a published author relaxing confidently beside a stack of her books, with text: 'This is what starting the right way looks like.' What format sells the emotional reward of the outcome?",opts:["Future Pacing Format","Aspirational Lifestyle Format","Emotional Arc Format","Customer Journey Format"],correct:1,exp:"The Aspirational Lifestyle Format sells the feeling of the result — not the steps to get there. When the emotional reward is vivid and clear, readers are pulled toward the offer by desire rather than pushed by fear."},
+{q:"'Unsure about editing. Unsure about formatting. Unsure about next steps.' Three problems are listed, then revealed to share one root cause with one solution. What format is this?",opts:["Agitate-Solution Format","Listicle Format","Problem Stack Format","FAQ Format"],correct:2,exp:"The Problem Stack Format makes the reader's situation feel more complicated before the reveal — which makes the moment of discovering a single solution feel like enormous relief. Perceived complexity → perceived value of simplicity."},
+{q:"A video ad delivers ten fast-cut phrases in under 15 seconds with no pauses — designed for short attention spans on Reels and Stories. What format is this?",opts:["Trending Audio Format","Rapid Fire Format","Pattern Interrupt Format","Listicle Format"],correct:1,exp:"The Rapid Fire Format signals energy and confidence through pacing. Its fast cuts are native to the Reels and Stories environment — matching the attention patterns of audiences already trained to consume content at speed."},
+{q:"'Here's why most authors don't publish on the timeline they originally set — and what to do about it.' An explanation format that feels like education. What is this called?",opts:["Expert Breakdown Format","Myth vs. Truth Format","Revelation Format","Here's Why Format"],correct:3,exp:"The 'Here's Why' Format makes the reader feel like they're learning something rather than being sold something. The explanation creates engagement and positions the brand as knowledgeable — making the offer a logical conclusion."}
+]},
+{id:14,section:'formats',afterIndex:44,label:'Formats 41–45',questions:[
+{q:"'We can only take on 15 manuscript evaluations this month. Here's how to request yours before we close.' Genuine scarcity and time pressure drive faster decisions. What format is this?",opts:["Time-Based Format","Warning Format","Countdown-Urgency Format","Open Loop Format"],correct:2,exp:"The Countdown-Urgency Format works because scarcity is one of the most tested persuasion principles in advertising history. When capacity is genuinely limited, the format creates legitimate urgency — not manufactured pressure."},
+{q:"An ad opens with a quote from a senior publishing advisor about the most common mistake first-time authors make — then the offer follows. Third-party credibility validates the message. What format?",opts:["Expert Breakdown Format","Confession Format","Authority Quote Format","Endorsement Chain Format"],correct:2,exp:"The Authority Quote Format inherits credibility from the source of the quote. When a recognized expert validates the core message before the brand does, skepticism drops — the brand's offer arrives pre-endorsed."},
+{q:"An ad maps out Day 1, Day 3, Day 7, and Day 30 after submitting a manuscript for evaluation. The sequence makes the service feel tangible and real. What format is this?",opts:["Step-by-Step Tutorial Format","Results Timeline Format","Customer Journey Format","90-Day Results Format"],correct:1,exp:"The Results Timeline Format makes an intangible service concrete by mapping out what happens and when. When readers can see the sequence of events clearly, the uncertainty that prevents action is replaced with confidence."},
+{q:"'I used to think getting manuscript feedback was a luxury. It wasn't — and the difference it made surprised me.' Admitting a former belief shifts the reader's current one. What format is this?",opts:["Confession Format","Reframe Format","I Was Wrong About Format","Contrarian Format"],correct:2,exp:"The 'I Was Wrong About' Format uses the credibility of lived experience and honest self-correction. When someone admits they were wrong, their new belief carries far more persuasive weight than if they'd always held it."},
+{q:"A video starts mid-sentence with unusual background music and cuts immediately to a manuscript close-up — completely breaking the expected ad pattern. What format forces genuine attention?",opts:["Trending Audio Format","Pattern Interrupt Format","POV Format","Rapid Fire Format"],correct:1,exp:"The Pattern Interrupt Format works because the brain automatically filters out familiar patterns. When something unexpected breaks the filter, a genuine moment of attention opens — and that moment is where the hook must land."}
+]},
+{id:15,section:'formats',afterIndex:49,label:'Formats 46–50',questions:[
+{q:"Three authors appear back to back — each delivering one sentence about what getting professional feedback did for their manuscript. Repetition creates the feel of consensus. What format is this?",opts:["Testimonial Carousel Format","UGC Format","Social Proof Format","Endorsement Chain Format"],correct:3,exp:"The Endorsement Chain Format uses a rapid sequence of endorsements to create the psychological effect of consensus. A single testimonial can be dismissed; a chain of three or more is experienced as a pattern the brain accepts as fact."},
+{q:"An ad gives the reader the exact words to say when approaching a publisher — and positions the service as what teaches them that language. Immediate actionability is the strategy. What format is this?",opts:["Step-by-Step Tutorial Format","Expert Breakdown Format","Word-for-Word Script Format","Checklist Format"],correct:2,exp:"The Word-for-Word Script Format removes uncertainty about how to use the service by making it immediately actionable. The reader can already picture themselves using the exact language — which reduces the gap between interest and action."},
+{q:"An ad shows an author frustrated, then receiving feedback, then smiling confidently beside her manuscript. The CTA arrives at the peak of positive emotion. What format is this?",opts:["Before & After Format","Customer Journey Format","Aspirational Lifestyle Format","Emotional Arc Format"],correct:3,exp:"The Emotional Arc Format strategically places the CTA at the moment of maximum positive emotion — after the reader has traveled from pain to relief. Decisions made at peak positive emotion are more likely to convert."},
+{q:"'You don't have a publishing problem. You have a feedback problem — and here's why that distinction matters.' A surface problem is reframed at a deeper level. What format positions the brand as most insightful?",opts:["Reframe Format","Myth vs. Truth Format","Contrarian Format","The Real Reason Format"],correct:3,exp:"The 'Real Reason' Format positions the brand as more insightful than the competition by identifying a problem at a deeper level than the reader expected. Feeling truly understood is the highest form of trust-building."},
+{q:"A 400-word Facebook post written like a personal letter to authors — building a detailed case for why professional feedback matters — with CTAs woven naturally throughout. Length itself filters for intent. What format?",opts:["Storytime Format","Expert Breakdown Format","Direct Response Letter Format","Open Loop Format"],correct:2,exp:"The Direct Response Letter Format attracts the highest-intent readers through length alone. Anyone who reads a 400-word post has already demonstrated significant interest — pre-qualifying themselves before they ever click."}
+]}
+];
+
+// ===================== STATE =====================
+const state = {
+  screen: 'welcome',
+  section: 'hooks',
+  cardIndex: 0,
+  quizCompleted: {},
+  activeQuizId: null,
+  selectedAnswers: {},
+  quizSubmitted: false,
+  totalCorrect: 0,
+  totalPossible: 0,
+  hooksScore: 0,
+  formatsScore: 0,
+  hooksSectionDone: false,
+  formatsSectionDone: false
+};
+
+// ===================== ROUTING =====================
+function goTo(screen) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+    s.style.display = 'none';
+  });
+  const el = document.getElementById('s-' + screen);
+  if (!el) return;
+  el.style.display = 'flex';
+  el.classList.add('active');
+  state.screen = screen;
+  if (screen === 'done') renderDoneScreen();
+  if (screen === 'welcome') renderWelcomeProgress();
+}
+
+function renderWelcomeProgress() {
+  const pct = getMasteryPct();
+  // Optionally show progress on welcome screen
+}
+
+// ===================== SECTION START =====================
+function startSection(sec) {
+  state.section = sec;
+  state.cardIndex = 0;
+  goTo('study');
+  updateSectionColor();
+  renderCard();
+  updateProgress();
+}
+
+function updateSectionColor() {
+  const fill = document.getElementById('progress-fill');
+  if (fill) fill.style.background = state.section === 'hooks' ? 'var(--gold)' : 'var(--coral)';
+  const nextBtn = document.getElementById('btn-next');
+  if (nextBtn) {
+    nextBtn.classList.toggle('formats', state.section === 'formats');
+  }
+  const dots = document.querySelectorAll('.card-dots');
+  dots.forEach(d => d.classList.toggle('formats-mode', state.section === 'formats'));
+}
+
+// ===================== CARD RENDERING =====================
+function renderCard() {
+  const items = state.section === 'hooks' ? HOOKS : FORMATS;
+  const item = items[state.cardIndex];
+  if (!item) return;
+  const card = document.getElementById('main-card');
+  const isHooks = state.section === 'hooks';
+  card.className = 'card ' + (isHooks ? 'hooks-card' : 'formats-card');
+  card.setAttribute('data-num', item.id);
+
+  let structureHTML = '';
+  if (!isHooks && item.structure) {
+    const parts = item.structure.split('→').map(p => p.trim());
+    structureHTML = `<div class="card-structure">${parts.map((p,i) => i < parts.length-1 ? `<span>${p}</span> <span style="color:var(--txt3)">→</span> ` : `<span>${p}</span>`).join('')}</div>`;
+  }
+
+  card.innerHTML = `
+    <div class="card-tag ${isHooks ? 'hooks' : 'formats'}">${isHooks ? '⚡ HOOK TYPE' : '▲ AD FORMAT'} &nbsp;·&nbsp; ${isHooks ? 'SECTION 1' : 'SECTION 2'}</div>
+    <div class="card-name">${item.name}</div>
+    ${structureHTML}
+    <div class="card-example">
+      <div class="card-example-label">📝 Example</div>
+      ${item.example}
+    </div>
+    <div class="card-rationale-label">💡 Why It Works</div>
+    <div class="card-rationale">${item.rationale}</div>
+  `;
+
+  // Update prev/next
+  const prevBtn = document.getElementById('btn-prev');
+  if (prevBtn) prevBtn.disabled = state.cardIndex === 0;
+
+  // Update counter
+  const counter = document.getElementById('sh-counter');
+  if (counter) counter.textContent = `${isHooks ? 'Hook' : 'Format'} ${state.cardIndex + 1} of ${items.length}`;
+
+  renderDots(items.length);
+  updateProgress();
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'fadeIn 0.3s ease';
+}
+
+function renderDots(total) {
+  const dotsEl = document.getElementById('card-dots');
+  if (!dotsEl) return;
+  const groupStart = Math.floor(state.cardIndex / 5) * 5;
+  const groupEnd = Math.min(groupStart + 4, total - 1);
+  dotsEl.innerHTML = '';
+  for (let i = groupStart; i <= groupEnd; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === state.cardIndex ? ' active' : '');
+    dotsEl.appendChild(d);
+  }
+}
+
+// ===================== NAVIGATION =====================
+function nextCard() {
+  const items = state.section === 'hooks' ? HOOKS : FORMATS;
+  const isEndOfGroup = (state.cardIndex + 1) % 5 === 0;
+  const isLastCard = state.cardIndex === items.length - 1;
+
+  if (isEndOfGroup || isLastCard) {
+    const groupIndex = Math.floor(state.cardIndex / 5);
+    const quizOffset = state.section === 'hooks' ? 0 : 6;
+    const quizId = quizOffset + groupIndex;
+    if (!state.quizCompleted.hasOwnProperty(quizId)) {
+      showQuiz(quizId);
+      return;
+    }
+  }
+
+  if (state.cardIndex < items.length - 1) {
+    state.cardIndex++;
+    renderCard();
+  } else {
+    handleSectionComplete();
+  }
+}
+
+function prevCard() {
+  if (state.cardIndex > 0) {
+    state.cardIndex--;
+    renderCard();
+  }
+}
+
+// ===================== SECTION COMPLETE =====================
+function handleSectionComplete() {
+  if (state.section === 'hooks') {
+    state.hooksSectionDone = true;
+  } else {
+    state.formatsSectionDone = true;
+  }
+
+  const otherSection = state.section === 'hooks' ? 'formats' : 'hooks';
+  const otherDone = state.section === 'hooks' ? state.formatsSectionDone : state.hooksSectionDone;
+
+  if (otherDone) {
+    goTo('done');
+    return;
+  }
+
+  const sdIcon = document.getElementById('sd-icon');
+  const sdTitle = document.getElementById('sd-title');
+  const sdSub = document.getElementById('sd-sub');
+  const sdStats = document.getElementById('sd-stats');
+  const sdActions = document.getElementById('sd-actions');
+
+  const sectionScore = getSectionScore(state.section);
+  const sectionTotal = state.section === 'hooks' ? 30 : 50;
+  const quizCount = state.section === 'hooks' ? 6 : 10;
+  const totalQs = quizCount * 5;
+  const pct = Math.round((sectionScore / totalQs) * 100);
+
+  sdIcon.textContent = pct >= 80 ? '🎯' : '📚';
+  sdTitle.textContent = `${state.section === 'hooks' ? 'Hooks' : 'Formats'} Section Complete!`;
+  sdSub.textContent = `You've studied all ${sectionTotal} ${state.section === 'hooks' ? 'hook types' : 'viral ad formats'} and completed ${quizCount} knowledge checks. Ready for the next section?`;
+
+  sdStats.innerHTML = `
+    <div class="sd-stat"><div class="n ${pct >= 80 ? 'color-green' : pct >= 60 ? 'color-gold' : 'color-red'}">${pct}%</div><div class="l">Section Score</div></div>
+    <div class="sd-stat"><div class="n color-teal">${sectionScore}/${totalQs}</div><div class="l">Correct Answers</div></div>
+    <div class="sd-stat"><div class="n">${sectionTotal}</div><div class="l">Cards Studied</div></div>
+  `;
+
+  sdActions.innerHTML = `
+    <button class="btn btn-${otherSection === 'hooks' ? 'gold' : 'coral'}" onclick="startSection('${otherSection}')">
+      ${otherSection === 'hooks' ? '⭐' : '▲'} Start ${otherSection === 'hooks' ? 'Hooks (1–30)' : 'Formats (1–50)'}
+    </button>
+    <button class="btn btn-outline" onclick="startSection('${state.section}')">Review Again</button>
+    <button class="btn btn-outline btn-sm" onclick="goTo('welcome')">Back to Home</button>
+  `;
+
+  goTo('section-done');
+}
+
+function getSectionScore(section) {
+  const offset = section === 'hooks' ? 0 : 6;
+  const count = section === 'hooks' ? 6 : 10;
+  let total = 0;
+  for (let i = offset; i < offset + count; i++) {
+    total += (state.quizCompleted[i] || 0);
+  }
+  return total;
+}
+
+// ===================== QUIZ =====================
+function showQuiz(quizId) {
+  state.activeQuizId = quizId;
+  state.selectedAnswers = {};
+  state.quizSubmitted = false;
+  const quiz = QUIZZES[quizId];
+  if (!quiz) return;
+
+  document.getElementById('quiz-title').textContent = `Quick Check — ${quiz.label}`;
+  document.getElementById('quiz-sub').textContent = `5 questions. Worded differently to test real recognition — not memorization.`;
+
+  renderQuizDots(quiz.questions.length);
+  renderQuizQuestions(quiz);
+
+  const submitBtn = document.getElementById('btn-submit');
+  if (submitBtn) { submitBtn.style.display = 'none'; submitBtn.disabled = false; }
+
+  const scoreDisplay = document.getElementById('quiz-score-display');
+  const scoreLabel = document.getElementById('quiz-score-label');
+  const quizMsg = document.getElementById('quiz-msg');
+  const footerBtns = document.getElementById('quiz-footer-btns');
+  if (scoreDisplay) { scoreDisplay.classList.remove('visible'); }
+  if (scoreLabel) { scoreLabel.classList.remove('visible'); }
+  if (quizMsg) { quizMsg.classList.remove('visible'); }
+  if (footerBtns) footerBtns.innerHTML = `<button class="btn btn-teal" id="btn-submit" onclick="submitQuiz()" style="display:none">Submit Answers</button>`;
+
+  document.getElementById('s-quiz').style.display = 'flex';
+  document.getElementById('s-quiz').classList.add('active');
+  document.getElementById('s-quiz').scrollTop = 0;
+}
+
+function renderQuizDots(count) {
+  const dotsEl = document.getElementById('quiz-dots');
+  if (!dotsEl) return;
+  dotsEl.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement('div');
+    d.className = 'qpd';
+    d.id = 'qpd-' + i;
+    dotsEl.appendChild(d);
+  }
+}
+
+function renderQuizQuestions(quiz) {
+  const container = document.getElementById('quiz-questions');
+  container.innerHTML = '';
+  quiz.questions.forEach((q, qi) => {
+    const letters = ['A', 'B', 'C', 'D'];
+    const block = document.createElement('div');
+    block.className = 'quiz-question-block';
+    block.id = 'qblock-' + qi;
+    block.innerHTML = `
+      <div class="q-num">Question ${qi + 1} of ${quiz.questions.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-opts" id="qopts-${qi}">
+        ${q.opts.map((opt, oi) => `
+          <button class="q-opt" id="qopt-${qi}-${oi}" onclick="selectAnswer(${qi}, ${oi})">
+            <span class="opt-letter">${letters[oi]}</span>
+            <span>${opt}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="q-exp" id="qexp-${qi}"></div>
+    `;
+    container.appendChild(block);
+  });
+}
+
+function selectAnswer(qi, oi) {
+  if (state.quizSubmitted) return;
+  const quiz = QUIZZES[state.activeQuizId];
+  if (!quiz) return;
+
+  // Deselect previous
+  if (state.selectedAnswers[qi] !== undefined) {
+    const prevBtn = document.getElementById(`qopt-${qi}-${state.selectedAnswers[qi]}`);
+    if (prevBtn) prevBtn.classList.remove('selected');
+  }
+
+  state.selectedAnswers[qi] = oi;
+  const btn = document.getElementById(`qopt-${qi}-${oi}`);
+  if (btn) btn.classList.add('selected');
+
+  // Update dot
+  const dot = document.getElementById('qpd-' + qi);
+  if (dot) dot.classList.add('answered');
+
+  // Show submit if all answered
+  const allAnswered = Object.keys(state.selectedAnswers).length === quiz.questions.length;
+  const submitBtn = document.getElementById('btn-submit');
+  if (submitBtn && allAnswered) submitBtn.style.display = 'inline-flex';
+}
+
+function submitQuiz() {
+  if (state.quizSubmitted) return;
+  state.quizSubmitted = true;
+  const quiz = QUIZZES[state.activeQuizId];
+  if (!quiz) return;
+
+  let correct = 0;
+  quiz.questions.forEach((q, qi) => {
+    const selected = state.selectedAnswers[qi];
+    const isCorrect = selected === q.correct;
+    if (isCorrect) correct++;
+
+    // Update dot
+    const dot = document.getElementById('qpd-' + qi);
+    if (dot) { dot.classList.remove('answered'); dot.classList.add(isCorrect ? 'correct' : 'wrong'); }
+
+    // Update block
+    const block = document.getElementById('qblock-' + qi);
+    if (block) block.classList.add(isCorrect ? 'correct-block' : 'wrong-block');
+
+    // Update options
+    for (let oi = 0; oi < q.opts.length; oi++) {
+      const optBtn = document.getElementById(`qopt-${qi}-${oi}`);
+      if (!optBtn) continue;
+      optBtn.classList.add('locked');
+      if (oi === q.correct) {
+        optBtn.classList.add('reveal-correct');
+        optBtn.classList.remove('selected');
+      } else if (oi === selected && !isCorrect) {
+        optBtn.classList.add('wrong');
+        optBtn.classList.remove('selected');
+      }
+    }
+
+    // Show explanation
+    const expEl = document.getElementById('qexp-' + qi);
+    if (expEl) {
+      expEl.textContent = q.exp;
+      expEl.classList.add('visible');
+      if (!isCorrect) expEl.classList.add('q-exp-wrong');
+    }
+  });
+
+  // Record score
+  state.quizCompleted[state.activeQuizId] = correct;
+  if (state.section === 'hooks') state.hooksScore += correct;
+  else state.formatsScore += correct;
+
+  const pct = Math.round((correct / quiz.questions.length) * 100);
+  const scoreDisplay = document.getElementById('quiz-score-display');
+  const scoreLabel = document.getElementById('quiz-score-label');
+  const quizMsg = document.getElementById('quiz-msg');
+  const footerBtns = document.getElementById('quiz-footer-btns');
+
+  let scoreColor = correct === 5 ? 'var(--green)' : correct >= 3 ? 'var(--gold)' : 'var(--red)';
+  if (scoreDisplay) {
+    scoreDisplay.textContent = `${correct}/5`;
+    scoreDisplay.style.color = scoreColor;
+    scoreDisplay.classList.add('visible');
+  }
+  if (scoreLabel) {
+    scoreLabel.textContent = `${pct}% on this check`;
+    scoreLabel.classList.add('visible');
+  }
+
+  const messages = {5:"Perfect score! 🔥 That's exactly the kind of recognition we're building.", 4:"Strong work! One slip, but your recognition is sharp.", 3:"Good effort. Review the explanations above before continuing.", 2:"Keep going — re-read those explanations carefully.", 1:"Don't worry — this is exactly why we train. Re-read the cards.", 0:"Head back and review the cards. You'll get it next time."};
+  if (quizMsg) {
+    quizMsg.textContent = messages[correct] || '';
+    quizMsg.classList.add('visible');
+    quizMsg.style.color = scoreColor;
+  }
+
+  updateProgress();
+
+  if (footerBtns) {
+    footerBtns.innerHTML = `
+      <button class="btn btn-teal" onclick="continueFromQuiz()">Continue Learning &#8594;</button>
+      <button class="btn btn-outline btn-sm" onclick="retakeQuiz()">Retake This Check</button>
+    `;
+  }
+}
+
+function skipQuiz() {
+  closeQuiz();
+  const items = state.section === 'hooks' ? HOOKS : FORMATS;
+  if (state.cardIndex < items.length - 1) {
+    state.cardIndex++;
+    renderCard();
+  } else {
+    handleSectionComplete();
+  }
+}
+
+function retakeQuiz() {
+  const quizId = state.activeQuizId;
+  if (quizId !== null) {
+    delete state.quizCompleted[quizId];
+    showQuiz(quizId);
+  }
+}
+
+function continueFromQuiz() {
+  closeQuiz();
+  const items = state.section === 'hooks' ? HOOKS : FORMATS;
+  if (state.cardIndex < items.length - 1) {
+    state.cardIndex++;
+    renderCard();
+    updateProgress();
+  } else {
+    handleSectionComplete();
+  }
+}
+
+function closeQuiz() {
+  const quizEl = document.getElementById('s-quiz');
+  quizEl.style.display = 'none';
+  quizEl.classList.remove('active');
+}
+
+// ===================== PROGRESS =====================
+function getMasteryPct() {
+  const completed = Object.values(state.quizCompleted);
+  if (completed.length === 0) return 0;
+  const total = completed.reduce((a, b) => a + b, 0);
+  const possible = completed.length * 5;
+  return Math.round((total / possible) * 100);
+}
+
+function updateProgress() {
+  const items = state.section === 'hooks' ? HOOKS : FORMATS;
+  const total = items.length;
+  const pct = ((state.cardIndex + 1) / total) * 100;
+  const fill = document.getElementById('progress-fill');
+  if (fill) fill.style.width = pct + '%';
+
+  const masteryEl = document.getElementById('sh-mastery-pct');
+  if (masteryEl) {
+    const m = getMasteryPct();
+    masteryEl.textContent = m + '%';
+    masteryEl.style.color = m >= 95 ? 'var(--green)' : m >= 70 ? 'var(--gold)' : 'var(--teal)';
+  }
+}
+
+// ===================== DONE SCREEN =====================
+function renderDoneScreen() {
+  const pct = getMasteryPct();
+  const scoreEl = document.getElementById('done-score-pct');
+  if (scoreEl) {
+    scoreEl.textContent = pct + '%';
+    scoreEl.style.color = pct >= 95 ? 'var(--green)' : pct >= 80 ? 'var(--gold)' : 'var(--coral)';
+  }
+
+  const breakdown = document.getElementById('done-breakdown');
+  const hookQuizzes = [0,1,2,3,4,5].reduce((a,i) => a + (state.quizCompleted[i] || 0), 0);
+  const formatQuizzes = [6,7,8,9,10,11,12,13,14,15].reduce((a,i) => a + (state.quizCompleted[i] || 0), 0);
+
+  if (breakdown) {
+    breakdown.innerHTML = `
+      <div class="done-stat"><div class="dsn color-gold">${hookQuizzes}/30</div><div class="dsl">Hooks Score</div></div>
+      <div class="done-stat"><div class="dsn color-coral">${formatQuizzes}/50</div><div class="dsl">Formats Score</div></div>
+      <div class="done-stat"><div class="dsn color-teal">${Object.keys(state.quizCompleted).length}/16</div><div class="dsl">Checks Complete</div></div>
+      <div class="done-stat"><div class="dsn ${pct >= 95 ? 'color-green' : 'color-gold'}">${pct}%</div><div class="dsl">Mastery</div></div>
+    `;
+  }
+
+  const doneTitle = document.querySelector('#s-done .done-title');
+  const doneSub = document.querySelector('#s-done .done-sub');
+  if (doneTitle) doneTitle.textContent = pct >= 95 ? '95% Mastery Achieved! 🏆' : pct >= 80 ? 'Great Work! Keep Reviewing.' : 'Good Start — Keep Going!';
+  if (doneSub) doneSub.textContent = pct >= 95 ? 'You\'ve reached the target mastery level. You\'re ready for the end-of-month exam.' : `You're at ${pct}% — target is 95%. Review the sections where you lost points and retake those checks.`;
+}
+
+// ===================== KEYBOARD NAV =====================
+document.addEventListener('keydown', function(e) {
+  if (state.screen !== 'study') return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextCard();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevCard();
+});
+
+// ===================== INIT =====================
+function init() {
+  goTo('welcome');
+}
+
+init();
+</script>
+</body>
+</html>
