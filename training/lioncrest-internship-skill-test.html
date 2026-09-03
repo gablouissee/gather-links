@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lioncrest Internship — Skill Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  /* Atticus / Lioncrest palette — navy #023078 · mid #3C8BCB · light #719DD8 · slate #262C3D */
+  --bg:#171B26;--surface:#262C3D;--surface2:#2E3547;--border:#333B50;
+  --gold:#719DD8;--gold-dim:rgba(113,157,216,0.12);--gold-border:rgba(113,157,216,0.3);
+  --coral:#3C8BCB;--coral-dim:rgba(60,139,203,0.12);--coral-border:rgba(60,139,203,0.3);
+  --teal:#9FC1E9;--teal-dim:rgba(159,193,233,0.12);--teal-border:rgba(159,193,233,0.3);
+  --green:#4FC38E;--red:#E8776D;--accent-fg:#12161F;
+  --txt:#F2F5FA;--txt2:#A9B5CC;--txt3:#7C8AA6;
+  --radius:14px;--font-head:'Fraunces',Georgia,serif;--font-body:'IBM Plex Sans',sans-serif;--font-mono:'IBM Plex Mono',monospace;
+}
+body{font-family:var(--font-body);background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex}
+
+/* WELCOME */
+#s-welcome{flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;position:relative;overflow:hidden}
+#s-welcome::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(113,157,216,0.06) 0%,transparent 70%);top:-200px;left:-100px;pointer-events:none}
+#s-welcome::after{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(159,193,233,0.06) 0%,transparent 70%);bottom:-150px;right:-100px;pointer-events:none}
+.w-eyebrow{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--txt3);margin-bottom:16px}
+.w-title{font-family:var(--font-head);font-size:clamp(32px,5vw,60px);font-weight:800;line-height:1.15;margin-bottom:16px}
+.w-title span.g{color:var(--gold)}
+.w-sub{font-size:16px;color:var(--txt2);max-width:520px;line-height:1.6;margin-bottom:36px}
+.w-stats{display:flex;gap:24px;margin-bottom:36px;flex-wrap:wrap;justify-content:center}
+.w-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 24px;text-align:center}
+.w-stat .num{font-family:var(--font-head);font-size:28px;font-weight:800}
+.w-stat .lbl{font-family:var(--font-mono);font-size:12px;color:var(--txt2);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+.w-stat.gold .num{color:var(--gold)}
+.w-stat.coral .num{color:var(--coral)}
+.w-stat.teal .num{color:var(--teal)}
+.w-actions{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.btn{padding:14px 28px;border-radius:10px;border:none;cursor:pointer;font-family:var(--font-body);font-size:15px;font-weight:600;transition:all 0.2s;display:inline-flex;align-items:center;gap:8px}
+.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+.btn-gold{background:var(--gold);color:var(--accent-fg)}
+.btn-gold:hover{background:#8FB3E3;transform:translateY(-2px)}
+.btn-coral{background:var(--coral);color:#fff}
+.btn-coral:hover{background:#56A3DE;transform:translateY(-2px)}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--txt)}
+.btn-outline:hover{border-color:var(--txt2);transform:translateY(-2px)}
+.btn-teal{background:var(--teal);color:var(--accent-fg)}
+.btn-teal:hover{transform:translateY(-2px)}
+.btn-sm{padding:10px 18px;font-size:13px}
+.formula-bar{margin-top:8px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 24px;font-size:13px;color:var(--txt2);display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.formula-bar span.step{color:var(--txt);font-weight:600}
+.formula-bar .arrow{color:var(--txt3)}
+
+/* NAME FIELD */
+.name-field{margin:0 auto 28px;max-width:360px;width:100%;text-align:left}
+.name-field label{display:block;font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3);margin-bottom:8px}
+.name-field input{width:100%;font:inherit;font-size:15px;color:var(--txt);background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;transition:border-color .12s,box-shadow .12s}
+.name-field input::placeholder{color:var(--txt3)}
+.name-field input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(113,157,216,.28)}
+.name-field.error input{border-color:var(--red)}
+.field-error{display:none;color:var(--red);font-size:12px;margin-top:6px;text-align:left}
+.field-error.visible{display:block}
+
+/* OVERVIEW */
+#s-overview{flex-direction:column;align-items:center;justify-content:center;padding:48px 20px;text-align:center;min-height:100vh}
+.ov-greeting{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);margin-bottom:14px}
+.ov-title{font-family:var(--font-head);font-size:clamp(26px,4.5vw,44px);font-weight:800;margin-bottom:14px}
+.ov-sub{font-size:15px;color:var(--txt2);max-width:560px;line-height:1.65;margin-bottom:32px}
+.ov-parts{display:flex;flex-direction:column;gap:14px;width:100%;max-width:640px;margin-bottom:32px;text-align:left}
+.ov-part{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;display:flex;gap:16px;align-items:flex-start}
+.ov-part .ov-num{font-family:var(--font-head);font-size:20px;font-weight:800;min-width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+.ov-part.gold .ov-num{background:var(--gold-dim);color:var(--gold)}
+.ov-part.coral .ov-num{background:var(--coral-dim);color:var(--coral)}
+.ov-part.teal .ov-num{background:var(--teal-dim);color:var(--teal)}
+.ov-part .ov-body h3{font-family:var(--font-head);font-size:17px;font-weight:700;margin-bottom:6px;color:var(--txt)}
+.ov-part .ov-body p{font-size:13.5px;color:var(--txt2);line-height:1.55}
+.ov-part .ov-body p em{color:var(--txt3);font-style:italic}
+.ov-tag{display:inline-block;font-family:var(--font-mono);font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;margin-top:8px;padding:2px 8px;border-radius:5px}
+.ov-part.gold .ov-tag{background:var(--gold-dim);color:var(--gold)}
+.ov-part.coral .ov-tag{background:var(--coral-dim);color:var(--coral)}
+.ov-part.teal .ov-tag{background:var(--teal-dim);color:var(--teal)}
+
+/* STUDY SCREEN */
+#s-study{flex-direction:column}
+.study-header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;gap:20px;position:sticky;top:0;z-index:100}
+.sh-logo{font-family:var(--font-head);font-size:14px;font-weight:800;color:var(--txt2);white-space:nowrap}
+.sh-progress-wrap{flex:1;display:flex;align-items:center;gap:12px}
+.sh-progress-bar{flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.sh-progress-fill{height:100%;border-radius:3px;transition:width 0.5s ease;background:var(--gold)}
+.sh-counter{font-size:13px;color:var(--txt2);white-space:nowrap;min-width:80px;text-align:right}
+.sh-mastery{background:var(--surface2);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;white-space:nowrap}
+.sh-mastery .pct{color:var(--gold)}
+.sh-home{padding:6px 12px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--txt2);cursor:pointer;font-size:12px;font-family:var(--font-body)}
+.sh-home:hover{border-color:var(--txt2);color:var(--txt)}
+
+.study-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;min-height:0}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;max-width:760px;width:100%;padding:48px;position:relative;overflow:hidden;animation:fadeIn 0.3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.card::before{content:attr(data-num);position:absolute;right:-10px;top:-20px;font-family:var(--font-head);font-size:160px;font-weight:800;opacity:0.04;color:#fff;line-height:1;pointer-events:none;user-select:none}
+.card.hooks-card{border-color:var(--gold-border);background:linear-gradient(135deg,var(--surface) 0%,rgba(113,157,216,0.04) 100%)}
+.card-tag{display:inline-block;font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;padding:4px 10px;border-radius:6px;margin-bottom:20px}
+.card-tag.hooks{background:var(--gold-dim);color:var(--gold)}
+.card-name{font-family:var(--font-head);font-size:clamp(22px,4vw,36px);font-weight:800;line-height:1.15;margin-bottom:24px;color:var(--gold)}
+.card-example{background:var(--surface2);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:24px;font-size:15px;color:var(--txt);font-style:italic;line-height:1.6}
+.card-example-label{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);margin-bottom:8px;font-style:normal}
+.card-rationale-label{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px}
+.card-rationale{font-size:15px;color:var(--txt2);line-height:1.75}
+
+/* CARD NAV */
+.card-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:28px;max-width:760px;width:100%}
+.nav-btn{padding:12px 28px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--txt);cursor:pointer;font-family:var(--font-body);font-size:14px;font-weight:600;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
+.nav-btn:hover:not(:disabled){border-color:var(--txt2);transform:translateY(-1px)}
+.nav-btn:disabled{opacity:0.3;cursor:not-allowed}
+.nav-btn.primary{background:var(--gold);border-color:var(--gold);color:var(--accent-fg)}
+.nav-btn.primary:hover:not(:disabled){transform:translateY(-1px);opacity:0.9}
+.card-dots{display:flex;gap:6px;align-items:center}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--surface2);transition:all 0.2s;border:1px solid var(--border)}
+.dot.active{background:var(--gold);border-color:var(--gold);width:20px;border-radius:3px}
+
+/* QUIZ OVERLAY */
+#s-quiz{position:fixed;inset:0;background:rgba(9,9,15,0.94);z-index:200;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 20px;overflow-y:auto;backdrop-filter:blur(4px)}
+.quiz-container{max-width:780px;width:100%;margin:0 auto}
+.quiz-header{text-align:center;margin-bottom:32px}
+.quiz-badge{display:inline-block;font-family:var(--font-mono);background:var(--teal-dim);border:1px solid var(--teal-border);color:var(--teal);font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:14px}
+.quiz-title{font-family:var(--font-head);font-size:clamp(20px,4vw,30px);font-weight:800;margin-bottom:8px}
+.quiz-sub{font-size:14px;color:var(--txt2)}
+.quiz-progress-dots{display:flex;gap:8px;justify-content:center;margin-top:16px}
+.qpd{width:8px;height:8px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);transition:all 0.2s}
+.qpd.answered{background:var(--teal);border-color:var(--teal)}
+.qpd.correct{background:var(--green);border-color:var(--green)}
+.qpd.wrong{background:var(--red);border-color:var(--red)}
+.quiz-question-block{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:16px;transition:border-color 0.2s}
+.quiz-question-block.correct-block{border-color:rgba(79,195,142,0.4)}
+.quiz-question-block.wrong-block{border-color:rgba(232,119,109,0.4)}
+.q-num{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px}
+.q-text{font-size:15px;color:var(--txt);line-height:1.65;margin-bottom:18px;font-weight:500}
+.q-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.q-opt{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;font-size:14px;color:var(--txt2);transition:all 0.18s;text-align:left;display:flex;align-items:flex-start;gap:10px;line-height:1.4}
+.q-opt:hover:not(.locked){background:var(--teal-dim);border-color:var(--teal-border);color:var(--txt)}
+.q-opt.selected{background:var(--teal-dim);border-color:var(--teal);color:var(--txt);font-weight:600}
+.q-opt.correct{background:rgba(79,195,142,0.12);border-color:var(--green);color:var(--txt)}
+.q-opt.wrong{background:rgba(232,119,109,0.12);border-color:var(--red);color:var(--txt2)}
+.q-opt.reveal-correct{background:rgba(79,195,142,0.12);border-color:var(--green);color:var(--txt)}
+.q-opt .opt-letter{min-width:22px;height:22px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;font-family:var(--font-head);transition:all 0.2s}
+.q-opt.selected .opt-letter{background:var(--teal);color:var(--accent-fg)}
+.q-opt.correct .opt-letter{background:var(--green);color:var(--accent-fg)}
+.q-opt.wrong .opt-letter{background:var(--red);color:var(--accent-fg)}
+.q-opt.reveal-correct .opt-letter{background:var(--green);color:var(--accent-fg)}
+.q-opt.locked{cursor:not-allowed}
+.q-exp{margin-top:14px;background:rgba(79,195,142,0.06);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;color:var(--txt2);line-height:1.6;display:none}
+.q-exp.visible{display:block}
+.q-exp-wrong{border-left-color:var(--red);background:rgba(232,119,109,0.06)}
+
+.quiz-footer{text-align:center;margin-top:24px;padding-bottom:40px}
+.quiz-score-display{font-family:var(--font-head);font-size:48px;font-weight:800;margin-bottom:8px;display:none}
+.quiz-score-display.visible{display:block}
+.quiz-score-label{font-size:15px;color:var(--txt2);margin-bottom:24px;display:none}
+.quiz-score-label.visible{display:block}
+.quiz-footer-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.quiz-msg{font-size:16px;margin-bottom:20px;font-weight:600;display:none}
+.quiz-msg.visible{display:block}
+
+/* PART 1 DONE / COMPLETION SHARED */
+#s-section-done,#s-done{flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center;min-height:100vh}
+.sd-icon{font-size:56px;margin-bottom:20px}
+.sd-title{font-family:var(--font-head);font-size:clamp(24px,4vw,44px);font-weight:800;margin-bottom:12px}
+.sd-sub{font-size:15px;color:var(--txt2);max-width:480px;line-height:1.6;margin-bottom:32px}
+.sd-stats{display:flex;gap:16px;justify-content:center;margin-bottom:32px;flex-wrap:wrap}
+.sd-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px;text-align:center}
+.sd-stat .n{font-family:var(--font-head);font-size:24px;font-weight:800}
+.sd-stat .l{font-family:var(--font-mono);font-size:11px;color:var(--txt2);margin-top:2px;letter-spacing:1px;text-transform:uppercase}
+
+.done-emoji{font-size:60px;margin-bottom:20px}
+.done-title{font-family:var(--font-head);font-size:clamp(28px,5vw,52px);font-weight:800;margin-bottom:12px}
+.done-sub{font-size:16px;color:var(--txt2);max-width:520px;line-height:1.6;margin-bottom:32px}
+.done-score{font-family:var(--font-head);font-size:72px;font-weight:800;line-height:1;margin-bottom:8px}
+.done-score-label{font-family:var(--font-mono);font-size:14px;color:var(--txt2);letter-spacing:2px;text-transform:uppercase;margin-bottom:32px}
+.done-breakdown{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:36px}
+.done-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 24px;min-width:140px}
+.done-stat .dsn{font-family:var(--font-head);font-size:28px;font-weight:800}
+.done-stat .dsl{font-family:var(--font-mono);font-size:12px;color:var(--txt2);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+
+/* TASK SCREENS (PART 2 / PART 3) */
+.task-screen{flex-direction:column;align-items:center;padding:44px 20px 60px;min-height:100vh}
+.task-wrap{max-width:680px;width:100%}
+.task-badge{display:inline-block;font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:16px}
+.task-badge.coral{background:var(--coral-dim);border:1px solid var(--coral-border);color:var(--coral)}
+.task-badge.teal{background:var(--teal-dim);border:1px solid var(--teal-border);color:var(--teal)}
+.task-title{font-family:var(--font-head);font-size:clamp(24px,4vw,38px);font-weight:800;margin-bottom:20px}
+.instructions-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-bottom:26px;text-align:left}
+.instructions-block.placeholder{border-style:dashed;border-color:var(--txt3)}
+.instructions-block .ib-label{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px}
+.instructions-block p{font-size:14.5px;color:var(--txt2);line-height:1.7}
+.instructions-block p em{color:var(--txt3)}
+.response-field{text-align:left;margin-bottom:22px}
+.response-field label{display:block;font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3);margin-bottom:8px}
+.response-field textarea{width:100%;min-height:200px;resize:vertical;font:inherit;font-size:14.5px;line-height:1.6;color:var(--txt);background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color .12s,box-shadow .12s}
+.response-field textarea::placeholder{color:var(--txt3)}
+.response-field textarea:focus{outline:none;border-color:var(--coral);box-shadow:0 0 0 3px rgba(60,139,203,.22)}
+.response-field .wc{margin-top:6px;font-size:11.5px;color:var(--txt3);text-align:right}
+
+/* SUMMARY */
+.summary-box{max-width:640px;width:100%;text-align:left;margin:0 auto 28px}
+.summary-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.summary-head .t{font-family:var(--font-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--txt3)}
+pre.summary{margin:0;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;font-family:var(--font-mono);font-size:12.5px;line-height:1.7;color:var(--txt);white-space:pre-wrap;word-break:break-word;max-height:320px;overflow:auto;text-align:left}
+.copy-status{font-size:12px;color:var(--txt3);margin-top:8px;min-height:16px}
+.copy-status.ok{color:var(--green)}
+
+/* UTILITY */
+.color-green{color:var(--green)}
+.color-red{color:var(--red)}
+.color-gold{color:var(--gold)}
+.color-coral{color:var(--coral)}
+.color-teal{color:var(--teal)}
+
+/* MINI QUIZ SKIP */
+.skip-link{font-size:12px;color:var(--txt3);cursor:pointer;text-decoration:underline;margin-top:16px;display:block}
+.skip-link:hover{color:var(--txt2)}
+</style>
+</head>
+<body>
+
+<!-- LANDING SCREEN -->
+<div class="screen active" id="s-welcome">
+  <div class="w-eyebrow">Lioncrest Internship · Skill Test</div>
+  <h1 class="w-title"><span class="g">Lioncrest Internship</span><br>Skill Test</h1>
+  <p class="w-sub">A three-part skills assessment covering ad hook recognition, social media content creation, and strategic thinking. Enter your name to begin.</p>
+
+  <div class="w-stats">
+    <div class="w-stat gold"><div class="num">30</div><div class="lbl">Ad Hooks</div></div>
+    <div class="w-stat coral"><div class="num">3</div><div class="lbl">Test Parts</div></div>
+    <div class="w-stat teal"><div class="num">6</div><div class="lbl">Knowledge Checks</div></div>
+  </div>
+
+  <div class="name-field" id="name-field-wrap">
+    <label for="candidate-name">Full Name</label>
+    <input type="text" id="candidate-name" placeholder="e.g. Jordan Rivera" autocomplete="name">
+    <div class="field-error" id="name-error">Please enter your name to continue.</div>
+  </div>
+
+  <div class="w-actions">
+    <button class="btn btn-gold" onclick="beginTest()">Begin Test &#8594;</button>
+  </div>
+
+  <div class="formula-bar">
+    <span style="font-family:var(--font-mono);color:var(--txt3);font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase">Hook Formula</span>
+    &nbsp;
+    <span class="step">Hook</span><span class="arrow">→</span>
+    <span class="step">Problem</span><span class="arrow">→</span>
+    <span class="step">Offer</span><span class="arrow">→</span>
+    <span class="step">Benefit</span><span class="arrow">→</span>
+    <span class="step">Trust</span><span class="arrow">→</span>
+    <span class="step">CTA</span>
+  </div>
+</div>
+
+<!-- OVERVIEW SCREEN -->
+<div class="screen" id="s-overview">
+  <div class="ov-greeting" id="ov-greeting">Candidate</div>
+  <h2 class="ov-title">Test Overview</h2>
+  <p class="ov-sub">The test has three parts — work through them in order. Part 1 is scored automatically as you go; Parts 2 and 3 are written responses reviewed by the Lioncrest team.</p>
+
+  <div class="ov-parts">
+    <div class="ov-part gold">
+      <div class="ov-num">1</div>
+      <div class="ov-body">
+        <h3>The Hook</h3>
+        <p>Study all 30 Facebook ad hook types and pass 6 short knowledge checks along the way.</p>
+        <span class="ov-tag">Multiple Choice · Auto-Scored</span>
+      </div>
+    </div>
+    <div class="ov-part coral">
+      <div class="ov-num">2</div>
+      <div class="ov-body">
+        <h3>Social Media Content Creation</h3>
+        <p><em>Instructions for this part are on the way — check back here once they're added.</em></p>
+        <span class="ov-tag">Written Response</span>
+      </div>
+    </div>
+    <div class="ov-part teal">
+      <div class="ov-num">3</div>
+      <div class="ov-body">
+        <h3>Open-Ended Question</h3>
+        <p><em>Instructions for this part are on the way — check back here once they're added.</em></p>
+        <span class="ov-tag">Written Response</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-gold" onclick="startPart1()">Begin Part 1: The Hook &#8594;</button>
+</div>
+
+<!-- STUDY SCREEN (PART 1) -->
+<div class="screen" id="s-study" style="flex-direction:column">
+  <header class="study-header">
+    <div class="sh-logo">Lioncrest Skill Test</div>
+    <div class="sh-progress-wrap">
+      <div class="sh-progress-bar"><div class="sh-progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+    <div class="sh-counter" id="sh-counter">1 of 30</div>
+    <div class="sh-mastery">Mastery: <span class="pct" id="sh-mastery-pct">0%</span></div>
+    <button class="sh-home" onclick="goTo('overview')">&#8592; Overview</button>
+  </header>
+  <div class="study-body" id="study-body">
+    <div class="card" id="main-card" data-num="1">
+      <!-- rendered by JS -->
+    </div>
+    <div class="card-nav" id="card-nav">
+      <button class="nav-btn" id="btn-prev" onclick="prevCard()">&#8592; Previous</button>
+      <div class="card-dots" id="card-dots"></div>
+      <button class="nav-btn primary" id="btn-next" onclick="nextCard()">Next &#8594;</button>
+    </div>
+  </div>
+</div>
+
+<!-- PART 1 DONE SCREEN -->
+<div class="screen" id="s-section-done">
+  <div class="sd-icon" id="sd-icon">🎯</div>
+  <h2 class="sd-title" id="sd-title">Part 1 Complete!</h2>
+  <p class="sd-sub" id="sd-sub"></p>
+  <div class="sd-stats" id="sd-stats"></div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center" id="sd-actions"></div>
+</div>
+
+<!-- QUIZ OVERLAY -->
+<div class="screen" id="s-quiz" style="display:none;position:fixed;inset:0;background:rgba(9,9,15,0.94);z-index:200;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 20px;overflow-y:auto">
+  <div class="quiz-container">
+    <div class="quiz-header">
+      <div class="quiz-badge">⚡ Knowledge Check</div>
+      <h2 class="quiz-title" id="quiz-title">Quick Check — Hooks 1–5</h2>
+      <p class="quiz-sub" id="quiz-sub">Answer all 5 questions. These are worded differently to test real recognition — not memorization.</p>
+      <div class="quiz-progress-dots" id="quiz-dots"></div>
+    </div>
+    <div id="quiz-questions"></div>
+    <div class="quiz-footer">
+      <div class="quiz-score-display" id="quiz-score-display"></div>
+      <div class="quiz-score-label" id="quiz-score-label"></div>
+      <div class="quiz-msg" id="quiz-msg"></div>
+      <div class="quiz-footer-btns" id="quiz-footer-btns">
+        <button class="btn btn-teal" id="btn-submit" onclick="submitQuiz()" style="display:none">Submit Answers</button>
+      </div>
+      <span class="skip-link" onclick="skipQuiz()">Skip for now</span>
+    </div>
+  </div>
+</div>
+
+<!-- PART 2 SCREEN: SOCIAL MEDIA CONTENT CREATION -->
+<div class="screen task-screen" id="s-part2">
+  <div class="task-wrap">
+    <span class="task-badge coral">Part 2 of 3</span>
+    <h2 class="task-title" style="color:var(--coral)">Social Media Content Creation</h2>
+    <div class="instructions-block placeholder" id="part2-instructions">
+      <div class="ib-label">📋 Instructions</div>
+      <p><em>Placeholder — send over your notes for this part and they'll be turned into the final task instructions here.</em></p>
+    </div>
+    <div class="response-field">
+      <label for="part2-response">Your Response</label>
+      <textarea id="part2-response" placeholder="Write or paste your submission here..."></textarea>
+      <div class="wc" id="part2-wc">0 words</div>
+      <div class="field-error" id="part2-required">A response is required to continue.</div>
+    </div>
+    <button class="btn btn-coral" onclick="continuePart2()">Continue to Part 3 &#8594;</button>
+  </div>
+</div>
+
+<!-- PART 3 SCREEN: OPEN-ENDED QUESTION -->
+<div class="screen task-screen" id="s-part3">
+  <div class="task-wrap">
+    <span class="task-badge teal">Part 3 of 3</span>
+    <h2 class="task-title" style="color:var(--teal)">Open-Ended Question</h2>
+    <div class="instructions-block placeholder" id="part3-instructions">
+      <div class="ib-label">📋 Instructions</div>
+      <p><em>Placeholder — send over the question and any guidance, and it'll be turned into the final prompt here.</em></p>
+    </div>
+    <div class="response-field">
+      <label for="part3-response">Your Response</label>
+      <textarea id="part3-response" placeholder="Write or paste your answer here..."></textarea>
+      <div class="wc" id="part3-wc">0 words</div>
+      <div class="field-error" id="part3-required">A response is required to submit.</div>
+    </div>
+    <button class="btn btn-teal" onclick="submitTest()">Submit Test &#8594;</button>
+  </div>
+</div>
+
+<!-- COMPLETION SCREEN -->
+<div class="screen" id="s-done">
+  <div class="done-emoji">🏆</div>
+  <h2 class="done-title">Test Submitted!</h2>
+  <p class="done-sub">Thanks, <span id="done-name">—</span>. Your responses are recorded below — copy the summary and send it to your Lioncrest contact.</p>
+  <div class="done-score color-gold" id="done-score-pct">0%</div>
+  <div class="done-score-label">Part 1 Mastery</div>
+  <div class="done-breakdown" id="done-breakdown"></div>
+
+  <div class="summary-box">
+    <div class="summary-head">
+      <span class="t">Submission Summary</span>
+      <button class="btn btn-sm btn-outline" onclick="copySummary()">Copy Summary</button>
+    </div>
+    <pre class="summary" id="summary-pre"></pre>
+    <div class="copy-status" id="copy-status"></div>
+  </div>
+
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+    <button class="btn btn-outline" onclick="restartTest()">Start Over</button>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+
+const HOOKS = [
+{id:1,name:"The Question Hook",example:'"Finished your manuscript but not sure what comes next?"',rationale:"Questions force the brain to answer involuntarily. When the question matches the reader's exact situation, they feel seen and understood — creating an emotional pause before a logical decision to keep reading."},
+{id:2,name:"The Double Question Hook",example:'"Tired of guessing? Tired of waiting?"',rationale:"Two short questions in a row create a rhythm and build momentum. Each question layers the pain deeper, making the reader feel increasingly understood. Works especially well in video as an opening voiceover."},
+{id:3,name:"The Identity Hook",example:'"For authors who are serious about publishing professionally."',rationale:"People buy into who they believe they are. When the hook names a specific identity — serious, ambitious, professional — the right audience self-selects in, and the wrong audience self-selects out. This is one of the most powerful qualifying tools in copywriting."},
+{id:4,name:"The Before Action Hook",example:'"Before you publish your book, get professional feedback first."',rationale:"This format positions the brand as a necessary step before a decision the reader is already about to make. It creates urgency without pressure, and feels like advice rather than a sales pitch."},
+{id:5,name:"The Pain Point Hook",example:'"Publishing alone is overwhelming — and most authors don\'t know where to start."',rationale:"Naming a pain point out loud creates instant connection. The reader feels understood rather than sold to. Effective pain hooks are specific, not generic — the more precise the pain, the stronger the connection."},
+{id:6,name:"The Curiosity Gap Hook",example:'"Here\'s what most authors don\'t realize until it\'s too late."',rationale:"The human brain cannot tolerate an open loop. When you tease information the reader doesn't have yet, they are compelled to keep reading just to close the gap. This is one of the highest-engagement hook formats available."},
+{id:7,name:"The Contrarian Hook",example:'"Stop trying to figure out publishing on your own."',rationale:"Leading with the opposite of conventional wisdom creates a pattern interrupt. It challenges what the reader currently believes and positions the brand as the smarter alternative. Works best when immediately followed by a compelling reason."},
+{id:8,name:"The Specificity Hook",example:'"In 27 days, this author went from unfinished manuscript to submitted and reviewed."',rationale:"Specificity signals truth. Vague claims like 'fast results' are ignored. Specific numbers and timelines feel real and earned. The brain processes specific figures as evidence, not just claims."},
+{id:9,name:"The Warning Hook",example:'"If you\'re about to publish without feedback, read this first."',rationale:"Warnings trigger a protective instinct. The reader pauses because they believe they might be about to make a mistake. This hook format implies the brand has important knowledge the reader doesn't — which earns attention before making any offer."},
+{id:10,name:"The Confession Hook",example:'"I\'ll be honest with you — most authors are skipping the most important step."',rationale:"Confessions feel human and disarming. When a brand admits something instead of boasting, the reader lowers their guard. This format builds trust fast and makes the rest of the message feel more credible."},
+{id:11,name:"The Reframe Hook",example:'"It\'s not your writing that\'s holding you back. It\'s not knowing the next step."',rationale:"Reframes shift blame away from the reader and redirect it toward an external, solvable problem. This makes the reader feel relieved instead of defensive — which opens them to the offer."},
+{id:12,name:"The Future Pacing Hook",example:'"Imagine opening your inbox to see your manuscript has been reviewed by a professional editorial team."',rationale:"Future pacing bypasses current skepticism by placing the reader mentally into the desired outcome. It activates emotion before logic — which is the right sequence for high-converting copy."},
+{id:13,name:"The Social Proof Hook",example:'"Over 4,000 authors have already submitted their manuscript for a free evaluation."',rationale:"Humans are wired to follow what others are already doing. When a large, credible number is placed at the very beginning of the ad, it signals safety and trust before the reader even processes the offer."},
+{id:14,name:"The Negative Qualification Hook",example:'"This is not for everyone. Only authors ready to take the next serious step."',rationale:"Exclusivity creates desire. When an ad says it is not for everyone, the reader immediately wants to qualify themselves as someone it IS for. This also filters for higher quality leads by repelling people looking for easy or free options."},
+{id:15,name:"The Relatability Hook",example:'"I know how it feels to finish writing something you\'re proud of — and then have no idea what to do next."',rationale:"Empathy before the offer is one of the most trust-building moves in advertising. It says: we understand your experience. Readers who feel understood are far more likely to take action than readers who feel sold to."},
+{id:16,name:"The Direct Address Hook",example:'"Attention: First-time authors with a completed manuscript."',rationale:"Calling out the exact person the ad is for creates an instant stop-scroll moment. The reader feels the ad was written personally for them. Simple, direct, and incredibly effective for targeted audiences."},
+{id:17,name:"The Story Opener Hook",example:'"It was 11pm and she had just typed the last sentence of her manuscript — and had no idea what came next."',rationale:"Stories activate a different part of the brain than direct claims. The reader enters a narrative instead of processing a sales pitch, which means resistance drops. A good story hook makes the reader feel like they are watching something, not being sold something."},
+{id:18,name:"The Comparison Hook",example:'"Most authors guess at publishing. The most successful ones get feedback first."',rationale:"Comparisons position the reader in one of two groups — the smart group or the average group. The reader naturally wants to align with the better outcome, which makes the offer feel like the obvious next step."},
+{id:19,name:"The Momentum Killer Hook",example:'"You\'re almost there. Here\'s what stops most authors at this exact stage."',rationale:"This hook meets the reader at the finish line — close to success — and warns them of the most common failure point. It speaks to proximity to success, which creates high emotional engagement."},
+{id:20,name:"The Outcome-First Hook",example:'"Here\'s what happens when a professional editorial team reviews your manuscript before you publish."',rationale:"Leading with the outcome reverses the traditional pitch structure. Instead of building toward what happens, you reveal the result first and let curiosity pull the reader backward into the explanation."},
+{id:21,name:"The Number Drop Hook",example:'"83% of first-time authors skip this step — and regret it later."',rationale:"Numbers in hooks signal research and authority. They also trigger comparison — the reader immediately wants to know if they are in that percentage or not. The combination of a statistic and a consequence is one of the highest-curiosity hook combinations."},
+{id:22,name:"The Time-Based Hook",example:'"Before the end of this month, your manuscript could already be reviewed."',rationale:"Time references create urgency without fake deadlines. They anchor the offer to a near-future outcome, making the action feel attainable and immediate rather than distant or abstract."},
+{id:23,name:"The Challenge Hook",example:'"Can you spot the one thing that separates a published author from an unpublished one?"',rationale:"Challenges activate the ego and trigger competitive instinct. The reader wants to answer correctly — and the only way to find out if they did is to keep reading. Gamification inside a hook is extremely effective for scroll-stopping."},
+{id:24,name:"The Disqualifier Hook",example:'"If you\'re still not sure you have a manuscript worth publishing, this probably isn\'t for you."',rationale:"Reverse psychology applied to advertising. Telling people they might not qualify makes the ones who do qualify lean in harder. It also filters out low-quality leads at the earliest possible moment in the funnel."},
+{id:25,name:"The Revelation Hook",example:'"What the publishing industry doesn\'t talk about — and why most authors get stuck."',rationale:"Any hook that implies hidden or suppressed information creates immediate curiosity. The reader feels they are about to get access to something they were previously blocked from. This format positions the brand as an insider."},
+{id:26,name:"The Bold Claim Hook",example:'"This one step could be the difference between your book sitting in a drawer and being on a shelf."',rationale:"A bold, high-stakes statement demands attention. It sets the emotional stakes high enough to make the reader pause and consider what they might be missing — without overpromising with unbelievable specifics."},
+{id:27,name:"The Empathy Stack Hook",example:'"You wrote the book. You edited it. You\'re proud of it. Now what?"',rationale:"Stacking validations before introducing the problem is disarming and powerful. The reader feels affirmed before they feel challenged, which makes them receptive to the offer rather than defensive about where they are."},
+{id:28,name:"The Pattern Interrupt Hook",example:'"Wait. Before you click away — does your manuscript actually have a next step?"',rationale:"Acknowledging that the reader might leave — and using that as the hook — breaks the expected advertising pattern. The reader's brain pauses to process the unexpected meta-awareness, creating a genuine moment of attention."},
+{id:29,name:"The Simple Promise Hook",example:'"One conversation. That\'s all it takes to know your next publishing step."',rationale:"Simplicity is underrated. When every other ad promises complex transformations, a short and believable promise cuts through. The simpler and more specific the promise, the more credible it feels in a noisy feed."},
+{id:30,name:"The Newsworthy Hook",example:'"Something just shifted in how serious authors are approaching publishing in 2026."',rationale:"News framing triggers the same neural response as a breaking headline. The reader feels like they are about to learn something timely and relevant — which makes the ad feel like information rather than advertising."}
+];
+
+const QUIZZES = [
+{id:0,afterIndex:4,label:'Hooks 1–5',questions:[
+{q:"An ad opens with: 'Struggling to take the leap into publishing?' The reader's brain automatically tries to answer. What hook type uses this involuntary response as its core mechanism?",opts:["Identity Hook","Question Hook","Pain Point Hook","Before Action Hook"],correct:1,exp:"The Question Hook works because the human brain cannot ignore an open question — it triggers an involuntary attempt to answer, creating engagement before the reader consciously decides to continue."},
+{q:"'Tired of guessing? Tired of waiting?' — Two questions hit in rapid succession before the payoff arrives. What hook type uses this rhythm-building strategy?",opts:["Double Question Hook","Curiosity Gap Hook","Warning Hook","Pain Point Hook"],correct:0,exp:"The Double Question Hook layers two short questions to build emotional momentum. Each question compounds the reader's sense of being understood, making the answer feel like a relief."},
+{q:"A copywriter writes: 'Built for authors who refuse to guess their way through publishing.' The ad attracts only one type of person before they even read the offer. What is this hook called?",opts:["Before Action Hook","Reframe Hook","Identity Hook","Direct Address Hook"],correct:2,exp:"The Identity Hook works because people buy into who they believe they are. By naming a specific identity — serious, ambitious — the right people self-select in while wrong-fit leads self-select out."},
+{q:"'Before you hit send to any publisher — do this one thing first.' This hook inserts itself into a decision the reader has already made. What type is it?",opts:["Warning Hook","Before Action Hook","Revelation Hook","Momentum Killer Hook"],correct:1,exp:"The Before Action Hook positions the brand as a necessary step before an action the reader is already planning to take — it feels like advice rather than a sales pitch."},
+{q:"'Most authors finish their manuscript and freeze — because nobody told them what to do next.' This works because it names a frustration with precision. What hook is this?",opts:["Pain Point Hook","Confession Hook","Contrarian Hook","Story Opener Hook"],correct:0,exp:"The Pain Point Hook creates instant connection by naming a specific frustration out loud. The more precise the pain, the stronger the reader feels understood — and the more likely they are to keep reading."}
+]},
+{id:1,afterIndex:9,label:'Hooks 6–10',questions:[
+{q:"'What most publishing guides leave out — and why it matters more than anything.' The reader keeps scrolling because their brain can't handle an unresolved gap. Name this hook.",opts:["Revelation Hook","Contrarian Hook","Curiosity Gap Hook","Open Loop Hook"],correct:2,exp:"The Curiosity Gap Hook exploits the brain's need to close information loops. By teasing knowledge the reader doesn't yet have, you compel them to keep reading just to find the resolution."},
+{q:"'Stop treating your manuscript like a guessing game.' This hook works by going against what most authors currently do or believe. What is it called?",opts:["Bold Claim Hook","Contrarian Hook","Hot Take Hook","Reframe Hook"],correct:1,exp:"The Contrarian Hook leads with the opposite of conventional wisdom — creating a pattern interrupt that positions the brand as the smarter, more informed alternative."},
+{q:"'In 23 days, this first-time author went from confused to fully evaluated.' The precise number makes the result feel real and earned. What hook type is this?",opts:["Time-Based Hook","Number Drop Hook","Specificity Hook","Social Proof Hook"],correct:2,exp:"The Specificity Hook uses precise details to signal truth. Vague claims like 'fast results' are ignored; specific numbers and timelines feel like evidence the brain can believe."},
+{q:"'If you're about to publish without getting your manuscript reviewed — stop and read this.' The reader pauses because they might be making a costly mistake. What hook is this?",opts:["Before Action Hook","Warning Hook","Urgency Hook","Momentum Killer Hook"],correct:1,exp:"The Warning Hook triggers a protective instinct — the reader believes they might be about to make a mistake. This positions the brand as knowledgeable and on the reader's side rather than selling to them."},
+{q:"'Here's something we don't say enough — most authors come to us too late.' A brand admitting an imperfect truth builds trust faster than boasting. What hook is this?",opts:["Empathy Stack Hook","Founder Story Hook","Confession Hook","Relatability Hook"],correct:2,exp:"The Confession Hook works because it's disarming. When a brand admits something instead of boasting, the reader lowers their defenses — making the rest of the message and offer feel more credible."}
+]},
+{id:2,afterIndex:14,label:'Hooks 11–15',questions:[
+{q:"'It's not your writing that's holding you back. It's not knowing what comes after the manuscript.' This hook removes blame and points to a solvable external problem. What type is it?",opts:["Contrarian Hook","Reframe Hook","Pain Point Hook","Revelation Hook"],correct:1,exp:"The Reframe Hook shifts blame away from the reader and redirects it toward a solvable external problem. This makes the reader feel relieved rather than defensive — opening them to the offer."},
+{q:"'Picture this: You open your inbox and find detailed professional notes on your manuscript — and a clear path forward.' This hook places the reader in the future outcome first. What is it?",opts:["Story Opener Hook","Aspirational Hook","Future Pacing Hook","Outcome-First Hook"],correct:2,exp:"Future Pacing bypasses current skepticism by placing the reader mentally in the desired outcome. It activates emotion before logic — the right sequence for building conversion momentum."},
+{q:"'More than 5,000 authors have already taken this first step before publishing.' Placed at the start of the ad, this creates safety and trust immediately. What hook is this?",opts:["Authority Quote Hook","Social Proof Hook","Bold Claim Hook","Endorsement Hook"],correct:1,exp:"The Social Proof Hook leverages herd behavior — humans follow what others are already doing. A large, credible number at the start of an ad signals safety before the reader even processes the offer."},
+{q:"'This isn't for everyone. If you want free publishing or a guaranteed deal, this isn't it.' Creating desire by excluding people is the strategy. What is this hook called?",opts:["Disqualifier Hook","Negative Qualification Hook","Direct Address Hook","Identity Hook"],correct:1,exp:"The Negative Qualification Hook uses exclusivity to create desire. When an ad says it's not for everyone, the people it IS for lean in harder — and wrong-fit leads filter themselves out early."},
+{q:"'I know what it feels like to finish something you're proud of — and have no idea what comes next.' Empathy placed before the offer is the core strategy. What hook is this?",opts:["Confession Hook","Story Opener Hook","Founder Story Hook","Relatability Hook"],correct:3,exp:"The Relatability Hook leads with empathy — 'I understand your experience.' Readers who feel understood are far more likely to take action than readers who feel sold to or lectured."}
+]},
+{id:3,afterIndex:19,label:'Hooks 16–20',questions:[
+{q:"'First-time authors with a completed manuscript — this is for you.' The reader feels personally called out before reading another word. What is this hook?",opts:["Identity Hook","Direct Address Hook","Negative Qualification Hook","Challenge Hook"],correct:1,exp:"The Direct Address Hook creates an instant stop-scroll moment by calling out the exact person the ad is for. The reader feels the ad was written specifically for them — which dramatically increases engagement."},
+{q:"'It was 9pm when she typed the final word of her manuscript — and felt completely lost about what came next.' The story draws the reader in before any pitch is made. What hook is this?",opts:["Relatability Hook","Founder Story Hook","Story Opener Hook","Day-in-the-Life Hook"],correct:2,exp:"The Story Opener Hook activates a different part of the brain than direct claims. The reader enters a narrative instead of processing a pitch — so resistance drops, and engagement rises."},
+{q:"'Authors who guess their way through publishing vs. authors who start with feedback. The difference shows up in the results.' This hook puts the reader in one of two groups. What is it?",opts:["This vs. That Format","Comparison Hook","Myth vs. Truth Hook","Side-by-Side Hook"],correct:1,exp:"The Comparison Hook uses two groups to position the reader — and they naturally want to be in the better group. This makes the offer feel like the obvious path to the smarter outcome."},
+{q:"'You're closer than you think — but this is where most authors stall.' The hook meets the reader right at the finish line. What type is this?",opts:["Warning Hook","Time-Based Hook","Momentum Killer Hook","Agitate-Solution Hook"],correct:2,exp:"The Momentum Killer Hook speaks to proximity to success — the reader is almost there, but this is where most fail. Emotional investment is high because the outcome feels within reach."},
+{q:"'Here's what changes when a professional editorial team reviews your manuscript before you try to publish.' The result is revealed first; explanation follows. What hook leads with the outcome?",opts:["Future Pacing Hook","Outcome-First Hook","Bold Claim Hook","Before Action Hook"],correct:1,exp:"The Outcome-First Hook reverses the traditional pitch structure — leading with the result and letting curiosity pull the reader backward into the explanation. It starts at the finish line."}
+]},
+{id:4,afterIndex:24,label:'Hooks 21–25',questions:[
+{q:"'76% of first-time authors skip this one step before publishing — and most regret it.' A number plus a consequence equals high curiosity. What hook type is this?",opts:["Social Proof Hook","Specificity Hook","Number Drop Hook","Bold Claim Hook"],correct:2,exp:"The Number Drop Hook uses a specific statistic plus a consequence to trigger curiosity. The reader immediately wonders if they're in that percentage — and the only way to find out is to keep reading."},
+{q:"'Before the end of this week, your manuscript could already have expert eyes on it.' The hook anchors the result to something near and achievable. What hook type is this?",opts:["Urgency Hook","Time-Based Hook","Countdown Hook","Results Timeline Hook"],correct:1,exp:"The Time-Based Hook creates urgency without fake deadlines by anchoring the offer to a specific near-future window. It makes the action feel attainable right now, not at some distant future point."},
+{q:"'Can you name the single thing that separates authors who publish confidently from those who stall?' The reader's competitive instinct kicks in. What hook is this?",opts:["Hot Take Hook","Open Loop Hook","Challenge Hook","Curiosity Gap Hook"],correct:2,exp:"The Challenge Hook activates ego and competitive instinct. The reader wants to answer correctly — and the only way to verify their answer is to keep reading. It's gamification embedded into the opening line."},
+{q:"'If you're looking for free publishing or a guaranteed book deal, this isn't for you.' The hook filters the audience before the offer even arrives. What is this hook?",opts:["Negative Qualification Hook","Disqualifier Hook","Identity Hook","Warning Hook"],correct:1,exp:"The Disqualifier Hook uses reverse psychology — telling people they might not qualify makes the right people lean in harder. It filters out low-quality leads at the earliest possible moment."},
+{q:"'What the publishing industry doesn't advertise — and why most authors get stuck at the same stage.' Hidden knowledge creates a feeling of insider access. What hook is this?",opts:["Curiosity Gap Hook","Contrarian Hook","Confession Hook","Revelation Hook"],correct:3,exp:"The Revelation Hook implies suppressed or overlooked information — positioning the brand as an insider with access to knowledge others don't have. This drives curiosity and perceived exclusivity."}
+]},
+{id:5,afterIndex:29,label:'Hooks 26–30',questions:[
+{q:"'This one decision could be the difference between your book finding readers — or collecting dust.' High-stakes framing demands attention. What hook type is this?",opts:["Warning Hook","Bold Claim Hook","Future Pacing Hook","Momentum Killer Hook"],correct:1,exp:"The Bold Claim Hook sets the emotional stakes high enough to make the reader pause and consider what they might be missing. It doesn't overpromise with specifics but delivers maximum impact."},
+{q:"'You planned it. You wrote it. You edited it. Now you're stuck.' Validating the reader's effort before naming the problem is the core strategy. What hook is this?",opts:["Relatability Hook","Reframe Hook","Empathy Stack Hook","Before Action Hook"],correct:2,exp:"The Empathy Stack Hook stacks affirmations before introducing the problem. The reader feels validated before they feel challenged — which makes them receptive rather than defensive when the offer arrives."},
+{q:"'Wait — before you scroll past this, does your manuscript actually have a next step mapped out?' The ad acknowledges the reader might leave and uses it as the hook. What type is this?",opts:["Contrarian Hook","Hot Take Hook","Curiosity Gap Hook","Pattern Interrupt Hook"],correct:3,exp:"The Pattern Interrupt Hook breaks the expected advertising pattern by acknowledging the reader's behavior (scrolling away). This unexpected meta-awareness forces a genuine pause in attention."},
+{q:"'One evaluation call. That's it. That's all it takes to know your next publishing step.' Simplicity cuts through complexity. What hook is this?",opts:["Before Action Hook","Direct Address Hook","Simple Promise Hook","Time-Based Hook"],correct:2,exp:"The Simple Promise Hook stands out precisely because most ads over-promise. A short, believable, specific promise cuts through noise in a feed full of complex claims — and credibility increases with simplicity."},
+{q:"'Something just changed about how serious authors approach publishing in 2026 — and it's worth knowing.' The ad feels like a news alert, not an advertisement. What hook is this?",opts:["Revelation Hook","Contrarian Hook","Newsworthy Hook","Curiosity Gap Hook"],correct:2,exp:"The Newsworthy Hook triggers the same neural response as a breaking headline. The reader feels they're about to learn something timely and important — which makes the ad feel like information, not advertising."}
+]}
+];
+
+// ===================== STATE =====================
+const state = {
+  screen: 'welcome',
+  candidateName: '',
+  cardIndex: 0,
+  quizCompleted: {},
+  activeQuizId: null,
+  selectedAnswers: {},
+  quizSubmitted: false,
+  hooksScore: 0,
+  part2Answer: '',
+  part3Answer: ''
+};
+
+// ===================== ROUTING =====================
+function goTo(screen) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+    s.style.display = 'none';
+  });
+  const el = document.getElementById('s-' + screen);
+  if (!el) return;
+  el.style.display = 'flex';
+  el.classList.add('active');
+  state.screen = screen;
+  if (screen === 'done') renderDoneScreen();
+}
+
+// ===================== LANDING =====================
+function validateName() {
+  const input = document.getElementById('candidate-name');
+  const wrap = document.getElementById('name-field-wrap');
+  const errEl = document.getElementById('name-error');
+  const ok = input.value.trim().length > 0;
+  if (wrap) wrap.classList.toggle('error', !ok);
+  if (errEl) errEl.classList.toggle('visible', !ok);
+  return ok;
+}
+
+function beginTest() {
+  const input = document.getElementById('candidate-name');
+  if (!validateName()) { input.focus(); return; }
+  state.candidateName = input.value.trim();
+  const greet = document.getElementById('ov-greeting');
+  if (greet) greet.textContent = `Candidate · ${state.candidateName}`;
+  goTo('overview');
+}
+
+// ===================== PART 1: THE HOOK =====================
+function startPart1() {
+  state.cardIndex = 0;
+  goTo('study');
+  renderCard();
+  updateProgress();
+}
+
+function renderCard() {
+  const item = HOOKS[state.cardIndex];
+  if (!item) return;
+  const card = document.getElementById('main-card');
+  card.className = 'card hooks-card';
+  card.setAttribute('data-num', item.id);
+
+  card.innerHTML = `
+    <div class="card-tag hooks">⚡ HOOK TYPE &nbsp;·&nbsp; PART 1</div>
+    <div class="card-name">${item.name}</div>
+    <div class="card-example">
+      <div class="card-example-label">📝 Example</div>
+      ${item.example}
+    </div>
+    <div class="card-rationale-label">💡 Why It Works</div>
+    <div class="card-rationale">${item.rationale}</div>
+  `;
+
+  const prevBtn = document.getElementById('btn-prev');
+  if (prevBtn) prevBtn.disabled = state.cardIndex === 0;
+
+  const counter = document.getElementById('sh-counter');
+  if (counter) counter.textContent = `Hook ${state.cardIndex + 1} of ${HOOKS.length}`;
+
+  renderDots(HOOKS.length);
+  updateProgress();
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'fadeIn 0.3s ease';
+}
+
+function renderDots(total) {
+  const dotsEl = document.getElementById('card-dots');
+  if (!dotsEl) return;
+  const groupStart = Math.floor(state.cardIndex / 5) * 5;
+  const groupEnd = Math.min(groupStart + 4, total - 1);
+  dotsEl.innerHTML = '';
+  for (let i = groupStart; i <= groupEnd; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === state.cardIndex ? ' active' : '');
+    dotsEl.appendChild(d);
+  }
+}
+
+// ===================== NAVIGATION =====================
+function nextCard() {
+  const isEndOfGroup = (state.cardIndex + 1) % 5 === 0;
+  const isLastCard = state.cardIndex === HOOKS.length - 1;
+
+  if (isEndOfGroup || isLastCard) {
+    const quizId = Math.floor(state.cardIndex / 5);
+    if (!state.quizCompleted.hasOwnProperty(quizId)) {
+      showQuiz(quizId);
+      return;
+    }
+  }
+
+  if (state.cardIndex < HOOKS.length - 1) {
+    state.cardIndex++;
+    renderCard();
+  } else {
+    handlePart1Complete();
+  }
+}
+
+function prevCard() {
+  if (state.cardIndex > 0) {
+    state.cardIndex--;
+    renderCard();
+  }
+}
+
+// ===================== PART 1 COMPLETE =====================
+function handlePart1Complete() {
+  const sdIcon = document.getElementById('sd-icon');
+  const sdTitle = document.getElementById('sd-title');
+  const sdSub = document.getElementById('sd-sub');
+  const sdStats = document.getElementById('sd-stats');
+  const sdActions = document.getElementById('sd-actions');
+
+  const totalQs = 6 * 5;
+  const pct = Math.round((state.hooksScore / totalQs) * 100);
+
+  sdIcon.textContent = pct >= 80 ? '🎯' : '📚';
+  sdTitle.textContent = 'Part 1 Complete!';
+  sdSub.textContent = `You've studied all 30 hook types and completed 6 knowledge checks. Next up: Part 2 — Social Media Content Creation.`;
+
+  sdStats.innerHTML = `
+    <div class="sd-stat"><div class="n ${pct >= 80 ? 'color-green' : pct >= 60 ? 'color-gold' : 'color-red'}">${pct}%</div><div class="l">Part 1 Score</div></div>
+    <div class="sd-stat"><div class="n color-teal">${state.hooksScore}/${totalQs}</div><div class="l">Correct Answers</div></div>
+    <div class="sd-stat"><div class="n">30</div><div class="l">Hooks Studied</div></div>
+  `;
+
+  sdActions.innerHTML = `
+    <button class="btn btn-coral" onclick="goTo('part2')">Continue to Part 2 &#8594;</button>
+    <button class="btn btn-outline btn-sm" onclick="startPart1()">Review Hooks Again</button>
+  `;
+
+  goTo('section-done');
+}
+
+// ===================== QUIZ =====================
+function showQuiz(quizId) {
+  state.activeQuizId = quizId;
+  state.selectedAnswers = {};
+  state.quizSubmitted = false;
+  const quiz = QUIZZES[quizId];
+  if (!quiz) return;
+
+  document.getElementById('quiz-title').textContent = `Quick Check — ${quiz.label}`;
+  document.getElementById('quiz-sub').textContent = `5 questions. Worded differently to test real recognition — not memorization.`;
+
+  renderQuizDots(quiz.questions.length);
+  renderQuizQuestions(quiz);
+
+  const submitBtn = document.getElementById('btn-submit');
+  if (submitBtn) { submitBtn.style.display = 'none'; submitBtn.disabled = false; }
+
+  const scoreDisplay = document.getElementById('quiz-score-display');
+  const scoreLabel = document.getElementById('quiz-score-label');
+  const quizMsg = document.getElementById('quiz-msg');
+  const footerBtns = document.getElementById('quiz-footer-btns');
+  if (scoreDisplay) { scoreDisplay.classList.remove('visible'); }
+  if (scoreLabel) { scoreLabel.classList.remove('visible'); }
+  if (quizMsg) { quizMsg.classList.remove('visible'); }
+  if (footerBtns) footerBtns.innerHTML = `<button class="btn btn-teal" id="btn-submit" onclick="submitQuiz()" style="display:none">Submit Answers</button>`;
+
+  document.getElementById('s-quiz').style.display = 'flex';
+  document.getElementById('s-quiz').classList.add('active');
+  document.getElementById('s-quiz').scrollTop = 0;
+}
+
+function renderQuizDots(count) {
+  const dotsEl = document.getElementById('quiz-dots');
+  if (!dotsEl) return;
+  dotsEl.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement('div');
+    d.className = 'qpd';
+    d.id = 'qpd-' + i;
+    dotsEl.appendChild(d);
+  }
+}
+
+function renderQuizQuestions(quiz) {
+  const container = document.getElementById('quiz-questions');
+  container.innerHTML = '';
+  quiz.questions.forEach((q, qi) => {
+    const letters = ['A', 'B', 'C', 'D'];
+    const block = document.createElement('div');
+    block.className = 'quiz-question-block';
+    block.id = 'qblock-' + qi;
+    block.innerHTML = `
+      <div class="q-num">Question ${qi + 1} of ${quiz.questions.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-opts" id="qopts-${qi}">
+        ${q.opts.map((opt, oi) => `
+          <button class="q-opt" id="qopt-${qi}-${oi}" onclick="selectAnswer(${qi}, ${oi})">
+            <span class="opt-letter">${letters[oi]}</span>
+            <span>${opt}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="q-exp" id="qexp-${qi}"></div>
+    `;
+    container.appendChild(block);
+  });
+}
+
+function selectAnswer(qi, oi) {
+  if (state.quizSubmitted) return;
+  const quiz = QUIZZES[state.activeQuizId];
+  if (!quiz) return;
+
+  if (state.selectedAnswers[qi] !== undefined) {
+    const prevBtn = document.getElementById(`qopt-${qi}-${state.selectedAnswers[qi]}`);
+    if (prevBtn) prevBtn.classList.remove('selected');
+  }
+
+  state.selectedAnswers[qi] = oi;
+  const btn = document.getElementById(`qopt-${qi}-${oi}`);
+  if (btn) btn.classList.add('selected');
+
+  const dot = document.getElementById('qpd-' + qi);
+  if (dot) dot.classList.add('answered');
+
+  const allAnswered = Object.keys(state.selectedAnswers).length === quiz.questions.length;
+  const submitBtn = document.getElementById('btn-submit');
+  if (submitBtn && allAnswered) submitBtn.style.display = 'inline-flex';
+}
+
+function submitQuiz() {
+  if (state.quizSubmitted) return;
+  state.quizSubmitted = true;
+  const quiz = QUIZZES[state.activeQuizId];
+  if (!quiz) return;
+
+  let correct = 0;
+  quiz.questions.forEach((q, qi) => {
+    const selected = state.selectedAnswers[qi];
+    const isCorrect = selected === q.correct;
+    if (isCorrect) correct++;
+
+    const dot = document.getElementById('qpd-' + qi);
+    if (dot) { dot.classList.remove('answered'); dot.classList.add(isCorrect ? 'correct' : 'wrong'); }
+
+    const block = document.getElementById('qblock-' + qi);
+    if (block) block.classList.add(isCorrect ? 'correct-block' : 'wrong-block');
+
+    for (let oi = 0; oi < q.opts.length; oi++) {
+      const optBtn = document.getElementById(`qopt-${qi}-${oi}`);
+      if (!optBtn) continue;
+      optBtn.classList.add('locked');
+      if (oi === q.correct) {
+        optBtn.classList.add('reveal-correct');
+        optBtn.classList.remove('selected');
+      } else if (oi === selected && !isCorrect) {
+        optBtn.classList.add('wrong');
+        optBtn.classList.remove('selected');
+      }
+    }
+
+    const expEl = document.getElementById('qexp-' + qi);
+    if (expEl) {
+      expEl.textContent = q.exp;
+      expEl.classList.add('visible');
+      if (!isCorrect) expEl.classList.add('q-exp-wrong');
+    }
+  });
+
+  state.quizCompleted[state.activeQuizId] = correct;
+  state.hooksScore += correct;
+
+  const pct = Math.round((correct / quiz.questions.length) * 100);
+  const scoreDisplay = document.getElementById('quiz-score-display');
+  const scoreLabel = document.getElementById('quiz-score-label');
+  const quizMsg = document.getElementById('quiz-msg');
+  const footerBtns = document.getElementById('quiz-footer-btns');
+
+  let scoreColor = correct === 5 ? 'var(--green)' : correct >= 3 ? 'var(--gold)' : 'var(--red)';
+  if (scoreDisplay) {
+    scoreDisplay.textContent = `${correct}/5`;
+    scoreDisplay.style.color = scoreColor;
+    scoreDisplay.classList.add('visible');
+  }
+  if (scoreLabel) {
+    scoreLabel.textContent = `${pct}% on this check`;
+    scoreLabel.classList.add('visible');
+  }
+
+  const messages = {5:"Perfect score! 🔥 That's exactly the kind of recognition we're building.", 4:"Strong work! One slip, but your recognition is sharp.", 3:"Good effort. Review the explanations above before continuing.", 2:"Keep going — re-read those explanations carefully.", 1:"Don't worry — this is exactly why we train. Re-read the cards.", 0:"Head back and review the cards. You'll get it next time."};
+  if (quizMsg) {
+    quizMsg.textContent = messages[correct] || '';
+    quizMsg.classList.add('visible');
+    quizMsg.style.color = scoreColor;
+  }
+
+  updateProgress();
+
+  if (footerBtns) {
+    footerBtns.innerHTML = `
+      <button class="btn btn-teal" onclick="continueFromQuiz()">Continue Learning &#8594;</button>
+      <button class="btn btn-outline btn-sm" onclick="retakeQuiz()">Retake This Check</button>
+    `;
+  }
+}
+
+function skipQuiz() {
+  closeQuiz();
+  if (state.cardIndex < HOOKS.length - 1) {
+    state.cardIndex++;
+    renderCard();
+  } else {
+    handlePart1Complete();
+  }
+}
+
+function retakeQuiz() {
+  const quizId = state.activeQuizId;
+  if (quizId !== null) {
+    delete state.quizCompleted[quizId];
+    showQuiz(quizId);
+  }
+}
+
+function continueFromQuiz() {
+  closeQuiz();
+  if (state.cardIndex < HOOKS.length - 1) {
+    state.cardIndex++;
+    renderCard();
+    updateProgress();
+  } else {
+    handlePart1Complete();
+  }
+}
+
+function closeQuiz() {
+  const quizEl = document.getElementById('s-quiz');
+  quizEl.style.display = 'none';
+  quizEl.classList.remove('active');
+}
+
+// ===================== PROGRESS =====================
+function getMasteryPct() {
+  const completed = Object.values(state.quizCompleted);
+  if (completed.length === 0) return 0;
+  const total = completed.reduce((a, b) => a + b, 0);
+  const possible = completed.length * 5;
+  return Math.round((total / possible) * 100);
+}
+
+function updateProgress() {
+  const total = HOOKS.length;
+  const pct = ((state.cardIndex + 1) / total) * 100;
+  const fill = document.getElementById('progress-fill');
+  if (fill) fill.style.width = pct + '%';
+
+  const masteryEl = document.getElementById('sh-mastery-pct');
+  if (masteryEl) {
+    const m = getMasteryPct();
+    masteryEl.textContent = m + '%';
+    masteryEl.style.color = m >= 95 ? 'var(--green)' : m >= 70 ? 'var(--gold)' : 'var(--teal)';
+  }
+}
+
+// ===================== PART 2: SOCIAL MEDIA CONTENT CREATION =====================
+function continuePart2() {
+  const ta = document.getElementById('part2-response');
+  const val = ta ? ta.value.trim() : '';
+  const errEl = document.getElementById('part2-required');
+  if (!val) {
+    if (errEl) errEl.classList.add('visible');
+    if (ta) ta.focus();
+    return;
+  }
+  if (errEl) errEl.classList.remove('visible');
+  state.part2Answer = val;
+  goTo('part3');
+}
+
+// ===================== PART 3: OPEN-ENDED QUESTION =====================
+function submitTest() {
+  const ta = document.getElementById('part3-response');
+  const val = ta ? ta.value.trim() : '';
+  const errEl = document.getElementById('part3-required');
+  if (!val) {
+    if (errEl) errEl.classList.add('visible');
+    if (ta) ta.focus();
+    return;
+  }
+  if (errEl) errEl.classList.remove('visible');
+  state.part3Answer = val;
+  goTo('done');
+}
+
+function updateWordCount(taId, wcId) {
+  const ta = document.getElementById(taId);
+  const wc = document.getElementById(wcId);
+  if (!ta || !wc) return;
+  const trimmed = ta.value.trim();
+  const words = trimmed.length ? trimmed.split(/\s+/).length : 0;
+  wc.textContent = `${words} word${words === 1 ? '' : 's'}`;
+}
+
+// ===================== COMPLETION / SUMMARY =====================
+function buildSummary() {
+  const pct = getMasteryPct();
+  const lines = [
+    'Lioncrest Internship Skill Test',
+    `Candidate: ${state.candidateName}`,
+    `Submitted: ${new Date().toLocaleString()}`,
+    '',
+    'PART 1 — THE HOOK',
+    `Score: ${state.hooksScore}/30 (${pct}%)`,
+    '',
+    'PART 2 — SOCIAL MEDIA CONTENT CREATION',
+    state.part2Answer || '(no response)',
+    '',
+    'PART 3 — OPEN-ENDED QUESTION',
+    state.part3Answer || '(no response)'
+  ];
+  return lines.join('\n');
+}
+
+function renderDoneScreen() {
+  const pct = getMasteryPct();
+  const nameEl = document.getElementById('done-name');
+  if (nameEl) nameEl.textContent = state.candidateName;
+
+  const scoreEl = document.getElementById('done-score-pct');
+  if (scoreEl) {
+    scoreEl.textContent = pct + '%';
+    scoreEl.style.color = pct >= 95 ? 'var(--green)' : pct >= 80 ? 'var(--gold)' : 'var(--coral)';
+  }
+
+  const breakdown = document.getElementById('done-breakdown');
+  if (breakdown) {
+    breakdown.innerHTML = `
+      <div class="done-stat"><div class="dsn color-gold">${state.hooksScore}/30</div><div class="dsl">Part 1 Score</div></div>
+      <div class="done-stat"><div class="dsn ${pct >= 95 ? 'color-green' : 'color-gold'}">${pct}%</div><div class="dsl">Hooks Mastery</div></div>
+      <div class="done-stat"><div class="dsn color-teal">${Object.keys(state.quizCompleted).length}/6</div><div class="dsl">Checks Complete</div></div>
+    `;
+  }
+
+  const pre = document.getElementById('summary-pre');
+  if (pre) pre.textContent = buildSummary();
+
+  const statusEl = document.getElementById('copy-status');
+  if (statusEl) { statusEl.textContent = ''; statusEl.classList.remove('ok'); }
+}
+
+function copySummary() {
+  const text = buildSummary();
+  const statusEl = document.getElementById('copy-status');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      if (statusEl) { statusEl.textContent = 'Copied to clipboard.'; statusEl.classList.add('ok'); }
+    }).catch(() => {
+      if (statusEl) { statusEl.textContent = 'Copy failed — select the text above and copy manually.'; statusEl.classList.remove('ok'); }
+    });
+  } else if (statusEl) {
+    statusEl.textContent = 'Clipboard unavailable — select the text above and copy manually.';
+    statusEl.classList.remove('ok');
+  }
+}
+
+function restartTest() {
+  state.candidateName = '';
+  state.cardIndex = 0;
+  state.quizCompleted = {};
+  state.activeQuizId = null;
+  state.selectedAnswers = {};
+  state.quizSubmitted = false;
+  state.hooksScore = 0;
+  state.part2Answer = '';
+  state.part3Answer = '';
+
+  const nameInput = document.getElementById('candidate-name');
+  if (nameInput) nameInput.value = '';
+  const p2 = document.getElementById('part2-response');
+  if (p2) p2.value = '';
+  const p3 = document.getElementById('part3-response');
+  if (p3) p3.value = '';
+  updateWordCount('part2-response', 'part2-wc');
+  updateWordCount('part3-response', 'part3-wc');
+
+  goTo('welcome');
+}
+
+// ===================== KEYBOARD NAV =====================
+document.addEventListener('keydown', function(e) {
+  if (state.screen !== 'study') return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextCard();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevCard();
+});
+
+// ===================== INIT =====================
+function init() {
+  const nameInput = document.getElementById('candidate-name');
+  if (nameInput) {
+    nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') beginTest(); });
+  }
+  const p2 = document.getElementById('part2-response');
+  if (p2) p2.addEventListener('input', () => updateWordCount('part2-response', 'part2-wc'));
+  const p3 = document.getElementById('part3-response');
+  if (p3) p3.addEventListener('input', () => updateWordCount('part3-response', 'part3-wc'));
+
+  goTo('welcome');
+}
+
+init();
+</script>
+</body>
+</html>
