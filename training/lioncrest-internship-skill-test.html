@@ -192,16 +192,33 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--txt);min-heig
 .task-badge.coral{background:var(--coral-dim);border:1px solid var(--coral-border);color:var(--coral)}
 .task-badge.teal{background:var(--teal-dim);border:1px solid var(--teal-border);color:var(--teal)}
 .task-title{font-family:var(--font-head);font-size:clamp(24px,4vw,38px);font-weight:800;margin-bottom:20px}
-.instructions-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-bottom:26px;text-align:left}
+.instructions-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;margin-bottom:20px;text-align:left}
 .instructions-block.placeholder{border-style:dashed;border-color:var(--txt3)}
 .instructions-block .ib-label{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px}
-.instructions-block p{font-size:14.5px;color:var(--txt2);line-height:1.7}
+.instructions-block p{font-size:14.5px;color:var(--txt2);line-height:1.7;margin-bottom:8px}
+.instructions-block p:last-child{margin-bottom:0}
 .instructions-block p em{color:var(--txt3)}
+.instructions-block strong{color:var(--txt);font-weight:600}
+.instructions-block a{color:var(--teal);text-decoration:underline;text-decoration-color:var(--teal-border);word-break:break-word}
+.instructions-block a:hover{color:var(--txt)}
+.instructions-block .ib-sub{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--coral);margin:18px 0 8px}
+.instructions-block .ib-sub:first-of-type{margin-top:16px}
+.instructions-block ul{margin:0 0 8px;padding-left:20px}
+.instructions-block ul li{font-size:14px;color:var(--txt2);line-height:1.6;margin-bottom:6px}
+.instructions-block ol.plain-steps{margin:0 0 8px;padding-left:20px}
+.instructions-block ol.plain-steps li{font-size:14px;color:var(--txt2);line-height:1.6;margin-bottom:8px}
+.script-steps{list-style:none;padding:0;margin:12px 0 16px;display:flex;flex-direction:column;gap:10px}
+.script-steps li{background:var(--surface2);border-left:3px solid var(--coral);border-radius:0 8px 8px 0;padding:12px 16px}
+.script-steps .step-tag{display:block;font-family:var(--font-mono);font-size:9.5px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--coral);margin-bottom:4px}
+.script-steps .step-line{display:block;font-size:14.5px;color:var(--txt);font-style:italic;line-height:1.5;margin-bottom:4px}
+.script-steps .step-note{display:block;font-size:12.5px;color:var(--txt3);line-height:1.5}
 .response-field{text-align:left;margin-bottom:22px}
 .response-field label{display:block;font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt3);margin-bottom:8px}
-.response-field textarea{width:100%;min-height:200px;resize:vertical;font:inherit;font-size:14.5px;line-height:1.6;color:var(--txt);background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color .12s,box-shadow .12s}
-.response-field textarea::placeholder{color:var(--txt3)}
-.response-field textarea:focus{outline:none;border-color:var(--coral);box-shadow:0 0 0 3px rgba(60,139,203,.22)}
+.response-field .rf-hint{font-size:12px;color:var(--txt3);margin-bottom:8px}
+.response-field textarea,.response-field input[type=url]{width:100%;font:inherit;font-size:14.5px;line-height:1.6;color:var(--txt);background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color .12s,box-shadow .12s}
+.response-field textarea{min-height:200px;resize:vertical}
+.response-field textarea::placeholder,.response-field input[type=url]::placeholder{color:var(--txt3)}
+.response-field textarea:focus,.response-field input[type=url]:focus{outline:none;border-color:var(--coral);box-shadow:0 0 0 3px rgba(60,139,203,.22)}
 .response-field .wc{margin-top:6px;font-size:11.5px;color:var(--txt3);text-align:right}
 
 /* SUMMARY */
@@ -279,8 +296,8 @@ pre.summary{margin:0;background:var(--surface2);border:1px solid var(--border);b
       <div class="ov-num">2</div>
       <div class="ov-body">
         <h3>Social Media Content Creation</h3>
-        <p><em>Instructions for this part are on the way — check back here once they're added.</em></p>
-        <span class="ov-tag">Written Response</span>
+        <p>Two content tasks: a promotional book Reel and a book mockup graphic, using the materials and reference provided.</p>
+        <span class="ov-tag">Submission Links</span>
       </div>
     </div>
     <div class="ov-part teal">
@@ -355,15 +372,107 @@ pre.summary{margin:0;background:var(--surface2);border:1px solid var(--border);b
   <div class="task-wrap">
     <span class="task-badge coral">Part 2 of 3</span>
     <h2 class="task-title" style="color:var(--coral)">Social Media Content Creation</h2>
-    <div class="instructions-block placeholder" id="part2-instructions">
-      <div class="ib-label">📋 Instructions</div>
-      <p><em>Placeholder — send over your notes for this part and they'll be turned into the final task instructions here.</em></p>
+    <p style="font-size:14.5px;color:var(--txt2);line-height:1.65;margin-bottom:22px">Two content creation tasks that assess your creativity, understanding of digital content, visual storytelling, and ability to follow a given brand direction. Complete both, then submit a link to each.</p>
+
+    <div class="instructions-block" id="part2-instructions-1">
+      <div class="ib-label">📋 Activity 1 — Book Cover Reel Creation</div>
+      <p>Create a short, vertical promotional Reel for the provided book. It should introduce the book, communicate its main theme, and end with a clear call to purchase — engaging and visually polished, not a slideshow of static images.</p>
+
+      <p class="ib-sub">Required Script &amp; Structure</p>
+      <p>Follow this sequence exactly — match the visuals to each line's message.</p>
+      <ol class="script-steps">
+        <li><span class="step-tag">Hook</span><span class="step-line">"Bedtime struggles made fun."</span><span class="step-note">Grab attention immediately and introduce the book's core idea.</span></li>
+        <li><span class="step-tag">Sequence 2</span><span class="step-line">"Bedtime struggles made fun! I Don't Want to Go to Bed by Sylvia A. Greenlee"</span><span class="step-note">Introduce the book title and author.</span></li>
+        <li><span class="step-tag">Sequence 3</span><span class="step-line">"is a delightful story that helps kids embrace their nighttime routine."</span><span class="step-note">Introduce the book's main concept and benefit.</span></li>
+        <li><span class="step-tag">Sequence 4</span><span class="step-line">"With playful characters and a gentle approach,"</span><span class="step-note">Highlight the tone and experience of the story.</span></li>
+        <li><span class="step-tag">Sequence 5</span><span class="step-line">"this book turns bedtime into an adventure, making it easier for children to say goodnight with a smile."</span><span class="step-note">Land the emotional message and overall value of the book.</span></li>
+        <li><span class="step-tag">Call to Action</span><span class="step-line">"I Don't Want to Go to Bed by Sylvia A. Greenlee. Available now on Amazon."</span><span class="step-note">Close with a clear presentation of the book and a purchasing CTA.</span></li>
+      </ol>
+
+      <p class="ib-sub">Creative Guidelines</p>
+      <ul>
+        <li>Use the provided book cover and materials.</li>
+        <li>Keep the Reel visually cohesive and professional.</li>
+        <li>Use transitions, typography, animation, and supporting elements with intention.</li>
+        <li>Keep on-screen text readable — don't overcrowd the frame.</li>
+        <li>Add background music and sound effects where they support the story.</li>
+        <li>Build a natural flow from one sequence to the next.</li>
+        <li>Maintain a clear visual hierarchy — the title, hook, and CTA should always read first.</li>
+      </ul>
+
+      <p class="ib-sub">Voice-Over</p>
+      <p>Generate the voice-over with <a href="https://elevenlabs.io/" target="_blank" rel="noopener">ElevenLabs</a> when one is needed. It should sound natural, clear, and match the tone of the book.</p>
+
+      <p class="ib-sub">Book Mockups (Optional)</p>
+      <p>Create 3D book mockups with <a href="https://diybookcovers.com/3Dmockups/#" target="_blank" rel="noopener">DIY Book Covers</a> to make the presentation more visually interesting.</p>
+
+      <p class="ib-sub">Materials</p>
+      <p>Source assets are in the <a href="https://drive.google.com/drive/folders/1UTIKGaFppcyiGcnidhyS59kH492oJZVN?usp=sharing" target="_blank" rel="noopener">Materials — Skill Test</a> Drive folder.</p>
+
+      <p class="ib-sub">Recommended Tools</p>
+      <ul>
+        <li><strong>Canva</strong> — video editing, graphics, text, animation, and layout</li>
+        <li><strong>ElevenLabs</strong> — voice-over generation</li>
+        <li><strong>DIY Book Covers</strong> — 3D book mockup creation</li>
+      </ul>
+
+      <p class="ib-sub">Deliverable</p>
+      <p>1 completed vertical book promotional Reel — 9:16, 1080 × 1920px, exported as MP4.</p>
+    </div>
+
+    <div class="instructions-block" id="part2-instructions-2">
+      <div class="ib-label">📋 Activity 2 — Book Mockup Content</div>
+      <p>Create a book promotional mockup / social graphic for the same book, presenting it in an appealing, professional way while reflecting the theme and identity below.</p>
+
+      <p class="ib-sub">Reference</p>
+      <p><a href="https://www.kabbalahbiology.com/" target="_blank" rel="noopener">kabbalahbiology.com</a> — review the book, its subject, visual identity, mood, messaging, colors, and imagery. Use it as creative and informational reference only — do not copy its layout directly.</p>
+
+      <p class="ib-sub">Steps</p>
+      <ol class="plain-steps">
+        <li>Review the reference site and get familiar with the book, its subject, visual identity, mood, messaging, colors, and imagery/design style.</li>
+        <li>Identify the strongest visual elements you could translate into a social promotional graphic.</li>
+        <li>Create an appropriate book mockup.</li>
+        <li>Build a promotional layout around the book using supporting visual elements inspired by the reference.</li>
+        <li>Make the book cover the clear, primary focal point.</li>
+        <li>Keep a clean hierarchy between the book cover, headline, supporting information, and CTA (when applicable).</li>
+        <li>Develop an original promotional concept — don't copy the reference layout.</li>
+      </ol>
+
+      <p class="ib-sub">Your Design Should Show</p>
+      <ul>
+        <li>Creativity and strong composition</li>
+        <li>Clear visual hierarchy</li>
+        <li>Appropriate typography</li>
+        <li>Effective use of imagery</li>
+        <li>Consistency and attention to detail</li>
+        <li>Understanding of the book's theme</li>
+        <li>Ability to turn source material into promotional social content</li>
+      </ul>
+
+      <p class="ib-sub">Recommended Tools</p>
+      <ul>
+        <li><strong>Canva</strong> — final layout and design</li>
+        <li><strong>DIY Book Covers</strong> — when a 3D book presentation is appropriate</li>
+      </ul>
+
+      <p class="ib-sub">Deliverable</p>
+      <p>1 completed book promotional mockup / social graphic — clean, professional final layout, exported as PNG or JPG.</p>
+    </div>
+
+    <div class="response-field">
+      <label for="part2-link1">Activity 1 — Reel Link</label>
+      <div class="rf-hint">Paste a shareable link to your video (Google Drive, Canva, unlisted YouTube, etc.).</div>
+      <input type="url" id="part2-link1" placeholder="https://...">
     </div>
     <div class="response-field">
-      <label for="part2-response">Your Response</label>
-      <textarea id="part2-response" placeholder="Write or paste your submission here..."></textarea>
-      <div class="wc" id="part2-wc">0 words</div>
-      <div class="field-error" id="part2-required">A response is required to continue.</div>
+      <label for="part2-link2">Activity 2 — Mockup Graphic Link</label>
+      <div class="rf-hint">Paste a shareable link to your image (Google Drive, Canva, etc.).</div>
+      <input type="url" id="part2-link2" placeholder="https://...">
+    </div>
+    <div class="field-error" id="part2-required">Both submission links are required to continue.</div>
+    <div class="response-field">
+      <label for="part2-notes">Notes (Optional)</label>
+      <textarea id="part2-notes" placeholder="Anything you'd like to add about your approach..." style="min-height:100px"></textarea>
     </div>
     <button class="btn btn-coral" onclick="continuePart2()">Continue to Part 3 &#8594;</button>
   </div>
@@ -502,7 +611,9 @@ const state = {
   selectedAnswers: {},
   quizSubmitted: false,
   hooksScore: 0,
-  part2Answer: '',
+  part2Link1: '',
+  part2Link2: '',
+  part2Notes: '',
   part3Answer: ''
 };
 
@@ -875,16 +986,21 @@ function updateProgress() {
 
 // ===================== PART 2: SOCIAL MEDIA CONTENT CREATION =====================
 function continuePart2() {
-  const ta = document.getElementById('part2-response');
-  const val = ta ? ta.value.trim() : '';
+  const link1 = document.getElementById('part2-link1');
+  const link2 = document.getElementById('part2-link2');
+  const notes = document.getElementById('part2-notes');
   const errEl = document.getElementById('part2-required');
-  if (!val) {
+  const v1 = link1 ? link1.value.trim() : '';
+  const v2 = link2 ? link2.value.trim() : '';
+  if (!v1 || !v2) {
     if (errEl) errEl.classList.add('visible');
-    if (ta) ta.focus();
+    (!v1 ? link1 : link2).focus();
     return;
   }
   if (errEl) errEl.classList.remove('visible');
-  state.part2Answer = val;
+  state.part2Link1 = v1;
+  state.part2Link2 = v2;
+  state.part2Notes = notes ? notes.value.trim() : '';
   goTo('part3');
 }
 
@@ -924,11 +1040,13 @@ function buildSummary() {
     `Score: ${state.hooksScore}/30 (${pct}%)`,
     '',
     'PART 2 — SOCIAL MEDIA CONTENT CREATION',
-    state.part2Answer || '(no response)',
+    `Activity 1 (Book Cover Reel): ${state.part2Link1 || '(no link submitted)'}`,
+    `Activity 2 (Book Mockup Content): ${state.part2Link2 || '(no link submitted)'}`,
+    state.part2Notes ? `Notes: ${state.part2Notes}` : null,
     '',
     'PART 3 — OPEN-ENDED QUESTION',
     state.part3Answer || '(no response)'
-  ];
+  ].filter(line => line !== null);
   return lines.join('\n');
 }
 
@@ -982,16 +1100,21 @@ function restartTest() {
   state.selectedAnswers = {};
   state.quizSubmitted = false;
   state.hooksScore = 0;
-  state.part2Answer = '';
+  state.part2Link1 = '';
+  state.part2Link2 = '';
+  state.part2Notes = '';
   state.part3Answer = '';
 
   const nameInput = document.getElementById('candidate-name');
   if (nameInput) nameInput.value = '';
-  const p2 = document.getElementById('part2-response');
-  if (p2) p2.value = '';
+  const link1 = document.getElementById('part2-link1');
+  if (link1) link1.value = '';
+  const link2 = document.getElementById('part2-link2');
+  if (link2) link2.value = '';
+  const notes = document.getElementById('part2-notes');
+  if (notes) notes.value = '';
   const p3 = document.getElementById('part3-response');
   if (p3) p3.value = '';
-  updateWordCount('part2-response', 'part2-wc');
   updateWordCount('part3-response', 'part3-wc');
 
   goTo('welcome');
@@ -1010,8 +1133,6 @@ function init() {
   if (nameInput) {
     nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') beginTest(); });
   }
-  const p2 = document.getElementById('part2-response');
-  if (p2) p2.addEventListener('input', () => updateWordCount('part2-response', 'part2-wc'));
   const p3 = document.getElementById('part3-response');
   if (p3) p3.addEventListener('input', () => updateWordCount('part3-response', 'part3-wc'));
 
