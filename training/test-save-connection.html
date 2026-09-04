@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Connection Test</title>
+<style>
+  body{font-family:system-ui,sans-serif;max-width:520px;margin:60px auto;padding:0 20px;color:#1C1917}
+  button{font-size:16px;padding:14px 24px;background:#E8500A;color:#fff;border:none;border-radius:8px;cursor:pointer}
+  button:hover{background:#c9450a}
+  #status{margin-top:20px;padding:16px;border-radius:8px;background:#f5f5f4;font-size:14px;line-height:1.6;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<h2>Google Sheet Connection Test</h2>
+<p>Click the button. This sends one test row to your Sheet — nothing more.</p>
+<button onclick="runTest()">Send Test Row</button>
+<div id="status"></div>
+<script>
+const URL = 'https://script.google.com/macros/s/AKfycbxYyWEaOPjHUzAGbaV5HJjJ4t031hl9U1rGAjXF81dKRvoSzT8dmuh7oVtRUHADkkP1/exec';
+
+function log(msg) {
+  document.getElementById('status').textContent += msg + '\n';
+}
+
+async function runTest() {
+  document.getElementById('status').textContent = '';
+  log('Starting test at ' + new Date().toLocaleTimeString());
+  log('Target URL: ' + URL);
+
+  const payload = {
+    candidateName: 'CONNECTION TEST — safe to delete this row',
+    hooksScore: 0,
+    masteryPct: 0,
+    part2Link1: 'test',
+    part2Link2: 'test',
+    part2Notes: 'test',
+    part3Q1: 'test',
+    part3Q2: 'test',
+    part3Q3: 'test'
+  };
+
+  try {
+    await fetch(URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    log('');
+    log('Request completed with no network error.');
+    log('(This does NOT confirm Google actually ran your script —');
+    log('no-cors mode hides the real result. Go check your Sheet');
+    log('and the Executions page now.)');
+  } catch (err) {
+    log('');
+    log('NETWORK ERROR — the request never left the browser:');
+    log(err.message);
+  }
+}
+</script>
+</body>
+</html>
