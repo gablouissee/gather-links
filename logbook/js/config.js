@@ -13,12 +13,13 @@
 // ------------------------------------------------------------
 
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyDfUFMGCOv8QmPuWzfWlT3xUuk4O3N8cTI",
+  authDomain: "internship-logbook-94a41.firebaseapp.com",
+  projectId: "internship-logbook-94a41",
+  storageBucket: "internship-logbook-94a41.firebasestorage.app",
+  messagingSenderId: "619512870061",
+  appId: "1:619512870061:web:8f0148dc0454f72379c224",
+  measurementId: "G-P1HVCS62NT",
 };
 
 // The company name shown throughout the app.
@@ -29,5 +30,5 @@ export const ORG_NAME = "Lioncrest";
 // security rules still rely on the `admins` collection, so the FIRST admin
 // must also be added there once (see README → "Make yourself an admin").
 export const ADMIN_EMAILS = [
-  // "you@gmail.com",
+  "lgcapao.lc@gmail.com",
 ];
