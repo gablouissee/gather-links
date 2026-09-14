@@ -1,0 +1,46 @@
+rules_version = '2';
+
+// Security rules for the Lioncrest Intern Logbook.
+//
+// Deploy these in Firebase Console → Firestore Database → Rules,
+// or with the Firebase CLI: `firebase deploy --only firestore:rules`.
+//
+// Model:
+//   admins/{email}          – existence of a doc keyed by the user's email
+//                             grants admin rights. Bootstrap the first one
+//                             by hand in the console (see README).
+//   interns/{uid}           – one profile per signed-in user (uid = auth uid).
+//   interns/{uid}/logs/{id} – that intern's daily time entries.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.token.email));
+    }
+
+    // Any signed-in user may check the admin list (e.g. their own status).
+    // Only existing admins may add or remove admins.
+    match /admins/{email} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /interns/{uid} {
+      allow read:   if isAdmin() || (signedIn() && request.auth.uid == uid);
+      allow create: if signedIn() && request.auth.uid == uid;
+      allow update: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      allow delete: if isAdmin();
+
+      match /logs/{logId} {
+        allow read:  if isAdmin() || (signedIn() && request.auth.uid == uid);
+        allow write: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      }
+    }
+  }
+}
