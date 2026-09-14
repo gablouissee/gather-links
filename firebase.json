@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "logbook",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
