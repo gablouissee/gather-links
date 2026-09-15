@@ -25,6 +25,34 @@ const CONFIGURED = firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_
 
 let state = { user: null, profile: null, admin: false };
 
+// ---------------------------------------------------------------- theme
+const THEME_KEY = "lb-theme";
+function currentTheme() {
+  return document.documentElement.getAttribute("data-theme") || "light";
+}
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  try { localStorage.setItem(THEME_KEY, theme); } catch { /* ignore */ }
+  refreshThemeToggles();
+}
+function refreshThemeToggles() {
+  const dark = currentTheme() === "dark";
+  document.querySelectorAll(".theme-toggle").forEach((b) => {
+    b.textContent = dark ? "☀️" : "🌙";
+    b.title = dark ? "Switch to light mode" : "Switch to dark mode";
+    b.onclick = () => applyTheme(dark ? "light" : "dark");
+  });
+}
+function initTheme() {
+  let t;
+  try { t = localStorage.getItem(THEME_KEY); } catch { /* ignore */ }
+  if (t !== "dark" && t !== "light") {
+    t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  document.documentElement.setAttribute("data-theme", t);
+}
+initTheme();
+
 // ---------------------------------------------------------------- toast
 let toastTimer;
 function toast(msg, isErr = false) {
@@ -56,6 +84,7 @@ function topbar() {
         <div class="avatar">${avatar}</div>
         <span>${esc(u?.displayName || u?.email || "")}</span>
       </div>
+      <button class="theme-toggle" title="Toggle theme">🌙</button>
       <button class="ghost" id="signout" style="color:#fff">Sign out</button>
     </header>`;
 }
@@ -63,6 +92,7 @@ function topbar() {
 function wireTopbar() {
   const btn = document.getElementById("signout");
   if (btn) btn.onclick = () => signOut(auth);
+  refreshThemeToggles();
 }
 
 // -------------------------------------------------------------- login
@@ -71,6 +101,7 @@ function renderLogin() {
   const ms = `<svg viewBox="0 0 24 24"><path fill="#F25022" d="M1 1h10v10H1z"/><path fill="#7FBA00" d="M13 1h10v10H13z"/><path fill="#00A4EF" d="M1 13h10v10H1z"/><path fill="#FFB900" d="M13 13h10v10H13z"/></svg>`;
   appEl.innerHTML = `
     <div class="login-shell">
+      <button class="theme-toggle floating" title="Toggle theme">🌙</button>
       <div class="login-card">
         <div class="crest">${esc(ORG_NAME[0] || "L")}</div>
         <h1>${esc(ORG_NAME)} Intern Logbook</h1>
@@ -83,6 +114,7 @@ function renderLogin() {
     </div>`;
   document.getElementById("google").onclick = () => login(googleProvider);
   document.getElementById("microsoft").onclick = () => login(microsoftProvider);
+  refreshThemeToggles();
 }
 
 async function login(provider) {
