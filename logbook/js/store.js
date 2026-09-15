@@ -92,3 +92,13 @@ export async function getAllInterns() {
   const snap = await getDocs(collection(db, "interns"));
   return snap.docs.map((d) => ({ uid: d.id, ...d.data() }));
 }
+
+// Remove an intern entirely: all their log entries first, then the profile.
+// (Firestore doesn't auto-delete subcollections, so we clear logs manually.)
+export async function deleteIntern(uid) {
+  const logs = await getLogs(uid);
+  for (const l of logs) {
+    await deleteLog(uid, l.id);
+  }
+  await deleteDoc(doc(db, "interns", uid));
+}

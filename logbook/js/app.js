@@ -396,7 +396,10 @@ async function renderAdminDashboard() {
         <td>${fmtHours(it.done)}${it.target ? " / " + fmtHours(it.target) : ""}</td>
         <td>${it.logCount}</td>
         <td>${pill}</td>
-        <td><button class="secondary small" data-view="${esc(it.uid)}">View log</button></td>
+        <td style="white-space:nowrap">
+          <button class="secondary small" data-view="${esc(it.uid)}">View log</button>
+          <button class="danger small" data-del-intern="${esc(it.uid)}" data-name="${esc(it.name || it.email || "this intern")}">Delete</button>
+        </td>
       </tr>`;
   }).join("");
 
@@ -425,6 +428,21 @@ async function renderAdminDashboard() {
   appEl.querySelectorAll("[data-view]").forEach((b) => {
     b.onclick = () => renderAdminInternDetail(withTotals.find((i) => i.uid === b.dataset.view));
   });
+  appEl.querySelectorAll("[data-del-intern]").forEach((b) => {
+    b.onclick = () => confirmDeleteIntern(b.dataset.delIntern, b.dataset.name);
+  });
+}
+
+async function confirmDeleteIntern(uid, name) {
+  if (!confirm(`Delete ${name} and ALL of their log entries?\n\nThis permanently removes their logbook record and cannot be undone.`)) return;
+  try {
+    await store.deleteIntern(uid);
+    toast("Intern deleted.");
+    renderAdminDashboard();
+  } catch (e) {
+    toast("Could not delete intern.", true);
+    console.error(e);
+  }
 }
 
 async function renderAdminInternDetail(intern) {
@@ -442,6 +460,7 @@ async function renderAdminInternDetail(intern) {
         <div class="row-actions">
           <button class="gold" id="admin-add">+ Log entry</button>
           <button class="secondary" id="admin-export">Export CSV</button>
+          <button class="danger" id="admin-delete">Delete intern</button>
         </div>
       </div>
       <div class="stats">
@@ -460,6 +479,7 @@ async function renderAdminInternDetail(intern) {
   document.getElementById("back").onclick = () => renderAdminDashboard();
   document.getElementById("admin-add").onclick = () => openLogModal(intern.uid, null, () => renderAdminInternDetail(intern));
   document.getElementById("admin-export").onclick = () => downloadCsv(`logbook-${(intern.name || "intern").replace(/\s+/g, "_")}.csv`, logsToCsv(intern, logs));
+  document.getElementById("admin-delete").onclick = () => confirmDeleteIntern(intern.uid, intern.name || intern.email || "this intern");
   wireLogRowActions(intern.uid, logs, () => renderAdminInternDetail(intern), true);
 }
 
