@@ -3,6 +3,10 @@ import {
   googleProvider,
   microsoftProvider,
   signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  updateProfile,
   signOut,
   onAuthStateChanged,
 } from "./firebase.js";
@@ -109,12 +113,96 @@ function renderLogin() {
         ${CONFIGURED ? "" : `<div class="setup-warn">⚠️ Not connected yet. Add your Firebase keys in <code>js/config.js</code> and enable Google &amp; Microsoft sign-in. See <code>README.md</code>.</div>`}
         <button class="oauth-btn" id="google" ${CONFIGURED ? "" : "disabled"}>${g} Sign in with Google (Gmail)</button>
         <button class="oauth-btn" id="microsoft" ${CONFIGURED ? "" : "disabled"}>${ms} Sign in with Microsoft (Outlook)</button>
+
+        <div class="or-divider"><span>or use email</span></div>
+
+        <form id="email-form" autocomplete="on">
+          <div id="name-field" hidden>
+            <input id="e-name" type="text" placeholder="Full name" autocomplete="name" />
+          </div>
+          <input id="e-email" type="email" placeholder="Email address" autocomplete="email" ${CONFIGURED ? "" : "disabled"} />
+          <input id="e-pass" type="password" placeholder="Password" autocomplete="current-password" ${CONFIGURED ? "" : "disabled"} />
+          <button class="gold" type="submit" id="e-submit" style="width:100%" ${CONFIGURED ? "" : "disabled"}>Sign in</button>
+        </form>
+        <div class="login-links">
+          <a href="#" id="toggle-mode">Create an account</a>
+          <a href="#" id="forgot">Forgot password?</a>
+        </div>
+
         <div class="login-foot">Your logbook is private to you. Admins can review all interns' hours.</div>
       </div>
     </div>`;
   document.getElementById("google").onclick = () => login(googleProvider);
   document.getElementById("microsoft").onclick = () => login(microsoftProvider);
+  wireEmailAuth();
   refreshThemeToggles();
+}
+
+// Email + password sign-in / sign-up (for people without Google or Outlook).
+let emailMode = "signin"; // or "signup"
+function wireEmailAuth() {
+  emailMode = "signin";
+  const form = document.getElementById("email-form");
+  const nameField = document.getElementById("name-field");
+  const submit = document.getElementById("e-submit");
+  const passEl = document.getElementById("e-pass");
+  const toggle = document.getElementById("toggle-mode");
+
+  const applyMode = () => {
+    const signup = emailMode === "signup";
+    nameField.hidden = !signup;
+    submit.textContent = signup ? "Create account" : "Sign in";
+    passEl.setAttribute("autocomplete", signup ? "new-password" : "current-password");
+    toggle.textContent = signup ? "Already have an account? Sign in" : "Create an account";
+  };
+  toggle.onclick = (ev) => { ev.preventDefault(); emailMode = emailMode === "signup" ? "signin" : "signup"; applyMode(); };
+
+  form.onsubmit = async (ev) => {
+    ev.preventDefault();
+    if (!CONFIGURED) return;
+    const email = document.getElementById("e-email").value.trim();
+    const pass = passEl.value;
+    const name = document.getElementById("e-name").value.trim();
+    if (!email || !pass) return toast("Enter your email and password.", true);
+    submit.disabled = true;
+    try {
+      if (emailMode === "signup") {
+        if (pass.length < 6) { toast("Password must be at least 6 characters.", true); submit.disabled = false; return; }
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        if (name) { try { await updateProfile(cred.user, { displayName: name }); } catch { /* non-fatal */ } }
+      } else {
+        await signInWithEmailAndPassword(auth, email, pass);
+      }
+      // onAuthStateChanged takes over from here.
+    } catch (e) {
+      toast(emailAuthError(e), true);
+      console.error(e);
+      submit.disabled = false;
+    }
+  };
+
+  document.getElementById("forgot").onclick = async (ev) => {
+    ev.preventDefault();
+    if (!CONFIGURED) return;
+    const email = (document.getElementById("e-email").value || "").trim();
+    if (!email) return toast("Type your email above first, then click “Forgot password?”.", true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast("Password reset email sent. Check your inbox.");
+    } catch (e) { toast(emailAuthError(e), true); console.error(e); }
+  };
+}
+
+function emailAuthError(e) {
+  const code = e?.code || "";
+  if (code.includes("invalid-email")) return "That email address doesn't look valid.";
+  if (code.includes("email-already-in-use")) return "An account with this email already exists — try signing in.";
+  if (code.includes("weak-password")) return "Password is too weak (use at least 6 characters).";
+  if (code.includes("user-not-found")) return "No account found with that email — create one first.";
+  if (code.includes("wrong-password") || code.includes("invalid-credential")) return "Incorrect email or password.";
+  if (code.includes("too-many-requests")) return "Too many attempts. Please wait a bit and try again.";
+  if (code.includes("operation-not-allowed")) return "Email/password sign-in isn't enabled in Firebase yet.";
+  return "Something went wrong. Please try again.";
 }
 
 async function login(provider) {

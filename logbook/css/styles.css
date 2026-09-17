@@ -185,6 +185,12 @@ td .proof-link { font-size: 13px; }
 .oauth-btn:hover { border-color: var(--gold); filter: none; background: var(--hover-surface); }
 .oauth-btn svg { width: 20px; height: 20px; flex: none; }
 .login-foot { font-size: 12px; color: var(--muted); margin-top: 18px; }
+.or-divider { display: flex; align-items: center; gap: 12px; margin: 18px 0 14px; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+.or-divider::before, .or-divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+#email-form input { margin-bottom: 10px; text-align: left; }
+.login-links { display: flex; justify-content: space-between; gap: 10px; margin-top: 12px; font-size: 13px; }
+.login-links a { color: var(--link); text-decoration: none; }
+.login-links a:hover { text-decoration: underline; }
 
 /* ---------- Misc ---------- */
 .toast {

@@ -33,8 +33,9 @@ Open [`js/config.js`](js/config.js) and replace the placeholder values in
 `firebaseConfig` with the ones from step 1. Set `ORG_NAME` if you want a name
 other than "Lioncrest".
 
-### 3. Enable Gmail + Outlook sign-in
+### 3. Enable the sign-in methods
 In the console: **Build → Authentication → Get started → Sign-in method**.
+- Enable **Email/Password** (for people who don't want to use Google or Outlook — they can create an account with any email and a password).
 - Enable **Google** (this is Gmail).
 - Enable **Microsoft** (this is Outlook / Microsoft 365). Microsoft asks for an
   Azure app **Client ID + secret** — create one at
