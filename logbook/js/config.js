@@ -25,6 +25,13 @@ export const firebaseConfig = {
 // The company name shown throughout the app.
 export const ORG_NAME = "Lioncrest";
 
+// Interns log in with a plain username + password (no email needed). Firebase
+// requires an email internally, so the app appends this hidden domain to every
+// username, e.g. username "juan" becomes "juan@lioncrest-interns.local".
+// Interns never see or type this. DO NOT change it after accounts exist —
+// changing it would stop existing usernames from logging in.
+export const USERNAME_DOMAIN = "lioncrest-interns.local";
+
 // Optional convenience: emails listed here are treated as admins by the UI
 // even before an `admins/{email}` document exists in Firestore. The Firestore
 // security rules still rely on the `admins` collection, so the FIRST admin

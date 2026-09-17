@@ -9,15 +9,20 @@ It mirrors the original spreadsheet:
 |----------------|-------------------|
 | Name, Department, School, Date started, Required hours/day, Weekly hours, **Total required hours**, Time-in link, Proof folder link | Date, Time In, Proof, Time Out, Proof, No. of Hours, **Actual Hours** |
 
-- **Interns** sign in with Google (Gmail), Microsoft (Outlook), or an
-  **email + password account their admin created for them** (there is no public
-  self-signup for email). They fill in their details and log each day. Hours are
+- **Interns** sign in with Google (Gmail), Microsoft (Outlook), or a
+  **username + password their admin created for them** (no email required, and
+  no public self-signup). They fill in their details and log each day. Hours are
   computed automatically from time-in / time-out; a progress bar tracks them
   toward their required total. They can export their log to CSV.
 - **Admins** see every intern, their total hours, progress and status, and can
   open any intern's daily log (and export it). Admins can also **create intern
-  accounts** ("+ Add intern" — sets an email + temporary password) and **delete**
-  interns.
+  accounts** ("+ Add intern" — sets a username + temporary password) and
+  **delete** interns.
+
+> **Resetting an intern's password:** since usernames have no real email inbox,
+> there's no self-service reset. To give a new password, delete the intern and
+> re-add them (this also clears their logs), or add a Cloud Function later for
+> in-place resets.
 
 It's a **static site** (HTML + JS, no build step). All accounts and data live in
 **Firebase Authentication + Firestore**, so there's no server for you to run.
@@ -38,7 +43,9 @@ other than "Lioncrest".
 
 ### 3. Enable the sign-in methods
 In the console: **Build → Authentication → Get started → Sign-in method**.
-- Enable **Email/Password** (for people who don't want to use Google or Outlook — they can create an account with any email and a password).
+- Enable **Email/Password** (this powers the **username + password** logins that
+  admins create — usernames are stored internally as `username@<hidden domain>`,
+  set by `USERNAME_DOMAIN` in `js/config.js`; interns only ever see the username).
 - Enable **Google** (this is Gmail).
 - Enable **Microsoft** (this is Outlook / Microsoft 365). Microsoft asks for an
   Azure app **Client ID + secret** — create one at

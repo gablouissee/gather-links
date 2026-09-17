@@ -17,7 +17,8 @@ import {
   orderBy,
   serverTimestamp,
 } from "./firebase.js";
-import { ADMIN_EMAILS } from "./config.js";
+import { ADMIN_EMAILS, USERNAME_DOMAIN } from "./config.js";
+import { usernameToEmail } from "./helpers.js";
 
 // --- Intern profile -------------------------------------------------
 
@@ -101,7 +102,8 @@ export async function getAllInterns() {
 // session. The new user is created on the secondary auth instance, and the
 // profile document is written as that new user (so it satisfies the security
 // rules), then the secondary instance is signed out again.
-export async function adminCreateIntern({ email, password, name, department, school, totalRequired }) {
+export async function adminCreateIntern({ username, password, name, department, school, totalRequired }) {
+  const email = usernameToEmail(username, USERNAME_DOMAIN);
   const { auth: secAuth, db: secDb } = getSecondary();
   const cred = await createUserWithEmailAndPassword(secAuth, email, password);
   try {
@@ -110,6 +112,7 @@ export async function adminCreateIntern({ email, password, name, department, sch
     }
     await setDoc(doc(secDb, "interns", cred.user.uid), {
       name: name || "",
+      username: username.trim().toLowerCase(),
       email,
       department: department || "",
       dateStart: "",

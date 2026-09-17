@@ -1,5 +1,14 @@
 // Small pure helpers: escaping, time/hours maths, formatting.
 
+// Usernames: lowercase, only letters/digits/dot/underscore/hyphen.
+export function sanitizeUsername(u) {
+  return String(u || "").trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
+}
+// Map a username to the internal Firebase email it's stored under.
+export function usernameToEmail(username, domain) {
+  return `${sanitizeUsername(username)}@${domain}`;
+}
+
 export function esc(value) {
   return String(value ?? "").replace(/[&<>"']/g, (c) => ({
     "&": "&amp;",

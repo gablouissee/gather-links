@@ -4,14 +4,15 @@ import {
   microsoftProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
-  sendPasswordResetEmail,
   signOut,
   onAuthStateChanged,
 } from "./firebase.js";
-import { firebaseConfig, ORG_NAME } from "./config.js";
+import { firebaseConfig, ORG_NAME, USERNAME_DOMAIN } from "./config.js";
 import * as store from "./store.js";
 import {
   esc,
+  sanitizeUsername,
+  usernameToEmail,
   computeHours,
   fmtTime,
   fmtDate,
@@ -68,8 +69,12 @@ function toast(msg, isErr = false) {
 // ------------------------------------------------------------ top bar
 function topbar() {
   const u = state.user;
-  const initials = (u?.displayName || u?.email || "?")
-    .split(/\s+/).map((s) => s[0]).slice(0, 2).join("").toUpperCase();
+  const who = u?.displayName
+    || (state.profile && state.profile.username ? "@" + state.profile.username : u?.email)
+    || "";
+  const initials = (who || "?")
+    .replace(/^@/, "")
+    .split(/[\s.]+/).map((s) => s[0]).slice(0, 2).join("").toUpperCase();
   const avatar = u?.photoURL
     ? `<img src="${esc(u.photoURL)}" alt="" referrerpolicy="no-referrer" />`
     : esc(initials);
@@ -84,7 +89,7 @@ function topbar() {
       ${state.admin ? '<span class="badge">Admin</span>' : ""}
       <div class="who">
         <div class="avatar">${avatar}</div>
-        <span>${esc(u?.displayName || u?.email || "")}</span>
+        <span>${esc(who)}</span>
       </div>
       <button class="theme-toggle" title="Toggle theme">🌙</button>
       <button class="ghost" id="signout" style="color:#fff">Sign out</button>
@@ -112,18 +117,15 @@ function renderLogin() {
         <button class="oauth-btn" id="google" ${CONFIGURED ? "" : "disabled"}>${g} Sign in with Google (Gmail)</button>
         <button class="oauth-btn" id="microsoft" ${CONFIGURED ? "" : "disabled"}>${ms} Sign in with Microsoft (Outlook)</button>
 
-        <div class="or-divider"><span>or use email</span></div>
+        <div class="or-divider"><span>or use a username</span></div>
 
         <form id="email-form" autocomplete="on">
-          <input id="e-email" type="email" placeholder="Email address" autocomplete="email" ${CONFIGURED ? "" : "disabled"} />
+          <input id="e-user" type="text" placeholder="Username" autocomplete="username" autocapitalize="none" spellcheck="false" ${CONFIGURED ? "" : "disabled"} />
           <input id="e-pass" type="password" placeholder="Password" autocomplete="current-password" ${CONFIGURED ? "" : "disabled"} />
           <button class="gold" type="submit" id="e-submit" style="width:100%" ${CONFIGURED ? "" : "disabled"}>Sign in</button>
         </form>
-        <div class="login-links" style="justify-content:center">
-          <a href="#" id="forgot">Forgot password?</a>
-        </div>
 
-        <div class="login-foot">Use the account details your coordinator gave you, or sign in with Google / Outlook.</div>
+        <div class="login-foot">Use the username &amp; password your coordinator gave you, or sign in with Google / Outlook. Forgot your password? Ask your coordinator to reset it.</div>
       </div>
     </div>`;
   document.getElementById("google").onclick = () => login(googleProvider);
@@ -132,7 +134,7 @@ function renderLogin() {
   refreshThemeToggles();
 }
 
-// Email + password sign-in (accounts are created by an admin, not self-service).
+// Username + password sign-in (accounts are created by an admin, not self-service).
 function wireEmailAuth() {
   const form = document.getElementById("email-form");
   const submit = document.getElementById("e-submit");
@@ -141,12 +143,12 @@ function wireEmailAuth() {
   form.onsubmit = async (ev) => {
     ev.preventDefault();
     if (!CONFIGURED) return;
-    const email = document.getElementById("e-email").value.trim();
+    const username = sanitizeUsername(document.getElementById("e-user").value);
     const pass = passEl.value;
-    if (!email || !pass) return toast("Enter your email and password.", true);
+    if (!username || !pass) return toast("Enter your username and password.", true);
     submit.disabled = true;
     try {
-      await signInWithEmailAndPassword(auth, email, pass);
+      await signInWithEmailAndPassword(auth, usernameToEmail(username, USERNAME_DOMAIN), pass);
       // onAuthStateChanged takes over from here.
     } catch (e) {
       toast(emailAuthError(e), true);
@@ -154,28 +156,17 @@ function wireEmailAuth() {
       submit.disabled = false;
     }
   };
-
-  document.getElementById("forgot").onclick = async (ev) => {
-    ev.preventDefault();
-    if (!CONFIGURED) return;
-    const email = (document.getElementById("e-email").value || "").trim();
-    if (!email) return toast("Type your email above first, then click “Forgot password?”.", true);
-    try {
-      await sendPasswordResetEmail(auth, email);
-      toast("Password reset email sent. Check your inbox.");
-    } catch (e) { toast(emailAuthError(e), true); console.error(e); }
-  };
 }
 
 function emailAuthError(e) {
   const code = e?.code || "";
-  if (code.includes("invalid-email")) return "That email address doesn't look valid.";
-  if (code.includes("email-already-in-use")) return "An account with this email already exists — try signing in.";
+  if (code.includes("invalid-email")) return "That username has invalid characters.";
+  if (code.includes("email-already-in-use")) return "That username is already taken.";
   if (code.includes("weak-password")) return "Password is too weak (use at least 6 characters).";
-  if (code.includes("user-not-found")) return "No account found with that email — create one first.";
-  if (code.includes("wrong-password") || code.includes("invalid-credential")) return "Incorrect email or password.";
+  if (code.includes("user-not-found")) return "No account found with that username.";
+  if (code.includes("wrong-password") || code.includes("invalid-credential")) return "Incorrect username or password.";
   if (code.includes("too-many-requests")) return "Too many attempts. Please wait a bit and try again.";
-  if (code.includes("operation-not-allowed")) return "Email/password sign-in isn't enabled in Firebase yet.";
+  if (code.includes("operation-not-allowed")) return "Username sign-in isn't enabled in Firebase yet (enable Email/Password).";
   return "Something went wrong. Please try again.";
 }
 
@@ -452,7 +443,7 @@ async function renderAdminDashboard() {
     else if (!it.logCount) pill = '<span class="pill behind">No logs</span>';
     return `
       <tr>
-        <td><strong>${esc(it.name || "—")}</strong><br><span class="hint">${esc(it.email || "")}</span></td>
+        <td><strong>${esc(it.name || "—")}</strong><br><span class="hint">${esc(it.username ? "@" + it.username : (it.email || ""))}</span></td>
         <td>${esc(it.department || "—")}</td>
         <td>${esc(it.school || "—")}</td>
         <td>${fmtHours(it.done)}${it.target ? " / " + fmtHours(it.target) : ""}</td>
@@ -504,10 +495,10 @@ function openAddInternModal() {
   back.innerHTML = `
     <div class="modal">
       <h2>Add intern</h2>
-      <p class="hint">Create a login for an intern. Share the email and password with them — they can change the password later via “Forgot password?”.</p>
+      <p class="hint">Create a login for an intern. Give them the username and password — no email needed.</p>
       <div class="grid">
         <div><label>Full name</label><input id="a-name" placeholder="Juan Dela Cruz" /></div>
-        <div><label>Email address</label><input id="a-email" type="email" placeholder="intern@example.com" /></div>
+        <div><label>Username</label><input id="a-user" type="text" autocapitalize="none" spellcheck="false" placeholder="e.g. juan.delacruz" /></div>
         <div><label>Temporary password</label><input id="a-pass" type="text" placeholder="at least 6 characters" /></div>
         <div class="grid two">
           <div><label>Department</label><input id="a-dept" placeholder="e.g. Marketing" /></div>
@@ -525,23 +516,23 @@ function openAddInternModal() {
   back.addEventListener("click", (ev) => { if (ev.target === back) close(); });
   back.querySelector("#a-cancel").onclick = close;
   back.querySelector("#a-save").onclick = async () => {
-    const email = back.querySelector("#a-email").value.trim();
+    const username = sanitizeUsername(back.querySelector("#a-user").value);
     const password = back.querySelector("#a-pass").value;
     const name = back.querySelector("#a-name").value.trim();
-    if (!email || !password) return toast("Email and password are required.", true);
+    if (!username || !password) return toast("Username and password are required.", true);
     if (password.length < 6) return toast("Password must be at least 6 characters.", true);
     const btn = back.querySelector("#a-save");
     btn.disabled = true;
     try {
       await store.adminCreateIntern({
-        email,
+        username,
         password,
         name,
         department: back.querySelector("#a-dept").value.trim(),
         school: back.querySelector("#a-school").value.trim(),
         totalRequired: back.querySelector("#a-total").value.trim(),
       });
-      toast(`Account created for ${email}.`);
+      toast(`Account created for @${username}.`);
       close();
       renderAdminDashboard();
     } catch (e) {
@@ -575,7 +566,7 @@ async function renderAdminInternDetail(intern) {
     <div class="wrap">
       <button class="back-link" id="back">← Back to all interns</button>
       <div class="page-head">
-        <div><h1>${esc(intern.name || "Intern")}</h1><p>${esc(intern.email || "")}${intern.department ? " · " + esc(intern.department) : ""}${intern.school ? " · " + esc(intern.school) : ""}</p></div>
+        <div><h1>${esc(intern.name || "Intern")}</h1><p>${esc(intern.username ? "@" + intern.username : (intern.email || ""))}${intern.department ? " · " + esc(intern.department) : ""}${intern.school ? " · " + esc(intern.school) : ""}</p></div>
         <div class="row-actions">
           <button class="gold" id="admin-add">+ Log entry</button>
           <button class="secondary" id="admin-export">Export CSV</button>
