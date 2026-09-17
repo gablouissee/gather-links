@@ -1,6 +1,10 @@
 // Firestore data access. All reads/writes go through here.
 import {
   db,
+  getSecondary,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signOut,
   doc,
   getDoc,
   setDoc,
@@ -91,6 +95,36 @@ export async function deleteLog(uid, logId) {
 export async function getAllInterns() {
   const snap = await getDocs(collection(db, "interns"));
   return snap.docs.map((d) => ({ uid: d.id, ...d.data() }));
+}
+
+// Admin creates an intern's email/password account without losing their own
+// session. The new user is created on the secondary auth instance, and the
+// profile document is written as that new user (so it satisfies the security
+// rules), then the secondary instance is signed out again.
+export async function adminCreateIntern({ email, password, name, department, school, totalRequired }) {
+  const { auth: secAuth, db: secDb } = getSecondary();
+  const cred = await createUserWithEmailAndPassword(secAuth, email, password);
+  try {
+    if (name) {
+      try { await updateProfile(cred.user, { displayName: name }); } catch { /* non-fatal */ }
+    }
+    await setDoc(doc(secDb, "interns", cred.user.uid), {
+      name: name || "",
+      email,
+      department: department || "",
+      dateStart: "",
+      requiredHours: "",
+      weeklyHours: "",
+      totalRequired: totalRequired || "",
+      school: school || "",
+      timeInLink: "https://time.is/",
+      folderLink: "",
+      createdAt: serverTimestamp(),
+    });
+  } finally {
+    await signOut(secAuth);
+  }
+  return cred.user.uid;
 }
 
 // Remove an intern entirely: all their log entries first, then the profile.

@@ -33,6 +33,15 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
+// A separate Firebase app instance used only when an admin creates an intern
+// account. Creating a user signs *in* as that user on whichever auth instance
+// does it — using this secondary instance keeps the admin's own session intact.
+let secondaryApp = null;
+export function getSecondary() {
+  if (!secondaryApp) secondaryApp = initializeApp(firebaseConfig, "secondary");
+  return { auth: getAuth(secondaryApp), db: getFirestore(secondaryApp) };
+}
+
 // Gmail sign-in.
 export const googleProvider = new GoogleAuthProvider();
 

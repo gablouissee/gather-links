@@ -4,9 +4,7 @@ import {
   microsoftProvider,
   signInWithPopup,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
   sendPasswordResetEmail,
-  updateProfile,
   signOut,
   onAuthStateChanged,
 } from "./firebase.js";
@@ -117,19 +115,15 @@ function renderLogin() {
         <div class="or-divider"><span>or use email</span></div>
 
         <form id="email-form" autocomplete="on">
-          <div id="name-field" hidden>
-            <input id="e-name" type="text" placeholder="Full name" autocomplete="name" />
-          </div>
           <input id="e-email" type="email" placeholder="Email address" autocomplete="email" ${CONFIGURED ? "" : "disabled"} />
           <input id="e-pass" type="password" placeholder="Password" autocomplete="current-password" ${CONFIGURED ? "" : "disabled"} />
           <button class="gold" type="submit" id="e-submit" style="width:100%" ${CONFIGURED ? "" : "disabled"}>Sign in</button>
         </form>
-        <div class="login-links">
-          <a href="#" id="toggle-mode">Create an account</a>
+        <div class="login-links" style="justify-content:center">
           <a href="#" id="forgot">Forgot password?</a>
         </div>
 
-        <div class="login-foot">Your logbook is private to you. Admins can review all interns' hours.</div>
+        <div class="login-foot">Use the account details your coordinator gave you, or sign in with Google / Outlook.</div>
       </div>
     </div>`;
   document.getElementById("google").onclick = () => login(googleProvider);
@@ -138,41 +132,21 @@ function renderLogin() {
   refreshThemeToggles();
 }
 
-// Email + password sign-in / sign-up (for people without Google or Outlook).
-let emailMode = "signin"; // or "signup"
+// Email + password sign-in (accounts are created by an admin, not self-service).
 function wireEmailAuth() {
-  emailMode = "signin";
   const form = document.getElementById("email-form");
-  const nameField = document.getElementById("name-field");
   const submit = document.getElementById("e-submit");
   const passEl = document.getElementById("e-pass");
-  const toggle = document.getElementById("toggle-mode");
-
-  const applyMode = () => {
-    const signup = emailMode === "signup";
-    nameField.hidden = !signup;
-    submit.textContent = signup ? "Create account" : "Sign in";
-    passEl.setAttribute("autocomplete", signup ? "new-password" : "current-password");
-    toggle.textContent = signup ? "Already have an account? Sign in" : "Create an account";
-  };
-  toggle.onclick = (ev) => { ev.preventDefault(); emailMode = emailMode === "signup" ? "signin" : "signup"; applyMode(); };
 
   form.onsubmit = async (ev) => {
     ev.preventDefault();
     if (!CONFIGURED) return;
     const email = document.getElementById("e-email").value.trim();
     const pass = passEl.value;
-    const name = document.getElementById("e-name").value.trim();
     if (!email || !pass) return toast("Enter your email and password.", true);
     submit.disabled = true;
     try {
-      if (emailMode === "signup") {
-        if (pass.length < 6) { toast("Password must be at least 6 characters.", true); submit.disabled = false; return; }
-        const cred = await createUserWithEmailAndPassword(auth, email, pass);
-        if (name) { try { await updateProfile(cred.user, { displayName: name }); } catch { /* non-fatal */ } }
-      } else {
-        await signInWithEmailAndPassword(auth, email, pass);
-      }
+      await signInWithEmailAndPassword(auth, email, pass);
       // onAuthStateChanged takes over from here.
     } catch (e) {
       toast(emailAuthError(e), true);
@@ -495,6 +469,7 @@ async function renderAdminDashboard() {
     <div class="wrap">
       <div class="page-head">
         <div><h1>Admin Dashboard</h1><p>Overview of all ${ORG_NAME} interns and their recorded hours.</p></div>
+        <div class="row-actions"><button class="gold" id="add-intern">+ Add intern</button></div>
       </div>
       <div class="stats">
         <div class="stat"><div class="k">Interns</div><div class="v">${withTotals.length}</div><div class="u">registered</div></div>
@@ -519,6 +494,62 @@ async function renderAdminDashboard() {
   appEl.querySelectorAll("[data-del-intern]").forEach((b) => {
     b.onclick = () => confirmDeleteIntern(b.dataset.delIntern, b.dataset.name);
   });
+  document.getElementById("add-intern").onclick = () => openAddInternModal();
+}
+
+// Admin-only: create a new intern's email/password account.
+function openAddInternModal() {
+  const back = document.createElement("div");
+  back.className = "modal-back";
+  back.innerHTML = `
+    <div class="modal">
+      <h2>Add intern</h2>
+      <p class="hint">Create a login for an intern. Share the email and password with them — they can change the password later via “Forgot password?”.</p>
+      <div class="grid">
+        <div><label>Full name</label><input id="a-name" placeholder="Juan Dela Cruz" /></div>
+        <div><label>Email address</label><input id="a-email" type="email" placeholder="intern@example.com" /></div>
+        <div><label>Temporary password</label><input id="a-pass" type="text" placeholder="at least 6 characters" /></div>
+        <div class="grid two">
+          <div><label>Department</label><input id="a-dept" placeholder="e.g. Marketing" /></div>
+          <div><label>Total required hours</label><input id="a-total" type="number" placeholder="486" /></div>
+        </div>
+        <div><label>School</label><input id="a-school" placeholder="School name" /></div>
+      </div>
+      <div class="modal-foot">
+        <button class="secondary" id="a-cancel">Cancel</button>
+        <button class="gold" id="a-save">Create account</button>
+      </div>
+    </div>`;
+  document.body.appendChild(back);
+  const close = () => back.remove();
+  back.addEventListener("click", (ev) => { if (ev.target === back) close(); });
+  back.querySelector("#a-cancel").onclick = close;
+  back.querySelector("#a-save").onclick = async () => {
+    const email = back.querySelector("#a-email").value.trim();
+    const password = back.querySelector("#a-pass").value;
+    const name = back.querySelector("#a-name").value.trim();
+    if (!email || !password) return toast("Email and password are required.", true);
+    if (password.length < 6) return toast("Password must be at least 6 characters.", true);
+    const btn = back.querySelector("#a-save");
+    btn.disabled = true;
+    try {
+      await store.adminCreateIntern({
+        email,
+        password,
+        name,
+        department: back.querySelector("#a-dept").value.trim(),
+        school: back.querySelector("#a-school").value.trim(),
+        totalRequired: back.querySelector("#a-total").value.trim(),
+      });
+      toast(`Account created for ${email}.`);
+      close();
+      renderAdminDashboard();
+    } catch (e) {
+      toast(emailAuthError(e), true);
+      console.error(e);
+      btn.disabled = false;
+    }
+  };
 }
 
 async function confirmDeleteIntern(uid, name) {

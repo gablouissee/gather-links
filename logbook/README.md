@@ -9,12 +9,15 @@ It mirrors the original spreadsheet:
 |----------------|-------------------|
 | Name, Department, School, Date started, Required hours/day, Weekly hours, **Total required hours**, Time-in link, Proof folder link | Date, Time In, Proof, Time Out, Proof, No. of Hours, **Actual Hours** |
 
-- **Interns** sign in with Google (Gmail) or Microsoft (Outlook), fill in their
-  details, and log each day. Hours are computed automatically from time-in /
-  time-out; a progress bar tracks them toward their required total. They can
-  export their log to CSV.
+- **Interns** sign in with Google (Gmail), Microsoft (Outlook), or an
+  **email + password account their admin created for them** (there is no public
+  self-signup for email). They fill in their details and log each day. Hours are
+  computed automatically from time-in / time-out; a progress bar tracks them
+  toward their required total. They can export their log to CSV.
 - **Admins** see every intern, their total hours, progress and status, and can
-  open any intern's daily log (and export it).
+  open any intern's daily log (and export it). Admins can also **create intern
+  accounts** ("+ Add intern" — sets an email + temporary password) and **delete**
+  interns.
 
 It's a **static site** (HTML + JS, no build step). All accounts and data live in
 **Firebase Authentication + Firestore**, so there's no server for you to run.
