@@ -41,6 +41,11 @@ service cloud.firestore {
         allow read:  if isAdmin() || (signedIn() && request.auth.uid == uid);
         allow write: if isAdmin() || (signedIn() && request.auth.uid == uid);
       }
+
+      match /proofs/{logId} {
+        allow read:  if isAdmin() || (signedIn() && request.auth.uid == uid);
+        allow write: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      }
     }
   }
 }

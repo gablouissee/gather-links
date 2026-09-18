@@ -13,6 +13,7 @@ import {
   esc,
   sanitizeUsername,
   usernameToEmail,
+  fileToCompressedDataURL,
   computeHours,
   fmtTime,
   fmtDate,
@@ -247,9 +248,9 @@ function logTable(logs, editable) {
     <tr>
       <td>${esc(fmtDate(l.date))}</td>
       <td>${esc(fmtTime(l.timeIn))}</td>
-      <td>${l.timeInProof ? `<a class="proof-link" href="${esc(l.timeInProof)}" target="_blank" rel="noopener">view</a>` : "—"}</td>
+      <td>${proofCell(l, "in")}</td>
       <td>${esc(fmtTime(l.timeOut))}</td>
-      <td>${l.timeOutProof ? `<a class="proof-link" href="${esc(l.timeOutProof)}" target="_blank" rel="noopener">view</a>` : "—"}</td>
+      <td>${proofCell(l, "out")}</td>
       <td>${fmtHours(l.hours)}</td>
       <td><strong>${fmtHours(l.actualHours)}</strong></td>
       ${editable ? `<td><button class="ghost small" data-edit="${esc(l.id)}">Edit</button><button class="ghost small" data-del="${esc(l.id)}" style="color:var(--danger)">Delete</button></td>` : ""}
@@ -264,7 +265,39 @@ function logTable(logs, editable) {
     </table>`;
 }
 
+function proofCell(l, which) {
+  const link = which === "in" ? l.timeInProof : l.timeOutProof;
+  const isImg = which === "in" ? l.timeInProofImg : l.timeOutProofImg;
+  if (isImg) {
+    return `<button class="ghost small proof-view" data-proof-log="${esc(l.id)}" data-proof-which="${which}">📷 photo</button>`;
+  }
+  if (link) {
+    return `<a class="proof-link" href="${esc(link)}" target="_blank" rel="noopener">link</a>`;
+  }
+  return "—";
+}
+
+function openProofLightbox(uid, logId, which) {
+  const back = document.createElement("div");
+  back.className = "modal-back";
+  back.innerHTML = `<div class="lightbox"><div class="center-load" style="color:#fff">Loading photo…</div></div>`;
+  document.body.appendChild(back);
+  back.addEventListener("click", () => back.remove());
+  store.getProofs(uid, logId).then((p) => {
+    const url = p && (which === "in" ? p.timeIn : p.timeOut);
+    back.querySelector(".lightbox").innerHTML = url
+      ? `<img src="${url}" alt="Proof photo" /><div style="text-align:center;margin-top:10px"><button class="secondary small">Close</button></div>`
+      : `<p style="color:#fff">Photo not found.</p>`;
+  }).catch((e) => {
+    console.error(e);
+    back.querySelector(".lightbox").innerHTML = `<p style="color:#fff">Could not load photo.</p>`;
+  });
+}
+
 function wireLogRowActions(uid, logs, onDone, editable) {
+  appEl.querySelectorAll(".proof-view").forEach((b) => {
+    b.onclick = () => openProofLightbox(uid, b.dataset.proofLog, b.dataset.proofWhich);
+  });
   if (!editable) return;
   appEl.querySelectorAll("[data-edit]").forEach((b) => {
     b.onclick = () => {
@@ -298,8 +331,18 @@ function openLogModal(uid, entry, onDone) {
           <div><label>Time In</label><input type="time" id="f-in" value="${esc(e.timeIn || "")}" /></div>
           <div><label>Time Out</label><input type="time" id="f-out" value="${esc(e.timeOut || "")}" /></div>
         </div>
-        <div><label>Time-In proof (screenshot link)</label><input type="url" id="f-inproof" placeholder="https://…" value="${esc(e.timeInProof || "")}" /></div>
-        <div><label>Time-Out proof (screenshot link)</label><input type="url" id="f-outproof" placeholder="https://…" value="${esc(e.timeOutProof || "")}" /></div>
+        <div>
+          <label>Time-In proof</label>
+          <div class="proof-preview" id="in-preview" hidden></div>
+          <input type="file" id="f-in-file" accept="image/*" class="proof-file" />
+          <input type="url" id="f-inproof" placeholder="…or paste a link instead" value="${esc(e.timeInProof || "")}" />
+        </div>
+        <div>
+          <label>Time-Out proof</label>
+          <div class="proof-preview" id="out-preview" hidden></div>
+          <input type="file" id="f-out-file" accept="image/*" class="proof-file" />
+          <input type="url" id="f-outproof" placeholder="…or paste a link instead" value="${esc(e.timeOutProof || "")}" />
+        </div>
         <div><label>Actual hours <span style="font-weight:400">(auto-filled from times; edit to deduct breaks)</span></label><input type="number" step="0.25" min="0" id="f-actual" value="${esc(e.actualHours ?? "")}" /></div>
         <div><label>Notes (optional)</label><textarea id="f-notes" rows="2">${esc(e.notes || "")}</textarea></div>
       </div>
@@ -323,6 +366,52 @@ function openLogModal(uid, entry, onDone) {
   inEl.addEventListener("change", recompute);
   outEl.addEventListener("change", recompute);
 
+  // --- proof photos ---
+  const photos = { in: null, out: null }; // data URLs, or null
+  const renderPreview = (which) => {
+    const box = back.querySelector(which === "in" ? "#in-preview" : "#out-preview");
+    const linkEl = back.querySelector(which === "in" ? "#f-inproof" : "#f-outproof");
+    const data = photos[which];
+    box.hidden = !data;
+    box.innerHTML = data
+      ? `<img src="${data}" alt="preview" /><button type="button" class="ghost small remove-photo" style="color:var(--danger)">Remove photo</button>`
+      : "";
+    if (data) {
+      linkEl.value = "";
+      linkEl.disabled = true;
+      box.querySelector(".remove-photo").onclick = () => {
+        photos[which] = null;
+        const fileEl = back.querySelector(which === "in" ? "#f-in-file" : "#f-out-file");
+        fileEl.value = "";
+        linkEl.disabled = false;
+        renderPreview(which);
+      };
+    } else {
+      linkEl.disabled = false;
+    }
+  };
+  const wireFile = (which) => {
+    const fileEl = back.querySelector(which === "in" ? "#f-in-file" : "#f-out-file");
+    fileEl.addEventListener("change", async () => {
+      const file = fileEl.files && fileEl.files[0];
+      if (!file) return;
+      try {
+        photos[which] = await fileToCompressedDataURL(file);
+        renderPreview(which);
+      } catch (err) { toast(err.message || "Could not use that image.", true); fileEl.value = ""; }
+    });
+  };
+  wireFile("in");
+  wireFile("out");
+  // Load existing uploaded photos when editing.
+  if (entry && (entry.timeInProofImg || entry.timeOutProofImg)) {
+    store.getProofs(uid, entry.id).then((p) => {
+      if (!p) return;
+      if (p.timeIn) { photos.in = p.timeIn; renderPreview("in"); }
+      if (p.timeOut) { photos.out = p.timeOut; renderPreview("out"); }
+    }).catch((err) => console.error(err));
+  }
+
   const close = () => back.remove();
   back.addEventListener("click", (ev) => { if (ev.target === back) close(); });
   back.querySelector("#m-cancel").onclick = close;
@@ -336,19 +425,28 @@ function openLogModal(uid, entry, onDone) {
       date,
       timeIn,
       timeOut,
-      timeInProof: back.querySelector("#f-inproof").value.trim(),
-      timeOutProof: back.querySelector("#f-outproof").value.trim(),
+      timeInProof: photos.in ? "" : back.querySelector("#f-inproof").value.trim(),
+      timeInProofImg: !!photos.in,
+      timeOutProof: photos.out ? "" : back.querySelector("#f-outproof").value.trim(),
+      timeOutProofImg: !!photos.out,
       hours,
       actualHours: actualRaw === "" ? hours : Number(actualRaw),
       notes: back.querySelector("#f-notes").value.trim(),
     };
+    const saveBtn = back.querySelector("#m-save");
+    saveBtn.disabled = true;
     try {
-      if (entry) await store.updateLog(uid, entry.id, record);
-      else await store.addLog(uid, record);
+      let logId = entry ? entry.id : null;
+      if (entry) await store.updateLog(uid, logId, record);
+      else logId = await store.addLog(uid, record);
+      // Save/clear the photos if there are any now, or there were any before.
+      if (photos.in || photos.out || (entry && (entry.timeInProofImg || entry.timeOutProofImg))) {
+        await store.saveProofs(uid, logId, { timeIn: photos.in || "", timeOut: photos.out || "" });
+      }
       toast("Entry saved.");
       close();
       onDone();
-    } catch (err) { toast("Could not save entry.", true); console.error(err); }
+    } catch (err) { toast("Could not save entry.", true); console.error(err); saveBtn.disabled = false; }
   };
 }
 

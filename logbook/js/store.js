@@ -89,6 +89,26 @@ export async function updateLog(uid, logId, entry) {
 
 export async function deleteLog(uid, logId) {
   await deleteDoc(doc(db, "interns", uid, "logs", logId));
+  // Remove any uploaded proof photos for this log too.
+  try { await deleteDoc(doc(db, "interns", uid, "proofs", logId)); } catch { /* none */ }
+}
+
+// --- Proof photos (stored apart from logs so listings stay light) ----
+
+export async function getProofs(uid, logId) {
+  const snap = await getDoc(doc(db, "interns", uid, "proofs", logId));
+  return snap.exists() ? snap.data() : null;
+}
+
+// Save (or clear) the time-in / time-out photos for a log. Data URLs are stored
+// in a separate `proofs` document so log listings don't have to download images.
+export async function saveProofs(uid, logId, { timeIn, timeOut }) {
+  const ref = doc(db, "interns", uid, "proofs", logId);
+  if (!timeIn && !timeOut) {
+    try { await deleteDoc(ref); } catch { /* nothing to delete */ }
+    return;
+  }
+  await setDoc(ref, { timeIn: timeIn || "", timeOut: timeOut || "" });
 }
 
 // --- Admin views ----------------------------------------------------
@@ -135,7 +155,12 @@ export async function adminCreateIntern({ username, password, name, department, 
 export async function deleteIntern(uid) {
   const logs = await getLogs(uid);
   for (const l of logs) {
-    await deleteLog(uid, l.id);
+    await deleteLog(uid, l.id); // also removes each log's proof photos
+  }
+  // Safety net: clear any stray proof documents.
+  const proofSnap = await getDocs(collection(db, "interns", uid, "proofs"));
+  for (const d of proofSnap.docs) {
+    await deleteDoc(doc(db, "interns", uid, "proofs", d.id));
   }
   await deleteDoc(doc(db, "interns", uid));
 }

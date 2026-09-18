@@ -9,6 +9,47 @@ export function usernameToEmail(username, domain) {
   return `${sanitizeUsername(username)}@${domain}`;
 }
 
+// Read an image File, shrink/compress it in-browser, and return a JPEG data URL
+// small enough to store in Firestore (well under the 1 MB document limit).
+export function fileToCompressedDataURL(file, { maxDim = 1200, maxBytes = 300000 } = {}) {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type || !file.type.startsWith("image/")) {
+      reject(new Error("Please choose an image file."));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("Could not read that file."));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("Could not open that image."));
+      img.onload = () => {
+        let { width, height } = img;
+        if (width >= height && width > maxDim) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else if (height > maxDim) {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+        let q = 0.72;
+        let url = canvas.toDataURL("image/jpeg", q);
+        // base64 length is ~1.37x the byte size; shrink quality until it fits.
+        while (url.length > maxBytes * 1.37 && q > 0.4) {
+          q -= 0.1;
+          url = canvas.toDataURL("image/jpeg", q);
+        }
+        resolve(url);
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 export function esc(value) {
   return String(value ?? "").replace(/[&<>"']/g, (c) => ({
     "&": "&amp;",
@@ -95,9 +136,9 @@ export function logsToCsv(profile, logs) {
     rows.push([
       l.date || "",
       fmtTime(l.timeIn),
-      l.timeInProof || "",
+      l.timeInProofImg ? "[photo uploaded]" : (l.timeInProof || ""),
       fmtTime(l.timeOut),
-      l.timeOutProof || "",
+      l.timeOutProofImg ? "[photo uploaded]" : (l.timeOutProof || ""),
       l.hours ?? "",
       l.actualHours ?? "",
       l.notes || "",
