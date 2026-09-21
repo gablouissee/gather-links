@@ -46,6 +46,19 @@ service cloud.firestore {
         allow read:  if isAdmin() || (signedIn() && request.auth.uid == uid);
         allow write: if isAdmin() || (signedIn() && request.auth.uid == uid);
       }
+
+      // Private admin notes about an intern — admins only, never the intern.
+      match /admin/{docId} {
+        allow read, write: if isAdmin();
+      }
+    }
+
+    // Admin document library — admins only.
+    match /documents/{docId} {
+      allow read, write: if isAdmin();
+    }
+    match /documentFiles/{docId} {
+      allow read, write: if isAdmin();
     }
   }
 }

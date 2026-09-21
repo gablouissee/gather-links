@@ -164,3 +164,48 @@ export async function deleteIntern(uid) {
   }
   await deleteDoc(doc(db, "interns", uid));
 }
+
+// --- Admin notes about an intern (private: admins only) ---------------
+
+export async function getAdminNotes(uid) {
+  const snap = await getDoc(doc(db, "interns", uid, "admin", "notes"));
+  return snap.exists() ? (snap.data().text || "") : "";
+}
+
+export async function saveAdminNotes(uid, text) {
+  await setDoc(doc(db, "interns", uid, "admin", "notes"), {
+    text: text || "",
+    updatedAt: serverTimestamp(),
+  });
+}
+
+// --- Admin document library (admin only) -----------------------------
+// Metadata lives in `documents`; any uploaded file's bytes live in
+// `documentFiles/{id}` so the library list stays light.
+
+export async function getDocuments() {
+  const q = query(collection(db, "documents"), orderBy("createdAt", "desc"));
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+}
+
+export async function addDocument(meta, fileData) {
+  const ref = await addDoc(collection(db, "documents"), {
+    ...meta,
+    createdAt: serverTimestamp(),
+  });
+  if (fileData) {
+    await setDoc(doc(db, "documentFiles", ref.id), fileData);
+  }
+  return ref.id;
+}
+
+export async function getDocumentFile(id) {
+  const snap = await getDoc(doc(db, "documentFiles", id));
+  return snap.exists() ? snap.data() : null;
+}
+
+export async function deleteDocument(id) {
+  await deleteDoc(doc(db, "documents", id));
+  try { await deleteDoc(doc(db, "documentFiles", id)); } catch { /* none */ }
+}

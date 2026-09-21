@@ -50,6 +50,26 @@ export function fileToCompressedDataURL(file, { maxDim = 1200, maxBytes = 300000
   });
 }
 
+// Read any file as a data URL (no compression — used for documents).
+export function fileToDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("Could not read that file."));
+    reader.onload = () => resolve(reader.result);
+    reader.readAsDataURL(file);
+  });
+}
+
+// Trigger a browser download of a data URL.
+export function downloadDataUrl(fileName, dataUrl) {
+  const a = document.createElement("a");
+  a.href = dataUrl;
+  a.download = fileName || "download";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
 export function esc(value) {
   return String(value ?? "").replace(/[&<>"']/g, (c) => ({
     "&": "&amp;",

@@ -19,6 +19,11 @@ It mirrors the original spreadsheet:
   accounts** ("+ Add intern" — sets a username + temporary password) and
   **delete** interns.
 
+Admins also get a **Documents** library ("📁 Documents" on the dashboard) for
+storing OJT forms, memos and other files (upload a file up to ~700 KB, or paste a
+link for bigger ones), and a private **Admin notes** box on each intern's page
+that only admins can see.
+
 > **Resetting an intern's password:** since usernames have no real email inbox,
 > there's no self-service reset. To give a new password, delete the intern and
 > re-add them (this also clears their logs), or add a Cloud Function later for

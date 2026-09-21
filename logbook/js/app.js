@@ -14,6 +14,8 @@ import {
   sanitizeUsername,
   usernameToEmail,
   fileToCompressedDataURL,
+  fileToDataURL,
+  downloadDataUrl,
   computeHours,
   fmtTime,
   fmtDate,
@@ -558,7 +560,10 @@ async function renderAdminDashboard() {
     <div class="wrap">
       <div class="page-head">
         <div><h1>Admin Dashboard</h1><p>Overview of all ${ORG_NAME} interns and their recorded hours.</p></div>
-        <div class="row-actions"><button class="gold" id="add-intern">+ Add intern</button></div>
+        <div class="row-actions">
+          <button class="secondary" id="open-docs">📁 Documents</button>
+          <button class="gold" id="add-intern">+ Add intern</button>
+        </div>
       </div>
       <div class="stats">
         <div class="stat"><div class="k">Interns</div><div class="v">${withTotals.length}</div><div class="u">registered</div></div>
@@ -584,6 +589,145 @@ async function renderAdminDashboard() {
     b.onclick = () => confirmDeleteIntern(b.dataset.delIntern, b.dataset.name);
   });
   document.getElementById("add-intern").onclick = () => openAddInternModal();
+  document.getElementById("open-docs").onclick = () => renderDocuments();
+}
+
+// ----------------------------------------------------- documents library
+const MAX_DOC_BYTES = 700 * 1024; // ~700 KB cap for uploaded files
+
+async function renderDocuments() {
+  appEl.innerHTML = topbar() + `<div class="wrap"><div class="center-load">Loading documents…</div></div>`;
+  wireTopbar();
+  let docs = [];
+  try {
+    docs = await store.getDocuments();
+  } catch (e) {
+    console.error(e);
+    appEl.innerHTML = topbar() + `<div class="wrap"><div class="card"><p>Could not load documents. Check your Firestore rules.</p></div></div>`;
+    wireTopbar();
+    return;
+  }
+  const items = docs.map((d) => `
+    <tr>
+      <td><strong>${esc(d.title || "Untitled")}</strong>${d.note ? `<br><span class="hint">${esc(d.note)}</span>` : ""}</td>
+      <td>${d.fileName ? esc(d.fileName) : (d.link ? "Link" : "—")}</td>
+      <td style="white-space:nowrap">
+        ${d.hasFile ? `<button class="secondary small" data-dl="${esc(d.id)}" data-name="${esc(d.fileName || "document")}">Download</button>` : ""}
+        ${d.link ? `<a class="proof-link" href="${esc(d.link)}" target="_blank" rel="noopener">Open link</a>` : ""}
+        <button class="danger small" data-del-doc="${esc(d.id)}" data-title="${esc(d.title || "this document")}">Delete</button>
+      </td>
+    </tr>`).join("");
+
+  appEl.innerHTML = topbar() + `
+    <div class="wrap">
+      <button class="back-link" id="back">← Back to dashboard</button>
+      <div class="page-head">
+        <div><h1>Documents</h1><p>Store OJT forms, memos and other files (private to admins).</p></div>
+        <div class="row-actions"><button class="gold" id="add-doc">+ Add document</button></div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          ${docs.length ? `<table>
+            <thead><tr><th>Title</th><th>File</th><th></th></tr></thead>
+            <tbody>${items}</tbody></table>` : '<div class="empty">No documents yet. Click “+ Add document”.</div>'}
+        </div>
+      </div>
+    </div>`;
+  wireTopbar();
+  document.getElementById("back").onclick = () => renderAdminDashboard();
+  document.getElementById("add-doc").onclick = () => openAddDocumentModal();
+  appEl.querySelectorAll("[data-dl]").forEach((b) => {
+    b.onclick = async () => {
+      b.disabled = true;
+      try {
+        const f = await store.getDocumentFile(b.dataset.dl);
+        if (f && f.data) downloadDataUrl(f.fileName || b.dataset.name, f.data);
+        else toast("File not found.", true);
+      } catch (e) { toast("Could not download file.", true); console.error(e); }
+      b.disabled = false;
+    };
+  });
+  appEl.querySelectorAll("[data-del-doc]").forEach((b) => {
+    b.onclick = async () => {
+      if (!confirm(`Delete “${b.dataset.title}”?`)) return;
+      try { await store.deleteDocument(b.dataset.delDoc); toast("Document deleted."); renderDocuments(); }
+      catch (e) { toast("Could not delete document.", true); console.error(e); }
+    };
+  });
+}
+
+function openAddDocumentModal() {
+  const back = document.createElement("div");
+  back.className = "modal-back";
+  back.innerHTML = `
+    <div class="modal">
+      <h2>Add document</h2>
+      <p class="hint">Upload a file (up to 700 KB) or paste a link (for bigger files, e.g. Google Drive).</p>
+      <div class="grid">
+        <div><label>Title</label><input id="d-title" placeholder="e.g. OJT Endorsement Form" /></div>
+        <div><label>Note (optional)</label><input id="d-note" placeholder="short description" /></div>
+        <div>
+          <label>File</label>
+          <input type="file" id="d-file" class="proof-file" />
+          <div class="hint" id="d-fileinfo"></div>
+        </div>
+        <div><label>…or a link</label><input type="url" id="d-link" placeholder="https://drive.google.com/…" /></div>
+      </div>
+      <div class="modal-foot">
+        <button class="secondary" id="d-cancel">Cancel</button>
+        <button class="gold" id="d-save">Save document</button>
+      </div>
+    </div>`;
+  document.body.appendChild(back);
+  const close = () => back.remove();
+  back.addEventListener("click", (ev) => { if (ev.target === back) close(); });
+  back.querySelector("#d-cancel").onclick = close;
+
+  let fileData = null; // { data, fileName, mime }
+  const info = back.querySelector("#d-fileinfo");
+  const linkEl = back.querySelector("#d-link");
+  back.querySelector("#d-file").addEventListener("change", async (ev) => {
+    const file = ev.target.files && ev.target.files[0];
+    fileData = null;
+    info.textContent = "";
+    if (!file) return;
+    try {
+      let dataUrl;
+      if (file.type.startsWith("image/")) {
+        dataUrl = await fileToCompressedDataURL(file, { maxDim: 1600, maxBytes: 500000 });
+      } else {
+        if (file.size > MAX_DOC_BYTES) {
+          toast("That file is over 700 KB — paste a link instead.", true);
+          ev.target.value = "";
+          return;
+        }
+        dataUrl = await fileToDataURL(file);
+      }
+      fileData = { data: dataUrl, fileName: file.name, mime: file.type || "application/octet-stream" };
+      info.textContent = `Selected: ${file.name}`;
+      linkEl.value = "";
+      linkEl.disabled = true;
+    } catch (e) { toast(e.message || "Could not read that file.", true); ev.target.value = ""; }
+  });
+
+  back.querySelector("#d-save").onclick = async () => {
+    const title = back.querySelector("#d-title").value.trim();
+    const note = back.querySelector("#d-note").value.trim();
+    const link = linkEl.value.trim();
+    if (!title) return toast("Please enter a title.", true);
+    if (!fileData && !link) return toast("Add a file or a link.", true);
+    const btn = back.querySelector("#d-save");
+    btn.disabled = true;
+    try {
+      await store.addDocument(
+        { title, note, link: fileData ? "" : link, fileName: fileData ? fileData.fileName : "", hasFile: !!fileData },
+        fileData,
+      );
+      toast("Document saved.");
+      close();
+      renderDocuments();
+    } catch (e) { toast("Could not save document.", true); console.error(e); btn.disabled = false; }
+  };
 }
 
 // Admin-only: create a new intern's email/password account.
@@ -679,6 +823,11 @@ async function renderAdminInternDetail(intern) {
       </div>
       ${target ? `<div class="progress"><span style="width:${pct}%"></span></div>` : ""}
       <div class="card" style="margin-top:22px">
+        <h2>Admin notes <span style="font-weight:400;font-size:13px;color:var(--muted)">(private — only admins can see this)</span></h2>
+        <textarea id="admin-notes" rows="4" placeholder="Notes about this intern…">Loading…</textarea>
+        <div class="row-actions"><button class="secondary small" id="save-notes">Save notes</button></div>
+      </div>
+      <div class="card">
         <h2>Daily time log</h2>
         <div class="table-wrap">${logTable(logs, true)}</div>
       </div>
@@ -689,6 +838,17 @@ async function renderAdminInternDetail(intern) {
   document.getElementById("admin-export").onclick = () => downloadCsv(`logbook-${(intern.name || "intern").replace(/\s+/g, "_")}.csv`, logsToCsv(intern, logs));
   document.getElementById("admin-delete").onclick = () => confirmDeleteIntern(intern.uid, intern.name || intern.email || "this intern");
   wireLogRowActions(intern.uid, logs, () => renderAdminInternDetail(intern), true);
+
+  // Admin notes: load then enable saving.
+  const notesEl = document.getElementById("admin-notes");
+  store.getAdminNotes(intern.uid).then((t) => { notesEl.value = t; }).catch(() => { notesEl.value = ""; });
+  document.getElementById("save-notes").onclick = async () => {
+    const btn = document.getElementById("save-notes");
+    btn.disabled = true;
+    try { await store.saveAdminNotes(intern.uid, notesEl.value); toast("Notes saved."); }
+    catch (e) { toast("Could not save notes.", true); console.error(e); }
+    btn.disabled = false;
+  };
 }
 
 // -------------------------------------------------------- auth routing
