@@ -534,6 +534,10 @@ async function renderAdminDashboard() {
     return;
   }
 
+  // Keep the chat directory in sync so every intern is reachable in chat
+  // automatically (runs in the background; only writes missing entries).
+  store.syncDirectory(interns).catch((e) => console.error(e));
+
   // Pull each intern's logs to compute totals.
   const withTotals = await Promise.all(interns.map(async (it) => {
     let logs = [];

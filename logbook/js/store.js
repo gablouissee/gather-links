@@ -239,8 +239,11 @@ export async function getDirectory() {
 
 // Admin-only: make sure every intern has a directory entry, so they show up
 // in the chat contact list without each one having to sign in first.
-export async function syncDirectory() {
-  const [interns, dir] = await Promise.all([getAllInterns(), getDirectory()]);
+export async function syncDirectory(internsArg) {
+  const [interns, dir] = await Promise.all([
+    internsArg ? Promise.resolve(internsArg) : getAllInterns(),
+    getDirectory(),
+  ]);
   const have = new Set(dir.map((d) => d.uid));
   const missing = interns.filter((i) => !have.has(i.uid));
   for (const it of missing) {
