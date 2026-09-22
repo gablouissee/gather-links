@@ -31,6 +31,12 @@ const CONFIGURED = firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_
 
 let state = { user: null, profile: null, admin: false };
 
+// Active chat listener (unsubscribed when navigating away).
+let chatUnsub = null;
+function stopChat() {
+  if (chatUnsub) { chatUnsub(); chatUnsub = null; }
+}
+
 // ---------------------------------------------------------------- theme
 const THEME_KEY = "lb-theme";
 function currentTheme() {
@@ -94,6 +100,7 @@ function topbar() {
         <div class="avatar">${avatar}</div>
         <span>${esc(who)}</span>
       </div>
+      <button class="ghost" id="open-chat" style="color:#fff" title="Messages">💬</button>
       <button class="theme-toggle" title="Toggle theme">🌙</button>
       <button class="ghost" id="signout" style="color:#fff">Sign out</button>
     </header>`;
@@ -102,11 +109,14 @@ function topbar() {
 function wireTopbar() {
   const btn = document.getElementById("signout");
   if (btn) btn.onclick = () => signOut(auth);
+  const chat = document.getElementById("open-chat");
+  if (chat) chat.onclick = () => renderMessages();
   refreshThemeToggles();
 }
 
 // -------------------------------------------------------------- login
 function renderLogin() {
+  stopChat();
   const g = `<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.2 13.3 17.6 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.5 3-2.2 5.5-4.7 7.2l7.3 5.7c4.3-4 6.8-9.9 6.8-17.4z"/><path fill="#FBBC05" d="M10.4 28.3c-.5-1.5-.8-3-.8-4.8s.3-3.3.8-4.8l-7.8-6.1C.9 16.1 0 19.9 0 23.5s.9 7.4 2.6 10.9l7.8-6.1z"/><path fill="#34A853" d="M24 47c6.2 0 11.4-2 15.2-5.5l-7.3-5.7c-2 1.4-4.7 2.3-7.9 2.3-6.4 0-11.8-3.8-13.6-9.8l-7.8 6.1C6.5 42.6 14.6 47 24 47z"/></svg>`;
   const ms = `<svg viewBox="0 0 24 24"><path fill="#F25022" d="M1 1h10v10H1z"/><path fill="#7FBA00" d="M13 1h10v10H13z"/><path fill="#00A4EF" d="M1 13h10v10H1z"/><path fill="#FFB900" d="M13 13h10v10H13z"/></svg>`;
   appEl.innerHTML = `
@@ -198,6 +208,7 @@ function statProgress(logs, profile) {
 }
 
 function renderInternDashboard(logs) {
+  stopChat();
   const p = state.profile;
   const { done, target, pct, remaining } = statProgress(logs, p);
   appEl.innerHTML = topbar() + `
@@ -510,6 +521,7 @@ function openProfileModal(profile, onDone) {
 
 // ----------------------------------------------------- admin dashboard
 async function renderAdminDashboard() {
+  stopChat();
   appEl.innerHTML = topbar() + `<div class="wrap"><div class="center-load">Loading interns…</div></div>`;
   wireTopbar();
   let interns;
@@ -596,6 +608,7 @@ async function renderAdminDashboard() {
 const MAX_DOC_BYTES = 700 * 1024; // ~700 KB cap for uploaded files
 
 async function renderDocuments() {
+  stopChat();
   appEl.innerHTML = topbar() + `<div class="wrap"><div class="center-load">Loading documents…</div></div>`;
   wireTopbar();
   let docs = [];
@@ -798,6 +811,7 @@ async function confirmDeleteIntern(uid, name) {
 }
 
 async function renderAdminInternDetail(intern) {
+  stopChat();
   appEl.innerHTML = topbar() + `<div class="wrap"><div class="center-load">Loading log…</div></div>`;
   wireTopbar();
   let logs = [];
@@ -848,6 +862,100 @@ async function renderAdminInternDetail(intern) {
     try { await store.saveAdminNotes(intern.uid, notesEl.value); toast("Notes saved."); }
     catch (e) { toast("Could not save notes.", true); console.error(e); }
     btn.disabled = false;
+  };
+}
+
+// ----------------------------------------------------- messages / chat
+function myDisplayName() {
+  return (state.profile && (state.profile.name || (state.profile.username ? "@" + state.profile.username : ""))) ||
+    state.user?.displayName || state.user?.email || "Me";
+}
+
+async function renderMessages() {
+  stopChat();
+  appEl.innerHTML = topbar() + `<div class="wrap"><div class="center-load">Loading messages…</div></div>`;
+  wireTopbar();
+  let dir = [], convos = [];
+  try {
+    [dir, convos] = await Promise.all([store.getDirectory(), store.myConversations(state.user.uid)]);
+  } catch (e) {
+    console.error(e);
+    appEl.innerHTML = topbar() + `<div class="wrap"><div class="card"><p>Could not load messages. Make sure the Firestore rules are published.</p></div></div>`;
+    wireTopbar();
+    return;
+  }
+  const me = state.user.uid;
+  const nameOf = (uid) => {
+    const d = dir.find((x) => x.uid === uid);
+    return d ? (d.name || (d.username ? "@" + d.username : "User")) : "User";
+  };
+  const others = dir.filter((d) => d.uid !== me);
+  const lastByOther = {};
+  convos.forEach((c) => {
+    const other = (c.participants || []).find((u) => u !== me);
+    if (other) lastByOther[other] = c.lastMessage || "";
+  });
+  // Order: people you've chatted with first (by recency), then everyone else.
+  const chatted = convos.map((c) => (c.participants || []).find((u) => u !== me)).filter(Boolean);
+  const rest = others.map((o) => o.uid).filter((u) => !chatted.includes(u));
+  const order = [...chatted.filter((u) => others.some((o) => o.uid === u)), ...rest];
+
+  const contacts = order.map((uid) => `
+    <div class="chat-contact" data-uid="${esc(uid)}">
+      <div class="nm">${esc(nameOf(uid))}</div>
+      ${lastByOther[uid] ? `<div class="pv">${esc(lastByOther[uid])}</div>` : ""}
+    </div>`).join("") || `<div class="empty" style="padding:20px">No other people yet.</div>`;
+
+  appEl.innerHTML = topbar() + `
+    <div class="wrap">
+      <button class="back-link" id="back">← Back</button>
+      <div class="page-head"><div><h1>Messages</h1><p>Private 1-on-1 chats.</p></div></div>
+      <div class="chat-wrap">
+        <div class="chat-list" id="chat-list">${contacts}</div>
+        <div class="chat-thread" id="chat-thread"><div class="chat-empty">Pick someone to start chatting.</div></div>
+      </div>
+    </div>`;
+  wireTopbar();
+  document.getElementById("back").onclick = () => (state.admin ? renderAdminDashboard() : reloadInternLogs());
+  appEl.querySelectorAll(".chat-contact").forEach((el) => {
+    el.onclick = () => {
+      appEl.querySelectorAll(".chat-contact").forEach((c) => c.classList.remove("active"));
+      el.classList.add("active");
+      openThread(el.dataset.uid, nameOf(el.dataset.uid));
+    };
+  });
+}
+
+async function openThread(otherUid, otherName) {
+  stopChat();
+  const me = state.user.uid;
+  const pane = document.getElementById("chat-thread");
+  pane.innerHTML = `<div class="chat-head">${esc(otherName)}</div><div class="chat-msgs" id="chat-msgs"><div class="center-load">…</div></div>
+    <form class="chat-form" id="chat-form"><input id="chat-input" placeholder="Type a message…" autocomplete="off" /><button class="gold" type="submit">Send</button></form>`;
+  let convId;
+  try {
+    convId = await store.ensureConversation(me, otherUid, { [me]: myDisplayName(), [otherUid]: otherName });
+  } catch (e) {
+    pane.innerHTML = `<div class="chat-empty">Could not open this chat.</div>`;
+    console.error(e);
+    return;
+  }
+  const msgsEl = document.getElementById("chat-msgs");
+  chatUnsub = store.listenMessages(convId, (msgs) => {
+    if (!document.body.contains(msgsEl)) return;
+    msgsEl.innerHTML = msgs.length
+      ? msgs.map((m) => `<div class="bubble ${m.from === me ? "me" : "them"}">${esc(m.text)}</div>`).join("")
+      : `<div class="chat-empty">No messages yet. Say hi 👋</div>`;
+    msgsEl.scrollTop = msgsEl.scrollHeight;
+  });
+  document.getElementById("chat-form").onsubmit = async (ev) => {
+    ev.preventDefault();
+    const input = document.getElementById("chat-input");
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    try { await store.sendMessage(convId, me, text); }
+    catch (e) { toast("Could not send message.", true); console.error(e); }
   };
 }
 

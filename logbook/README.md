@@ -19,6 +19,9 @@ It mirrors the original spreadsheet:
   accounts** ("+ Add intern" — sets a username + temporary password) and
   **delete** interns.
 
+Everyone gets **Messages** (💬 in the top bar) — private 1-on-1 chats between
+users, updating live.
+
 Admins also get a **Documents** library ("📁 Documents" on the dashboard) for
 storing OJT forms, memos and other files (upload a file up to ~700 KB, or paste a
 link for bigger ones), and a private **Admin notes** box on each intern's page

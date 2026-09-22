@@ -14,7 +14,9 @@ import {
   getDocs,
   addDoc,
   query,
+  where,
   orderBy,
+  onSnapshot,
   serverTimestamp,
 } from "./firebase.js";
 import { ADMIN_EMAILS, USERNAME_DOMAIN } from "./config.js";
@@ -30,8 +32,7 @@ export async function getProfile(uid) {
 // Create a profile document the first time a user signs in.
 export async function ensureProfile(user) {
   const existing = await getProfile(user.uid);
-  if (existing) return existing;
-  const profile = {
+  const profile = existing || {
     name: user.displayName || "",
     email: user.email || "",
     department: "",
@@ -44,12 +45,23 @@ export async function ensureProfile(user) {
     folderLink: "",
     createdAt: serverTimestamp(),
   };
-  await setDoc(doc(db, "interns", user.uid), profile);
+  if (!existing) await setDoc(doc(db, "interns", user.uid), profile);
+  // Keep a lightweight, readable directory entry for the chat contact list.
+  try {
+    await setDoc(doc(db, "directory", user.uid), {
+      name: profile.name || user.displayName || "",
+      username: profile.username || "",
+    }, { merge: true });
+  } catch { /* non-fatal */ }
   return { uid: user.uid, ...profile };
 }
 
 export async function saveProfile(uid, fields) {
   await updateDoc(doc(db, "interns", uid), fields);
+  if (fields.name !== undefined) {
+    try { await setDoc(doc(db, "directory", uid), { name: fields.name || "" }, { merge: true }); }
+    catch { /* non-fatal */ }
+  }
 }
 
 // --- Admin check ----------------------------------------------------
@@ -144,6 +156,13 @@ export async function adminCreateIntern({ username, password, name, department, 
       folderLink: "",
       createdAt: serverTimestamp(),
     });
+    // Directory entry (written as the new user, so it passes the rules).
+    try {
+      await setDoc(doc(secDb, "directory", cred.user.uid), {
+        name: name || "",
+        username: username.trim().toLowerCase(),
+      }, { merge: true });
+    } catch { /* non-fatal */ }
   } finally {
     await signOut(secAuth);
   }
@@ -208,4 +227,60 @@ export async function getDocumentFile(id) {
 export async function deleteDocument(id) {
   await deleteDoc(doc(db, "documents", id));
   try { await deleteDoc(doc(db, "documentFiles", id)); } catch { /* none */ }
+}
+
+// --- Direct messages (1-on-1 chat) -----------------------------------
+
+// Everyone's name/username for the contact list.
+export async function getDirectory() {
+  const snap = await getDocs(collection(db, "directory"));
+  return snap.docs.map((d) => ({ uid: d.id, ...d.data() }));
+}
+
+// A pair of users always maps to the same conversation id.
+export function convIdFor(a, b) {
+  return [a, b].sort().join("__");
+}
+
+// Conversations the current user is part of (sorted newest-first client-side
+// to avoid needing a composite Firestore index).
+export async function myConversations(uid) {
+  const q = query(collection(db, "conversations"), where("participants", "array-contains", uid));
+  const snap = await getDocs(q);
+  const millis = (v) => (v && v.toMillis ? v.toMillis() : (typeof v === "number" ? v : 0));
+  return snap.docs
+    .map((d) => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => millis(b.updatedAt || b.createdAt) - millis(a.updatedAt || a.createdAt));
+}
+
+// Make sure the conversation document exists before sending.
+export async function ensureConversation(me, other, names) {
+  const id = convIdFor(me, other);
+  await setDoc(doc(db, "conversations", id), {
+    participants: [me, other].sort(),
+    names: names || {},
+    createdAt: serverTimestamp(),
+  }, { merge: true });
+  return id;
+}
+
+export async function sendMessage(convId, from, text) {
+  await addDoc(collection(db, "conversations", convId, "messages"), {
+    from,
+    text,
+    at: serverTimestamp(),
+  });
+  await setDoc(doc(db, "conversations", convId), {
+    lastMessage: text,
+    lastFrom: from,
+    updatedAt: serverTimestamp(),
+  }, { merge: true });
+}
+
+// Live listener for a conversation's messages. Returns an unsubscribe function.
+export function listenMessages(convId, cb) {
+  const q = query(collection(db, "conversations", convId, "messages"), orderBy("at", "asc"));
+  return onSnapshot(q, (snap) => {
+    cb(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+  }, (err) => console.error("chat listen error", err));
 }
