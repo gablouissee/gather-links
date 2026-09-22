@@ -877,6 +877,8 @@ async function renderMessages() {
   wireTopbar();
   let dir = [], convos = [];
   try {
+    // Admins back-fill the directory so all interns appear as contacts.
+    if (state.admin) { try { await store.syncDirectory(); } catch (e) { console.error(e); } }
     [dir, convos] = await Promise.all([store.getDirectory(), store.myConversations(state.user.uid)]);
   } catch (e) {
     console.error(e);
